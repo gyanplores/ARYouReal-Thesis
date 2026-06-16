@@ -3364,7 +3364,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1395359169}
   m_Father: {fileID: 65762522}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &411485201
@@ -10333,12 +10334,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1395359165}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.1}
   m_LocalScale: {x: 1, y: 2.73, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 411485200}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1403666696
 GameObject:
@@ -12059,7 +12060,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 2dd8aa6de7d8d5b45b78cb0b6b5a60b7, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -12869,7 +12870,7 @@ MonoBehaviour:
   listenPort: 5006
   blackBox: {fileID: 1395359165}
   whiteNoiseSource: {fileID: 1880571443}
-  droneAudioSource: {fileID: 0}
+  droneAudioSource: {fileID: 1652438795}
   hapticsFrequency: 0.5
   hapticsAmplitude: 0.5
   hapticsPulseInterval: 0.3
@@ -16057,6 +16058,5 @@ SceneRoots:
   - {fileID: 1820099017}
   - {fileID: 1964602102}
   - {fileID: 1804774361}
-  - {fileID: 1395359169}
   - {fileID: 1880571444}
   - {fileID: 1741312761}
