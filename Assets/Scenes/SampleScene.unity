@@ -12009,6 +12009,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -6713192559282737363, guid: e536cd1c7d994674ab354fd0d38f268f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1652438797}
+    - targetCorrespondingSourceObject: {fileID: -6713192559282737363, guid: e536cd1c7d994674ab354fd0d38f268f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1652438800}
   m_SourcePrefab: {fileID: 578520625792511679, guid: e536cd1c7d994674ab354fd0d38f268f, type: 3}
 --- !u!1 &1652438791 stripped
 GameObject:
@@ -12183,6 +12186,25 @@ MonoBehaviour:
   duration: 0.1
   continuousHaptics: 1
   continuousInterval: 0.2
+--- !u!114 &1652438800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652438791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 672cc37b157250c488fe72afd157415e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MirrorDroneController
+  listenPort: 5005
+  mirrorX: 1
+  mirrorY: 1
+  mirrorZ: 1
+  moveSpeed: 3
+  statusText: {fileID: 1479923171}
+  receivedText: {fileID: 986580960}
 --- !u!1 &1653707144
 GameObject:
   m_ObjectHideFlags: 0

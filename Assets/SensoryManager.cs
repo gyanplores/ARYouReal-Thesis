@@ -44,10 +44,8 @@ public class SensoryManager : MonoBehaviour
 
     void Start()
     {
-        // Start with everything off
-        SetVisual(false);
-        SetAudio(false);
-        SetHaptics(false);
+        // Start at V+A+H (everything on)
+        ApplyMode(1);
 
         StartUDP();
         Debug.Log($"[SensoryManager] Listening on port {listenPort}");
