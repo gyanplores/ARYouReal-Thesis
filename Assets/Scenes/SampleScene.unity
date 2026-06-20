@@ -4872,8 +4872,6 @@ MonoBehaviour:
   mirrorY: 0
   mirrorZ: 0
   moveSpeed: 3
-  statusText: {fileID: 1479923171}
-  receivedText: {fileID: 986580960}
 --- !u!114 &563221309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13133,13 +13131,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58b9c1b3d82e3664e8df422463191fa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SensoryManager
-  listenPort: 5006
   blackBox: {fileID: 1395359165}
-  whiteNoiseSource: {fileID: 1880571443}
-  droneAudioSource: {fileID: 1652438795}
-  hapticsFrequency: 0.5
-  hapticsAmplitude: 0.5
-  hapticsPulseInterval: 0.3
+  whiteNoise: {fileID: 1880571443}
+  droneAudio: {fileID: 563221310}
 --- !u!4 &1741312761
 Transform:
   m_ObjectHideFlags: 0
