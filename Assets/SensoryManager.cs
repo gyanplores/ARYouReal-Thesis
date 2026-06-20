@@ -79,6 +79,32 @@ public class SensoryManager : MonoBehaviour
 
     // ─── MODE SWITCHER ────────────────────────────────────────────
 
+    /// <summary>
+    /// Public entry point for string-based affordance combinations
+    /// (e.g. "VAH", "VA", "H") coming from TrialReceiver.
+    /// Called instead of the numeric 1-7 UDP path when using trial_sequence.py.
+    /// </summary>
+    public void ApplyAffordanceString(string affordance)
+    {
+        if (string.IsNullOrEmpty(affordance))
+        {
+            Debug.LogWarning("[SensoryManager] Empty affordance string received");
+            return;
+        }
+
+        affordance = affordance.ToUpper();
+
+        bool v = affordance.Contains("V");
+        bool a = affordance.Contains("A");
+        bool h = affordance.Contains("H");
+
+        SetVisual(v);
+        SetAudio(a);
+        SetHaptics(h);
+
+        Debug.Log($"[SensoryManager] Affordance '{affordance}' → Visual:{v} Audio:{a} Haptics:{h}");
+    }
+
     void ApplyMode(int mode)
     {
         // Map 1-7 to V/A/H combinations
