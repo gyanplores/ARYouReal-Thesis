@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &313179 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5310075558042083055, guid: 8de19d82a96b2484fa492922dee1ed94, type: 3}
+  m_PrefabInstance: {fileID: 563221305}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7357851
 GameObject:
   m_ObjectHideFlags: 0
@@ -4828,6 +4833,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -6713192559282737363, guid: 8de19d82a96b2484fa492922dee1ed94, type: 3}
       insertIndex: -1
       addedObject: {fileID: 563221307}
+    - targetCorrespondingSourceObject: {fileID: -6713192559282737363, guid: 8de19d82a96b2484fa492922dee1ed94, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 563221311}
+    - targetCorrespondingSourceObject: {fileID: -6713192559282737363, guid: 8de19d82a96b2484fa492922dee1ed94, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 563221312}
   m_SourcePrefab: {fileID: 578520625792511679, guid: 8de19d82a96b2484fa492922dee1ed94, type: 3}
 --- !u!1 &563221306 stripped
 GameObject:
@@ -4867,11 +4878,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrialReceiver
   listenPort: 5005
   sensoryManager: {fileID: 1741312760}
-  droneTransform: {fileID: 0}
+  droneTransform: {fileID: 313179}
   mirrorX: 1
   mirrorY: 0
   mirrorZ: 0
   moveSpeed: 3
+  statusText: {fileID: 1479923171}
+  receivedText: {fileID: 986580960}
 --- !u!114 &563221309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4884,11 +4897,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 441de1efc05f3e944ba28b35a26797c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DroneHaptics
-  frequency: 0.3
-  amplitude: 0.3
-  duration: 0.1
-  continuousHaptics: 1
-  continuousInterval: 0.2
+  frequency: 0.537
+  amplitude: 0.41
+  rayDistance: 20
+  leftHandAnchor: {fileID: 1011665194}
+  rightHandAnchor: {fileID: 1725252174}
 --- !u!82 &563221310
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4986,6 +4999,48 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &563221311
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563221306}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.35, y: 0.35, z: 0.35}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &563221312
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563221306}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.24
+  m_Center: {x: -0.03, y: 0, z: 0}
 --- !u!1 &569486839
 GameObject:
   m_ObjectHideFlags: 0
@@ -12425,9 +12480,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DroneHaptics
   frequency: 0.3
   amplitude: 0.3
-  duration: 0.1
-  continuousHaptics: 1
-  continuousInterval: 0.2
+  rayDistance: 20
+  leftHandAnchor: {fileID: 0}
+  rightHandAnchor: {fileID: 0}
 --- !u!114 &1652438800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13131,9 +13186,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58b9c1b3d82e3664e8df422463191fa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SensoryManager
+  listenPort: 5006
   blackBox: {fileID: 1395359165}
-  whiteNoise: {fileID: 1880571443}
-  droneAudio: {fileID: 563221310}
+  whiteNoiseSource: {fileID: 1880571443}
+  droneAudioSource: {fileID: 563221310}
+  hapticsFrequency: 0.5
+  hapticsAmplitude: 0.5
+  hapticsPulseInterval: 0.3
 --- !u!4 &1741312761
 Transform:
   m_ObjectHideFlags: 0

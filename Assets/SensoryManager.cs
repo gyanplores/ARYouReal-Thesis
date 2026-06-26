@@ -44,11 +44,10 @@ public class SensoryManager : MonoBehaviour
 
     void Start()
     {
-        // Start with Visual + Audio ON, Haptics OFF
-        // (avoids controllers buzzing constantly during setup/testing)
+        // Start at VAH — Visual ON, Audio ON, Haptics ON
         SetVisual(true);
         SetAudio(true);
-        SetHaptics(false);
+        SetHaptics(true);
 
         StartUDP();
         Debug.Log($"[SensoryManager] Listening on port {listenPort}");

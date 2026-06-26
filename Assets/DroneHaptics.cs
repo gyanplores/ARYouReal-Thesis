@@ -2,97 +2,86 @@ using UnityEngine;
 
 /// <summary>
 /// Attach this to the Drone GameObject.
-/// Vibrates the correct controller when its ray hovers over the drone.
+/// Uses Physics.Raycast from each controller's position/direction
+/// to detect when the ray hover over this drone, then vibrates
+/// the corresponding controller while hovering.
+///
+/// Requires:
+/// 1. A Collider on this drone GameObject (Box, Sphere, or Mesh)
+/// 2. OVRCameraRig in the scene with TrackingSpace/LeftHandAnchor/RightHandAnchor
 /// </summary>
 public class DroneHaptics : MonoBehaviour
 {
     [Header("Haptic Settings")]
-    [Range(0f, 1f)] public float frequency = 0.3f;
-    [Range(0f, 1f)] public float amplitude = 0.3f;
-    public float duration = 0.1f;
+    [Range(0f, 1f)] public float frequency = 0.5f;
+    [Range(0f, 1f)] public float amplitude = 0.5f;
 
-    [Header("Continuous Haptics")]
-    [Tooltip("If true, haptics keep firing while hovering. If false, only fires once on hover enter.")]
-    public bool continuousHaptics = false;
-    public float continuousInterval = 0.2f; // seconds between pulses if continuous
+    [Header("Ray Settings")]
+    public float rayDistance = 20f; // how far the ray extends
 
-    private float continuousTimer = 0f;
+    [Header("Controller Anchors")]
+    [Tooltip("Drag LeftHandAnchor from OVRCameraRig → TrackingSpace here")]
+    public Transform leftHandAnchor;
+    [Tooltip("Drag RightHandAnchor from OVRCameraRig → TrackingSpace here")]
+    public Transform rightHandAnchor;
+
+    // Internal state
     private bool isLeftHovering = false;
     private bool isRightHovering = false;
 
     void Update()
     {
-        if (!continuousHaptics) return;
+        CheckRayHover(leftHandAnchor, ref isLeftHovering, OVRInput.Controller.LTouch, "Left");
+        CheckRayHover(rightHandAnchor, ref isRightHovering, OVRInput.Controller.RTouch, "Right");
+    }
 
-        continuousTimer -= Time.deltaTime;
-        if (continuousTimer <= 0f)
+    void CheckRayHover(Transform anchor, ref bool isHovering, OVRInput.Controller controller, string side)
+    {
+        if (anchor == null) return;
+
+        // Cast ray from controller anchor forward
+        Ray ray = new Ray(anchor.position, anchor.forward);
+        bool hitThis = false;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, rayDistance))
         {
-            continuousTimer = continuousInterval;
-
-            if (isLeftHovering)
-                Vibrate(OVRInput.Controller.LTouch);
-
-            if (isRightHovering)
-                Vibrate(OVRInput.Controller.RTouch);
+            // Check if the ray hit THIS drone's collider
+            if (hit.collider.gameObject == gameObject ||
+                hit.collider.transform.IsChildOf(transform))
+            {
+                hitThis = true;
+            }
         }
-    }
 
-    // ─── CALLED BY RAY INTERACTION EVENTS ────────────────────────
+        // Hover Enter
+        if (hitThis && !isHovering)
+        {
+            isHovering = true;
+            OVRInput.SetControllerVibration(frequency, amplitude, controller);
+            Debug.Log($"[DroneHaptics] {side} ray hover ENTER");
+        }
 
-    public void OnLeftRayHoverEnter()
-    {
-        isLeftHovering = true;
-        Vibrate(OVRInput.Controller.LTouch);
-        Debug.Log("[DroneHaptics] Left ray hover ENTER");
-    }
+        // Hover Exit
+        if (!hitThis && isHovering)
+        {
+            isHovering = false;
+            OVRInput.SetControllerVibration(0f, 0f, controller);
+            Debug.Log($"[DroneHaptics] {side} ray hover EXIT");
+        }
 
-    public void OnLeftRayHoverExit()
-    {
-        isLeftHovering = false;
-        StopVibrate(OVRInput.Controller.LTouch);
-        Debug.Log("[DroneHaptics] Left ray hover EXIT");
-    }
-
-    public void OnRightRayHoverEnter()
-    {
-        isRightHovering = true;
-        Vibrate(OVRInput.Controller.RTouch);
-        Debug.Log("[DroneHaptics] Right ray hover ENTER");
-    }
-
-    public void OnRightRayHoverExit()
-    {
-        isRightHovering = false;
-        StopVibrate(OVRInput.Controller.RTouch);
-        Debug.Log("[DroneHaptics] Right ray hover EXIT");
-    }
-
-    // ─── HAPTIC HELPERS ───────────────────────────────────────────
-
-    void Vibrate(OVRInput.Controller controller)
-    {
-        OVRInput.SetControllerVibration(frequency, amplitude, controller);
-        if (!continuousHaptics)
-            Invoke(nameof(StopAllVibrations), duration);
-    }
-
-    void StopVibrate(OVRInput.Controller controller)
-    {
-        OVRInput.SetControllerVibration(0f, 0f, controller);
-    }
-
-    void StopAllVibrations()
-    {
-        if (!isLeftHovering)
-            OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.LTouch);
-        if (!isRightHovering)
-            OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
+        // Keep vibrating while hovering
+        if (hitThis && isHovering)
+        {
+            OVRInput.SetControllerVibration(frequency, amplitude, controller);
+        }
     }
 
     void OnDisable()
     {
-        // Safety — stop all vibrations if script is disabled
+        // Safety — stop all vibrations when disabled
         OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.LTouch);
         OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
+        isLeftHovering = false;
+        isRightHovering = false;
     }
 }

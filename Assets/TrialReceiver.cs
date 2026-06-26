@@ -55,14 +55,25 @@ public class TrialReceiver : MonoBehaviour
     private string lastRawMessage = "Waiting for data...";
     private int messageCount = 0;
 
+    // Relative/offset movement tracking
+    private Vector3 realBaseline = Vector3.zero;      // first real position received (Crazyflie space)
+    private Vector3 unityStartPosition = Vector3.zero; // where the Unity drone is when first packet arrives
+    private bool baselineSet = false;                  // whether baseline has been captured yet
+
     void Start()
     {
         if (droneTransform == null)
-            droneTransform = transform; // assume attached directly to drone if not assigned
+            droneTransform = transform;
+
+        // Record where the Unity drone starts in the scene
+        // (e.g. (0, 0, 2) — 2 meters in front of user)
+        // All real drone movement will be applied as a delta on top of this
+        unityStartPosition = droneTransform.position;
 
         StartUDP();
         Debug.Log($"[TrialReceiver] Listening on port {listenPort}");
         Debug.Log($"[TrialReceiver] Device IP: {GetLocalIP()}");
+        Debug.Log($"[TrialReceiver] Unity drone start position: {unityStartPosition}");
     }
 
     void Update()
@@ -173,11 +184,53 @@ public class TrialReceiver : MonoBehaviour
                 float z = ExtractFloatField(json, "z");
 
                 Vector3 real = new Vector3(x, y, z);
-                Vector3 mirrored = new Vector3(
-                    mirrorX ? -x : x,
-                    mirrorY ? -y : y,
-                    mirrorZ ? -z : z
+
+                // ── Axis conversion: Crazyflie → Unity ──────────────────
+                // Crazyflie X → Unity X (horizontal, same)
+                // Crazyflie Y → Unity Z (horizontal depth)
+                // Crazyflie Z → Unity Y (vertical height) ← KEY SWAP
+                float unityX = x;
+                float unityY = z; // Crazyflie Z (altitude) → Unity Y (up)
+                float unityZ = y; // Crazyflie Y (depth)    → Unity Z (depth)
+
+                // ── Set baseline on first packet ─────────────────────────
+                // We capture the real drone's starting Crazyflie position
+                // and the Unity drone's starting scene position once,
+                // then all subsequent moves are deltas from that baseline.
+                bool isFirstPacket = false;
+                lock (dataLock) { isFirstPacket = !baselineSet; }
+
+                if (isFirstPacket)
+                {
+                    lock (dataLock)
+                    {
+                        realBaseline = new Vector3(unityX, unityY, unityZ);
+                        unityStartPosition = droneTransform.position;
+                        baselineSet = true;
+                    }
+                    Debug.Log($"[TrialReceiver] Baseline set — real: ({unityX:F2},{unityY:F2},{unityZ:F2}) unity start: {unityStartPosition}");
+                }
+
+                // ── Compute relative offset from baseline ─────────────────
+                Vector3 baseline;
+                Vector3 unityStart;
+                lock (dataLock)
+                {
+                    baseline = realBaseline;
+                    unityStart = unityStartPosition;
+                }
+
+                Vector3 delta = new Vector3(unityX, unityY, unityZ) - baseline;
+
+                // ── Apply mirror on delta (not on absolute position) ──────
+                Vector3 mirroredDelta = new Vector3(
+                    mirrorX ? -delta.x : delta.x,
+                    mirrorY ? -delta.y : delta.y,
+                    mirrorZ ? -delta.z : delta.z
                 );
+
+                // ── Final target = Unity start position + mirrored delta ──
+                Vector3 mirrored = unityStart + mirroredDelta;
 
                 lock (dataLock)
                 {
