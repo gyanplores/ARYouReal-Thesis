@@ -185,6 +185,12 @@ public class TrialReceiver : MonoBehaviour
 
                 Vector3 real = new Vector3(x, y, z);
 
+                // ── Read mode from packet ────────────────────────────────
+                // MASK   = virtual drone moves SAME direction as real drone
+                // MIRROR = virtual drone moves OPPOSITE X direction
+                string mode = ExtractStringField(json, "mode");
+                bool isMirror = (mode == "MIRROR");
+
                 // ── Axis conversion: Crazyflie → Unity ──────────────────
                 // Crazyflie X → Unity X (horizontal, same)
                 // Crazyflie Y → Unity Z (horizontal depth)
@@ -222,11 +228,13 @@ public class TrialReceiver : MonoBehaviour
 
                 Vector3 delta = new Vector3(unityX, unityY, unityZ) - baseline;
 
-                // ── Apply mirror on delta (not on absolute position) ──────
+                // ── Apply mask or mirror on delta ────────────────────────
+                // MASK:   delta applies as-is (same direction)
+                // MIRROR: flip X only, Y and Z stay the same
                 Vector3 mirroredDelta = new Vector3(
-                    mirrorX ? -delta.x : delta.x,
-                    mirrorY ? -delta.y : delta.y,
-                    mirrorZ ? -delta.z : delta.z
+                    isMirror ? -delta.x : delta.x,   // flip X for mirror, keep for mask
+                    delta.y,                           // Y always same (vertical height)
+                    delta.z                            // Z always same (horizontal depth)
                 );
 
                 // ── Final target = Unity start position + mirrored delta ──
@@ -243,7 +251,7 @@ public class TrialReceiver : MonoBehaviour
                     messageCount++;
                 }
 
-                Debug.Log($"[TrialReceiver] TRIAL '{affordance}' real=({x:F2},{y:F2},{z:F2}) → mirrored=({mirrored.x:F2},{mirrored.y:F2},{mirrored.z:F2})");
+                Debug.Log($"[TrialReceiver] TRIAL '{affordance}' mode={mode} real=({x:F2},{y:F2},{z:F2}) → unity=({(unityStart + mirroredDelta).x:F2},{(unityStart + mirroredDelta).y:F2},{(unityStart + mirroredDelta).z:F2})");
             }
             else
             {
