@@ -28,11 +28,9 @@ public class TrialReceiver : MonoBehaviour
     [Tooltip("The drone GameObject to move (this script will move its own transform if left empty and attached directly to the drone)")]
     public Transform droneTransform;
 
-    [Header("Mirror Settings")]
-    [Tooltip("Which axis to flip when positioning the virtual drone")]
-    public bool mirrorX = true;
-    public bool mirrorY = false;
-    public bool mirrorZ = false;
+    [Header("Drone Mode (set by StartupMenu)")]
+    [Tooltip("True = MIRROR (opposite X). False = MASK (same direction). Set automatically by StartupMenu.cs")]
+    public bool isMirrorMode = true;
 
     [Header("Movement Smoothing")]
     public float moveSpeed = 3.0f;
@@ -185,11 +183,9 @@ public class TrialReceiver : MonoBehaviour
 
                 Vector3 real = new Vector3(x, y, z);
 
-                // ── Read mode from packet ────────────────────────────────
-                // MASK   = virtual drone moves SAME direction as real drone
-                // MIRROR = virtual drone moves OPPOSITE X direction
-                string mode = ExtractStringField(json, "mode");
-                bool isMirror = (mode == "MIRROR");
+                // ── Mode now comes from Unity's own StartupMenu choice ───
+                // (Python no longer sends "mode" — removed from the packet)
+                bool isMirror = isMirrorMode;
 
                 // ── Axis conversion: Crazyflie → Unity ──────────────────
                 // Crazyflie X → Unity X (horizontal, same)
@@ -251,7 +247,7 @@ public class TrialReceiver : MonoBehaviour
                     messageCount++;
                 }
 
-                Debug.Log($"[TrialReceiver] TRIAL '{affordance}' mode={mode} real=({x:F2},{y:F2},{z:F2}) → unity=({(unityStart + mirroredDelta).x:F2},{(unityStart + mirroredDelta).y:F2},{(unityStart + mirroredDelta).z:F2})");
+                Debug.Log($"[TrialReceiver] TRIAL '{affordance}' mode={(isMirror ? "MIRROR" : "MASK")} real=({x:F2},{y:F2},{z:F2}) → unity=({(unityStart + mirroredDelta).x:F2},{(unityStart + mirroredDelta).y:F2},{(unityStart + mirroredDelta).z:F2})");
             }
             else
             {
@@ -330,5 +326,16 @@ public class TrialReceiver : MonoBehaviour
         isRunning = false;
         udpClient?.Close();
         udpThread?.Abort();
+    }
+
+    // ─── PUBLIC API — called by StartupMenu.cs ─────────────────────
+
+    /// <summary>
+    /// Called once by StartupMenu when the user selects Mirror or Mask.
+    /// </summary>
+    public void SetMirrorMode(bool mirror)
+    {
+        isMirrorMode = mirror;
+        Debug.Log($"[TrialReceiver] Mode set to: {(mirror ? "MIRROR" : "MASK")}");
     }
 }

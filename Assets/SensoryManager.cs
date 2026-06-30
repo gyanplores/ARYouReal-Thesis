@@ -25,10 +25,9 @@ public class SensoryManager : MonoBehaviour
     [Tooltip("The drone's audio source — gets muted when audio is not present")]
     public AudioSource droneAudioSource;
 
-    [Header("Haptics Settings")]
-    [Range(0f, 1f)] public float hapticsFrequency = 0.5f;
-    [Range(0f, 1f)] public float hapticsAmplitude = 0.5f;
-    public float hapticsPulseInterval = 0.3f; // seconds between pulses
+    [Header("Haptics — Drone Hover")]
+    [Tooltip("Drag the DroneHaptics component (on the drone) here. SensoryManager only tells it whether the H condition is active; DroneHaptics handles the actual hover detection and vibration.")]
+    public DroneHaptics droneHaptics;
 
     // Internal
     private UdpClient udpClient;
@@ -40,14 +39,28 @@ public class SensoryManager : MonoBehaviour
     private bool visualEnabled = true;
     private bool audioEnabled = true;
     private bool hapticsEnabled = false;
-    private float hapticsTimer = 0f;
+
+    [Header("Startup Menu Handoff")]
+    [Tooltip("If true, StartupMenu controls the black box until the user picks Mirror/Mask. SensoryManager waits before applying its own default visual state.")]
+    public bool waitForStartupMenu = true;
+    private bool menuHasReleasedControl = false;
 
     void Start()
     {
-        // Start at VAH — Visual ON, Audio ON, Haptics ON
-        SetVisual(true);
-        SetAudio(true);
-        SetHaptics(true);
+        if (waitForStartupMenu)
+        {
+            // Don't touch blackBox yet — StartupMenu owns it until the user picks a mode.
+            // Audio/haptics can still default normally since the menu only controls vision.
+            SetAudio(true);
+            SetHaptics(true);
+        }
+        else
+        {
+            // No startup menu in this scene — behave as before
+            SetVisual(true);
+            SetAudio(true);
+            SetHaptics(true);
+        }
 
         StartUDP();
         Debug.Log($"[SensoryManager] Listening on port {listenPort}");
@@ -65,18 +78,6 @@ public class SensoryManager : MonoBehaviour
 
         if (mode >= 1 && mode <= 7)
             ApplyMode(mode);
-
-        // Continuous haptics pulse
-        if (hapticsEnabled)
-        {
-            hapticsTimer -= Time.deltaTime;
-            if (hapticsTimer <= 0f)
-            {
-                hapticsTimer = hapticsPulseInterval;
-                OVRInput.SetControllerVibration(hapticsFrequency, hapticsAmplitude, OVRInput.Controller.LTouch);
-                OVRInput.SetControllerVibration(hapticsFrequency, hapticsAmplitude, OVRInput.Controller.RTouch);
-            }
-        }
     }
 
     // ─── MODE SWITCHER ────────────────────────────────────────────
@@ -199,11 +200,16 @@ public class SensoryManager : MonoBehaviour
     void SetHaptics(bool enabled)
     {
         hapticsEnabled = enabled;
-        hapticsTimer = 0f;
+
+        // Tell DroneHaptics whether the H condition is currently active.
+        // DroneHaptics itself decides whether to actually vibrate,
+        // based on whether the controller ray is hovering the drone.
+        if (droneHaptics != null)
+            droneHaptics.SetHapticsCondition(enabled);
 
         if (!enabled)
         {
-            // Stop all vibrations immediately
+            // Safety — stop all vibrations immediately regardless of hover state
             OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.LTouch);
             OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
         }
@@ -265,5 +271,19 @@ public class SensoryManager : MonoBehaviour
         OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
         udpClient?.Close();
         udpThread?.Abort();
+    }
+
+    // ─── PUBLIC API — called by StartupMenu.cs ─────────────────────
+
+    /// <summary>
+    /// Called once by StartupMenu after the user picks Mirror or Mask.
+    /// Hands control of the black box back to SensoryManager's normal
+    /// affordance-driven behavior (defaults to Visual ON / VAH state).
+    /// </summary>
+    public void ReleaseControlFromMenu()
+    {
+        menuHasReleasedControl = true;
+        SetVisual(true); // experiment starts with visual ON (VAH default)
+        Debug.Log("[SensoryManager] Control released from StartupMenu — Visual now ON");
     }
 }

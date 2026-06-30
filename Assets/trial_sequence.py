@@ -34,25 +34,6 @@ UNITY_IP = input("Enter Quest / Unity IP: ").strip()
 USER_Z = float(input("Enter subject eye level vertical height in meters: "))
 
 print()
-print("Select virtual drone mode:")
-print("  1 = MASK   (virtual drone moves SAME direction as real drone)")
-print("  2 = MIRROR (virtual drone moves OPPOSITE X direction)")
-print()
-
-while True:
-    mode_choice = input("Enter mode (1 for MASK, 2 for MIRROR): ").strip()
-    if mode_choice == "1":
-        DRONE_MODE = "MASK"
-        break
-    elif mode_choice == "2":
-        DRONE_MODE = "MIRROR"
-        break
-    else:
-        print("  ! Invalid. Enter 1 or 2.")
-
-print(f"\n  Mode set to: {DRONE_MODE}")
-print()
-
 print("Enter affordance combinations one at a time.")
 print("Valid options: VAH, VA, AH, VH, V, A, H")
 print("Type 'done' when finished.\n")
@@ -233,19 +214,17 @@ def move_drone(x, y, z, affordance, hold=3):
 
     commander.go_to(x, y, z, 0, 2)
 
-    # Tell Unity the real drone position, the affordance,
-    # AND which mode (MASK or MIRROR) so Unity can position
-    # the virtual drone correctly
+    # Tell Unity the real drone position and the affordance.
+    # Unity itself decides MASK vs MIRROR via its own startup menu.
     send_udp({
         "type": "TRIAL",
         "affordance": affordance,
-        "mode": DRONE_MODE,
         "x": x,
         "y": y,
         "z": z
     })
 
-    print(f"\n[MOVE] mode={DRONE_MODE} affordance={affordance} -> ({x:.2f}, {y:.2f}, {z:.2f})")
+    print(f"\n[MOVE] affordance={affordance} -> ({x:.2f}, {y:.2f}, {z:.2f})")
 
     time.sleep(hold)
 
@@ -273,7 +252,7 @@ def build_trials(combo_list):
 
 def run_trials(trials):
     print("\n" + "=" * 50)
-    print(f"  TRIAL SEQUENCE — Mode: {DRONE_MODE}")
+    print("  TRIAL SEQUENCE")
     print("=" * 50)
     for i, trial in enumerate(trials, 1):
         print(f"  {i}. {trial['affordance']:<4} -> "

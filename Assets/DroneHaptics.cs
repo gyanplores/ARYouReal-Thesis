@@ -25,6 +25,10 @@ public class DroneHaptics : MonoBehaviour
     [Tooltip("Drag RightHandAnchor from OVRCameraRig → TrackingSpace here")]
     public Transform rightHandAnchor;
 
+    [Header("Affordance Gate")]
+    [Tooltip("Vibration only fires when the current trial's affordance contains 'H'. Set automatically by SensoryManager.")]
+    public bool hapticsConditionActive = false;
+
     // Internal state
     private bool isLeftHovering = false;
     private bool isRightHovering = false;
@@ -38,6 +42,18 @@ public class DroneHaptics : MonoBehaviour
     void CheckRayHover(Transform anchor, ref bool isHovering, OVRInput.Controller controller, string side)
     {
         if (anchor == null) return;
+
+        // If the current trial's affordance doesn't include H, never vibrate —
+        // even if the ray is hitting the drone.
+        if (!hapticsConditionActive)
+        {
+            if (isHovering)
+            {
+                isHovering = false;
+                OVRInput.SetControllerVibration(0f, 0f, controller);
+            }
+            return;
+        }
 
         // Cast ray from controller anchor forward
         Ray ray = new Ray(anchor.position, anchor.forward);
@@ -83,5 +99,25 @@ public class DroneHaptics : MonoBehaviour
         OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
         isLeftHovering = false;
         isRightHovering = false;
+    }
+
+    // ─── PUBLIC API — called by SensoryManager ─────────────────────
+
+    /// <summary>
+    /// Called by SensoryManager whenever the affordance changes.
+    /// True if the current trial's affordance string contains "H".
+    /// </summary>
+    public void SetHapticsCondition(bool active)
+    {
+        hapticsConditionActive = active;
+
+        // If the condition just turned off, immediately stop any active vibration
+        if (!active)
+        {
+            OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.LTouch);
+            OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
+            isLeftHovering = false;
+            isRightHovering = false;
+        }
     }
 }
