@@ -2,6 +2,7 @@ import time
 import socket
 import json
 import random
+import threading
 
 import cflib.crtp
 
@@ -57,6 +58,24 @@ while True:
 
 print(f"\n  {len(combos)} combination(s) entered.")
 print()
+
+# ==================================================
+# TCP SERVER — wait for Unity to connect
+# Unity will send USER_PICK responses after each trial
+# ==================================================
+
+TCP_PORT = 5006
+
+tcp_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+tcp_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+tcp_server.bind(("0.0.0.0", TCP_PORT))
+tcp_server.listen(1)
+
+print(f"Waiting for Unity TCP connection on port {TCP_PORT}...")
+tcp_conn, addr = tcp_server.accept()
+print(f"Unity connected: {addr}")
+print()
+
 input("Press Enter to connect to the drone and begin...")
 
 
@@ -73,6 +92,14 @@ udp_send = socket.socket(
 
 
 # ==================================================
+# GLOBAL STATE — USER CHOICE
+# ==================================================
+
+user_choice = None
+running = True
+
+
+# ==================================================
 # DRONE SETTINGS
 # ==================================================
 
@@ -82,13 +109,6 @@ USER_X = 0.0
 USER_Y = -2.0
 
 MIN_DISTANCE = 1.5
-
-
-# ==================================================
-# GLOBAL STATE
-# ==================================================
-
-running = True
 
 current_x = 0.0
 current_y = 0.0
@@ -109,6 +129,39 @@ def send_udp(packet):
         )
     except Exception as e:
         print("UDP SEND ERROR", e)
+
+
+# ==================================================
+# TCP LISTENER — receives USER_PICK from Unity
+# Runs in background thread
+# ==================================================
+
+def listen_unity():
+    global user_choice, running
+
+    buffer = ""
+
+    while running:
+        try:
+            data = tcp_conn.recv(4096)
+            if not data:
+                break
+
+            buffer += data.decode()
+
+            while "\n" in buffer:
+                msg_raw, buffer = buffer.split("\n", 1)
+                msg = json.loads(msg_raw)
+
+                print(f"\n[UNITY] {msg}")
+
+                if msg.get("cmd") == "USER_PICK":
+                    user_choice = msg["choice"]
+                    print(f"[UNITY] User picked: {user_choice}")
+
+        except Exception as e:
+            if running:
+                print(f"[TCP] Receive error: {e}")
 
 
 # ==================================================
@@ -251,6 +304,8 @@ def build_trials(combo_list):
 # ==================================================
 
 def run_trials(trials):
+    global user_choice
+
     print("\n" + "=" * 50)
     print("  TRIAL SEQUENCE")
     print("=" * 50)
@@ -263,6 +318,9 @@ def run_trials(trials):
         input(f"\nPress Enter to move to trial {i}/{len(trials)} "
               f"[{trial['affordance']}]...")
 
+        # Reset choice before this trial
+        user_choice = None
+
         move_drone(
             trial["x"],
             trial["y"],
@@ -273,7 +331,15 @@ def run_trials(trials):
         print(f"[TRIAL {i}/{len(trials)}] {trial['affordance']} "
               f"active at ({trial['x']:.2f}, {trial['y']:.2f}, {trial['z']:.2f})")
 
-    input("\nPress Enter to land the drone and end the session...")
+        # Wait for Unity to send back the user's Left/Right trigger response
+        print("Waiting for participant response (Left or Right trigger)...")
+        while user_choice is None:
+            time.sleep(0.1)
+
+        print(f"[RESPONSE] Trial {i}: {user_choice}")
+
+    print("\nAll trials complete.")
+    input("Press Enter to land the drone and end the session...")
 
 
 # ==================================================
@@ -320,6 +386,9 @@ with SyncCrazyflie(
     commander.takeoff(1.5, 3)
     time.sleep(4)
 
+    # Start TCP listener thread — receives USER_PICK responses from Unity
+    threading.Thread(target=listen_unity, daemon=True).start()
+
     try:
         trials = build_trials(combos)
         run_trials(trials)
@@ -328,8 +397,11 @@ with SyncCrazyflie(
         print("\n[EMERGENCY] Stopping early.")
 
     finally:
+        running = False
         commander.land(0, 3)
         time.sleep(4)
         commander.stop()
         logconf.stop()
+        tcp_conn.close()
+        tcp_server.close()
         print("\nDone")

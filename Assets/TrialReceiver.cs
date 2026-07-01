@@ -25,8 +25,11 @@ public class TrialReceiver : MonoBehaviour
     [Tooltip("Drag the SensoryManager component here to apply V/A/H toggles")]
     public SensoryManager sensoryManager;
 
-    [Tooltip("The drone GameObject to move (this script will move its own transform if left empty and attached directly to the drone)")]
+    [Tooltip("The drone GameObject to move")]
     public Transform droneTransform;
+
+    [Tooltip("Drag UnityTCPClient here so it gets notified when a new trial arrives")]
+    public UnityTCPClient tcpClient;
 
     [Header("Drone Mode (set by StartupMenu)")]
     [Tooltip("True = MIRROR (opposite X). False = MASK (same direction). Set automatically by StartupMenu.cs")]
@@ -104,6 +107,12 @@ public class TrialReceiver : MonoBehaviour
         if (newAffordance && sensoryManager != null)
         {
             sensoryManager.ApplyAffordanceString(affordance);
+        }
+
+        // Notify TCP client that a new trial has arrived (starts prompt countdown)
+        if (newAffordance && tcpClient != null)
+        {
+            tcpClient.OnTrialReceived();
         }
 
         UpdateUI();
