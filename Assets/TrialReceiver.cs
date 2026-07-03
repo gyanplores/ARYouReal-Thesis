@@ -25,8 +25,11 @@ public class TrialReceiver : MonoBehaviour
     [Tooltip("Drag the SensoryManager component here to apply V/A/H toggles")]
     public SensoryManager sensoryManager;
 
-    [Tooltip("The drone GameObject to move (this script will move its own transform if left empty and attached directly to the drone)")]
+    [Tooltip("The drone GameObject to move")]
     public Transform droneTransform;
+
+    [Tooltip("Drag UnityTCPClient here so it gets notified when a new trial arrives")]
+    public UnityTCPClient tcpClient;
 
     [Header("Drone Mode (set by StartupMenu)")]
     [Tooltip("True = MIRROR (opposite X). False = MASK (same direction). Set automatically by StartupMenu.cs")]
@@ -77,33 +80,42 @@ public class TrialReceiver : MonoBehaviour
     void Update()
     {
         Vector3 target;
-        bool newPosition;
         bool newAffordance;
         string affordance;
 
         lock (dataLock)
         {
             target = mirroredTargetPosition;
-            newPosition = hasNewPositionData;
             newAffordance = hasNewAffordance;
             affordance = lastAffordance;
-            hasNewAffordance = false; // consume the flag, apply once
+            hasNewAffordance = false; // consume affordance flag once
         }
 
-        // Move drone smoothly toward the mirrored target position
-        if (newPosition)
+        // Always move toward the current target every frame until we arrive
+        // (don't gate on newPosition — that flag was only true for one frame)
+        if (droneTransform != null)
         {
-            droneTransform.position = Vector3.MoveTowards(
-                droneTransform.position,
-                target,
-                moveSpeed * Time.deltaTime
-            );
+            float distanceToTarget = Vector3.Distance(droneTransform.position, target);
+            if (distanceToTarget > 0.001f)
+            {
+                droneTransform.position = Vector3.MoveTowards(
+                    droneTransform.position,
+                    target,
+                    moveSpeed * Time.deltaTime
+                );
+            }
         }
 
         // Apply affordance to SensoryManager once per new trial
         if (newAffordance && sensoryManager != null)
         {
             sensoryManager.ApplyAffordanceString(affordance);
+        }
+
+        // Notify TCP client that a new trial has arrived (starts prompt countdown)
+        if (newAffordance && tcpClient != null)
+        {
+            tcpClient.OnTrialReceived();
         }
 
         UpdateUI();
