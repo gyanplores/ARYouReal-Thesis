@@ -6211,7 +6211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f7b228942dbb6740a1d4acf0095991a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityTCPClient
-  pythonIP: 192.168.2.202
+  pythonIP: 192.168.2.203
   tcpPort: 5006
   promptDisplay: {fileID: 207147541}
   delayAfterTrialBeforePrompt: 5
@@ -13828,7 +13828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58b9c1b3d82e3664e8df422463191fa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SensoryManager
-  listenPort: 5006
+  listenPort: 5007
   blackBox: {fileID: 1395359165}
   whiteNoiseSource: {fileID: 1880571443}
   droneAudioSource: {fileID: 377044088}

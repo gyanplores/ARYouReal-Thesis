@@ -12,7 +12,7 @@ using System.Text;
 public class SensoryManager : MonoBehaviour
 {
     [Header("UDP Settings")]
-    public int listenPort = 5006;
+    public int listenPort = 5007;
 
     [Header("Visual — Black Box")]
     [Tooltip("A quad/cube placed in front of the camera to block vision")]

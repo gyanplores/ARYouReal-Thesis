@@ -57,23 +57,27 @@ public class TrialReceiver : MonoBehaviour
     private int messageCount = 0;
 
     // Relative/offset movement tracking
-    private Vector3 realBaseline = Vector3.zero;      // first real position received (Crazyflie space)
-    private Vector3 unityStartPosition = Vector3.zero; // where the Unity drone is when first packet arrives
-    private bool baselineSet = false;                  // whether baseline has been captured yet
+    private Vector3 realBaseline = Vector3.zero;
+    private Vector3 unityStartPosition = Vector3.zero;
+    private bool baselineSet = false;
+
+    // Cache local IP — only compute once, not every frame
+    private string cachedLocalIP = "Unknown";
+    private bool uiDirty = false; // only update UI when new data arrives
 
     void Start()
     {
         if (droneTransform == null)
             droneTransform = transform;
 
-        // Record where the Unity drone starts in the scene
-        // (e.g. (0, 0, 2) — 2 meters in front of user)
-        // All real drone movement will be applied as a delta on top of this
         unityStartPosition = droneTransform.position;
+
+        // Cache IP once on startup — never call GetLocalIP() per frame
+        cachedLocalIP = GetLocalIP();
 
         StartUDP();
         Debug.Log($"[TrialReceiver] Listening on port {listenPort}");
-        Debug.Log($"[TrialReceiver] Device IP: {GetLocalIP()}");
+        Debug.Log($"[TrialReceiver] Device IP: {cachedLocalIP}");
         Debug.Log($"[TrialReceiver] Unity drone start position: {unityStartPosition}");
     }
 
@@ -108,17 +112,23 @@ public class TrialReceiver : MonoBehaviour
 
         // Apply affordance to SensoryManager once per new trial
         if (newAffordance && sensoryManager != null)
-        {
             sensoryManager.ApplyAffordanceString(affordance);
-        }
 
-        // Notify TCP client that a new trial has arrived (starts prompt countdown)
+        // Notify TCP client that a new trial has arrived
         if (newAffordance && tcpClient != null)
-        {
             tcpClient.OnTrialReceived();
+
+        // Only update UI when new data arrived — not every frame
+        if (newAffordance)
+        {
+            uiDirty = true;
         }
 
-        UpdateUI();
+        if (uiDirty)
+        {
+            UpdateUI();
+            uiDirty = false;
+        }
     }
 
     void UpdateUI()
@@ -137,10 +147,10 @@ public class TrialReceiver : MonoBehaviour
         }
 
         if (statusText != null)
-            statusText.text = $"UDP Listening on port {listenPort}\nDevice IP: {GetLocalIP()}\nMessages received: {count}\nAffordance: {affordance}";
+            statusText.text = $"UDP Listening on port {listenPort}\nDevice IP: {cachedLocalIP}\nMessages received: {count}\nAffordance: {affordance}";
 
         if (receivedText != null)
-            receivedText.text = $"Real drone:  ({real.x:F2}, {real.y:F2}, {real.z:F2})\nMirrored target: ({mirrored.x:F2}, {mirrored.y:F2}, {mirrored.z:F2})\n\nRaw: {raw}";
+            receivedText.text = $"Real drone:  ({real.x:F2}, {real.y:F2}, {real.z:F2})\nTarget: ({mirrored.x:F2}, {mirrored.y:F2}, {mirrored.z:F2})\n\nRaw: {raw}";
     }
 
     // ─── UDP LISTENER ─────────────────────────────────────────────

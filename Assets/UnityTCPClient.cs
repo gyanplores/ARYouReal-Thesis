@@ -39,7 +39,11 @@ public class UnityTCPClient : MonoBehaviour
 
     void Start()
     {
-        ConnectToPython();
+        // Connect in background thread — never block the main thread
+        // If Python isn't running, app still loads normally and retries
+        Thread connectThread = new Thread(ConnectToPython);
+        connectThread.IsBackground = true;
+        connectThread.Start();
     }
 
     void Update()
@@ -75,18 +79,33 @@ public class UnityTCPClient : MonoBehaviour
 
     void ConnectToPython()
     {
+        // Only try once on startup — if Python isn't running,
+        // log a warning and give up. Don't hammer retries during
+        // the critical app startup window on Quest.
         try
         {
-            tcpClient = new TcpClient();
-            tcpClient.Connect(pythonIP, tcpPort);
+            TcpClient client = new TcpClient();
+
+            // 3 second timeout — if Python isn't ready, move on
+            IAsyncResult result = client.BeginConnect(pythonIP, tcpPort, null, null);
+            bool success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(3));
+
+            if (!success)
+            {
+                client.Close();
+                Debug.LogWarning("[UnityTCPClient] Python not reachable — USER_PICK responses disabled. Start Python first next time.");
+                return;
+            }
+
+            client.EndConnect(result);
+            tcpClient = client;
             stream = tcpClient.GetStream();
             isConnected = true;
             Debug.Log($"[UnityTCPClient] Connected to Python at {pythonIP}:{tcpPort}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"[UnityTCPClient] Failed to connect to Python: {e.Message}");
-            Debug.LogError($"[UnityTCPClient] Make sure trial_sequence.py is running and waiting for TCP connection first.");
+            Debug.LogWarning($"[UnityTCPClient] Could not connect to Python: {e.Message}. USER_PICK responses disabled.");
         }
     }
 
