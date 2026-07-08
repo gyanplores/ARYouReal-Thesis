@@ -25,8 +25,11 @@ public class TrialReceiver : MonoBehaviour
     [Tooltip("Drag the SensoryManager component here to apply V/A/H toggles")]
     public SensoryManager sensoryManager;
 
-    [Tooltip("The drone GameObject to move (this script will move its own transform if left empty and attached directly to the drone)")]
+    [Tooltip("The drone GameObject to move")]
     public Transform droneTransform;
+
+    [Tooltip("Drag QuestionnaireUI here so it gets notified when a new trial arrives")]
+    public QuestionnaireUI questionnaireUI;
 
     [Header("Drone Mode (set by StartupMenu)")]
     [Tooltip("True = MIRROR (opposite X). False = MASK (same direction). Set automatically by StartupMenu.cs")]
@@ -48,65 +51,87 @@ public class TrialReceiver : MonoBehaviour
     private string lastAffordance = "-";
     private Vector3 latestRealPosition = Vector3.zero;
     private Vector3 mirroredTargetPosition = Vector3.zero;
-    private bool hasNewPositionData = false;
     private bool hasNewAffordance = false;
     private string lastRawMessage = "Waiting for data...";
     private int messageCount = 0;
 
     // Relative/offset movement tracking
-    private Vector3 realBaseline = Vector3.zero;      // first real position received (Crazyflie space)
-    private Vector3 unityStartPosition = Vector3.zero; // where the Unity drone is when first packet arrives
-    private bool baselineSet = false;                  // whether baseline has been captured yet
+    private Vector3 realBaseline = Vector3.zero;
+    private Vector3 unityStartPosition = Vector3.zero;
+    private bool baselineSet = false;
+
+    // Cache local IP — only compute once, not every frame
+    private string cachedLocalIP = "Unknown";
+    private bool uiDirty = false; // only update UI when new data arrives
 
     void Start()
     {
         if (droneTransform == null)
             droneTransform = transform;
 
-        // Record where the Unity drone starts in the scene
-        // (e.g. (0, 0, 2) — 2 meters in front of user)
-        // All real drone movement will be applied as a delta on top of this
         unityStartPosition = droneTransform.position;
+
+        // Initialize target to drone's actual placed position —
+        // prevents drone from sliding toward (0,0,0) before first packet arrives
+        mirroredTargetPosition = droneTransform.position;
+
+        // Cache IP once on startup — never call GetLocalIP() per frame
+        cachedLocalIP = GetLocalIP();
 
         StartUDP();
         Debug.Log($"[TrialReceiver] Listening on port {listenPort}");
-        Debug.Log($"[TrialReceiver] Device IP: {GetLocalIP()}");
+        Debug.Log($"[TrialReceiver] Device IP: {cachedLocalIP}");
         Debug.Log($"[TrialReceiver] Unity drone start position: {unityStartPosition}");
     }
 
     void Update()
     {
         Vector3 target;
-        bool newPosition;
         bool newAffordance;
         string affordance;
 
         lock (dataLock)
         {
             target = mirroredTargetPosition;
-            newPosition = hasNewPositionData;
             newAffordance = hasNewAffordance;
             affordance = lastAffordance;
-            hasNewAffordance = false; // consume the flag, apply once
+            hasNewAffordance = false; // consume affordance flag once
         }
 
-        // Move drone smoothly toward the mirrored target position
-        if (newPosition)
+        // Always move toward the current target every frame until we arrive
+        // (don't gate on newPosition — that flag was only true for one frame)
+        if (droneTransform != null)
         {
-            droneTransform.position = Vector3.MoveTowards(
-                droneTransform.position,
-                target,
-                moveSpeed * Time.deltaTime
-            );
+            float distanceToTarget = Vector3.Distance(droneTransform.position, target);
+            if (distanceToTarget > 0.001f)
+            {
+                droneTransform.position = Vector3.MoveTowards(
+                    droneTransform.position,
+                    target,
+                    moveSpeed * Time.deltaTime
+                );
+            }
         }
 
         // Apply affordance to SensoryManager once per new trial
         if (newAffordance && sensoryManager != null)
-        {
             sensoryManager.ApplyAffordanceString(affordance);
+
+        // Notify QuestionnaireUI that a new trial has arrived (starts 5s countdown)
+        if (newAffordance && questionnaireUI != null)
+            questionnaireUI.OnTrialStarted();
+
+        // Only update UI when new data arrived — not every frame
+        if (newAffordance)
+        {
+            uiDirty = true;
         }
 
-        UpdateUI();
+        if (uiDirty)
+        {
+            UpdateUI();
+            uiDirty = false;
+        }
     }
 
     void UpdateUI()
@@ -125,10 +150,10 @@ public class TrialReceiver : MonoBehaviour
         }
 
         if (statusText != null)
-            statusText.text = $"UDP Listening on port {listenPort}\nDevice IP: {GetLocalIP()}\nMessages received: {count}\nAffordance: {affordance}";
+            statusText.text = $"UDP Listening on port {listenPort}\nDevice IP: {cachedLocalIP}\nMessages received: {count}\nAffordance: {affordance}";
 
         if (receivedText != null)
-            receivedText.text = $"Real drone:  ({real.x:F2}, {real.y:F2}, {real.z:F2})\nMirrored target: ({mirrored.x:F2}, {mirrored.y:F2}, {mirrored.z:F2})\n\nRaw: {raw}";
+            receivedText.text = $"Real drone:  ({real.x:F2}, {real.y:F2}, {real.z:F2})\nTarget: ({mirrored.x:F2}, {mirrored.y:F2}, {mirrored.z:F2})\n\nRaw: {raw}";
     }
 
     // ─── UDP LISTENER ─────────────────────────────────────────────
@@ -139,40 +164,50 @@ public class TrialReceiver : MonoBehaviour
         {
             udpClient = new UdpClient(listenPort);
             isRunning = true;
-            udpThread = new Thread(ReceiveLoop);
+            udpThread = new Thread(() =>
+            {
+                Debug.Log("[TrialReceiver] UDP thread started on port " + listenPort);
+                var ep = new IPEndPoint(IPAddress.Any, 0);
+                while (isRunning)
+                {
+                    try
+                    {
+                        byte[] data = udpClient.Receive(ref ep);
+                        string message = Encoding.UTF8.GetString(data);
+                        Debug.Log("[TrialReceiver] RAW received: " + message);
+                        ParsePacket(message);
+                    }
+                    catch (Exception e)
+                    {
+                        if (isRunning)
+                            Debug.LogWarning("[TrialReceiver] Receive error: " + e.Message);
+                        break;
+                    }
+                }
+            });
             udpThread.IsBackground = true;
             udpThread.Start();
+            Debug.Log("[TrialReceiver] UDP listening on port " + listenPort);
+            if (statusText != null)
+                statusText.text = $"UDP Listening on port {listenPort}\nDevice IP: {cachedLocalIP}\nWaiting for trial data...";
         }
         catch (Exception e)
         {
-            Debug.LogError($"[TrialReceiver] Failed to start UDP: {e.Message}");
-        }
-    }
-
-    void ReceiveLoop()
-    {
-        IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
-        while (isRunning)
-        {
-            try
-            {
-                byte[] data = udpClient.Receive(ref remoteEP);
-                string message = Encoding.UTF8.GetString(data);
-                ParsePacket(message);
-            }
-            catch (Exception e)
-            {
-                if (isRunning)
-                    Debug.LogWarning($"[TrialReceiver] Receive error: {e.Message}");
-            }
+            Debug.LogError("[TrialReceiver] Failed to start UDP: " + e.Message);
+            if (statusText != null)
+                statusText.text = "UDP FAILED: " + e.Message;
         }
     }
 
     void ParsePacket(string json)
     {
+        // Log raw message first before any parsing
+        Debug.Log($"[TrialReceiver] ParsePacket received: '{json}'");
+
         try
         {
             string type = ExtractStringField(json, "type");
+            Debug.Log($"[TrialReceiver] Extracted type: '{type}'");
 
             if (type == "TRIAL")
             {
@@ -204,10 +239,12 @@ public class TrialReceiver : MonoBehaviour
 
                 if (isFirstPacket)
                 {
+                    // Use the cached unityStartPosition set in Start() on main thread
+                    // NEVER access droneTransform from background thread — Unity components
+                    // are not thread safe and will crash silently on Android
                     lock (dataLock)
                     {
                         realBaseline = new Vector3(unityX, unityY, unityZ);
-                        unityStartPosition = droneTransform.position;
                         baselineSet = true;
                     }
                     Debug.Log($"[TrialReceiver] Baseline set — real: ({unityX:F2},{unityY:F2},{unityZ:F2}) unity start: {unityStartPosition}");
@@ -240,7 +277,6 @@ public class TrialReceiver : MonoBehaviour
                 {
                     latestRealPosition = real;
                     mirroredTargetPosition = mirrored;
-                    hasNewPositionData = true;
                     lastAffordance = affordance;
                     hasNewAffordance = true;
                     lastRawMessage = json;
