@@ -21,21 +21,33 @@ public class QuestionnaireUI : MonoBehaviour
     public TCPClient tcpClient;
 
     [Header("UI Elements")]
-    public GameObject questionnairePanel;   // root panel to show/hide
-    public TextMeshProUGUI questionText;    // "Which drone is real?"
-    public Slider answerSlider;             // slider 1-7
-    public TextMeshProUGUI sliderValueText; // shows current slider value e.g. "4"
-    public TextMeshProUGUI leftLabel;       // "Left" label on left end
-    public TextMeshProUGUI rightLabel;      // "Right" label on right end
-    public Button confirmButton;            // confirm button
+    public GameObject questionnairePanel;
+    public TextMeshProUGUI questionText;
+    public Slider answerSlider;
+    public TextMeshProUGUI sliderValueText;
+    public TextMeshProUGUI leftLabel;
+    public TextMeshProUGUI rightLabel;
+    public Button confirmButton;
+
+    [Header("Waiting Screen")]
+    public GameObject waitingPanel;  // Panel with "Please wait..." text
+
+    [Header("Debug — assign any visible TMP text to see status in headset")]
+    public TextMeshProUGUI debugText;
 
     [Header("Settings")]
     public string question = "Which drone is real?";
     public float delayAfterTrialSeconds = 5f;
 
-    // Internal
     private float timer = 0f;
     private bool timerRunning = false;
+
+    void SetDebug(string msg)
+    {
+        Debug.Log("[QuestionnaireUI] " + msg);
+        if (debugText != null)
+            debugText.text = "Q: " + msg;
+    }
 
     void Start()
     {
@@ -68,9 +80,13 @@ public class QuestionnaireUI : MonoBehaviour
         if (confirmButton != null)
             confirmButton.onClick.AddListener(OnConfirm);
 
-        // Now hide it — hidden by default until a trial starts
         HideQuestionnaire();
-        Debug.Log("[QuestionnaireUI] Initialized and hidden");
+
+        // Hide waiting panel by default
+        if (waitingPanel != null)
+            waitingPanel.SetActive(false);
+
+        SetDebug("Initialized OK");
     }
 
     void Update()
@@ -78,7 +94,7 @@ public class QuestionnaireUI : MonoBehaviour
         if (!timerRunning) return;
 
         timer -= Time.deltaTime;
-        Debug.Log($"[QuestionnaireUI] Timer: {timer:F1}s remaining");
+        SetDebug($"Timer: {timer:F1}s");
         if (timer <= 0f)
         {
             timerRunning = false;
@@ -86,34 +102,17 @@ public class QuestionnaireUI : MonoBehaviour
         }
     }
 
-    // ─── PUBLIC API — called by TrialReceiver ─────────────────────
-
-    /// <summary>
-    /// Call when a new trial packet arrives.
-    /// Starts the countdown before showing the questionnaire.
-    /// </summary>
-    public void OnTrialStarted()
-    {
-        Debug.Log("[QuestionnaireUI] OnTrialStarted() called");
-        HideQuestionnaire();
-        timer = delayAfterTrialSeconds;
-        timerRunning = true;
-        Debug.Log($"[QuestionnaireUI] Timer started — will show in {delayAfterTrialSeconds}s");
-    }
-
-    // ─── INTERNAL ─────────────────────────────────────────────────
-
     void ShowQuestionnaire()
     {
-        Debug.Log("[QuestionnaireUI] ShowQuestionnaire() called");
+        SetDebug("Showing panel...");
         if (questionnairePanel != null)
         {
             questionnairePanel.SetActive(true);
-            Debug.Log("[QuestionnaireUI] Panel set active");
+            SetDebug("Panel shown!");
         }
         else
         {
-            Debug.LogError("[QuestionnaireUI] questionnairePanel is NULL — not assigned!");
+            SetDebug("ERROR: panel is null!");
         }
 
         if (answerSlider != null)
@@ -125,11 +124,8 @@ public class QuestionnaireUI : MonoBehaviour
     void HideQuestionnaire()
     {
         timerRunning = false;
-
         if (questionnairePanel != null)
             questionnairePanel.SetActive(false);
-
-        Debug.Log("[QuestionnaireUI] Questionnaire hidden");
     }
 
     void OnSliderChanged(float value)
@@ -146,13 +142,27 @@ public class QuestionnaireUI : MonoBehaviour
     void OnConfirm()
     {
         int answer = (int)answerSlider.value;
-
-        // Send answer to Python via TCP
         if (tcpClient != null)
             tcpClient.SendAnswer(answer);
-
         HideQuestionnaire();
 
-        Debug.Log($"[QuestionnaireUI] Confirmed answer: {answer}");
+        // Show waiting screen until next trial arrives
+        if (waitingPanel != null)
+            waitingPanel.SetActive(true);
+
+        SetDebug($"Confirmed: {answer} — waiting for next trial");
+    }
+
+    public void OnTrialStarted()
+    {
+        SetDebug("OnTrialStarted called");
+
+        // Hide waiting screen when new trial arrives
+        if (waitingPanel != null)
+            waitingPanel.SetActive(false);
+
+        HideQuestionnaire();
+        timer = delayAfterTrialSeconds;
+        timerRunning = true;
     }
 }

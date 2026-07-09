@@ -273,6 +273,12 @@ public class TrialReceiver : MonoBehaviour
                 // ── Final target = Unity start position + mirrored delta ──
                 Vector3 mirrored = unityStart + mirroredDelta;
 
+                // ── Safety clamp in Unity space ───────────────────────────
+                // Prevent virtual drone from going behind the user (Unity Z < 0)
+                // or below the floor (Unity Y < 0)
+                mirrored.y = Mathf.Max(0f, mirrored.y);  // never below floor
+                mirrored.z = Mathf.Max(0f, mirrored.z);  // never behind user
+
                 lock (dataLock)
                 {
                     latestRealPosition = real;

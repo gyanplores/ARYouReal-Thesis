@@ -72,14 +72,15 @@ extern void MirrorDroneController_OnDestroy_m09460694A35705C0B635649CF01AC931140
 extern void MirrorDroneController__ctor_mEAABE9D1E5183A840CD759EE47054FADFE61DD8B (void);
 extern void PropellerSpin_Update_mDF10A7C8C4FD85092EAAD27F109DDD6B4CB34A76 (void);
 extern void PropellerSpin__ctor_m812DA1453CAC204085BC37457BA0EA6D1E4C8D6E (void);
+extern void QuestionnaireUI_SetDebug_m3C919C23F0AABB62EAA0D79A8FB1F5EC0D229611 (void);
 extern void QuestionnaireUI_Start_mDD63E162FE9B3E865D4606944F172EA38E861E8E (void);
 extern void QuestionnaireUI_Update_m06784F5C19D645950FF9B9D25E04CE07A812CFBB (void);
-extern void QuestionnaireUI_OnTrialStarted_mFC791EBB11FD78CF840632DE231B1C7AC01BEE9E (void);
 extern void QuestionnaireUI_ShowQuestionnaire_mDBCC38D4E1851D034C635B20D35D5A590DFCE4A0 (void);
 extern void QuestionnaireUI_HideQuestionnaire_m766A97813D4A57719674AA0C81597937EC8DE937 (void);
 extern void QuestionnaireUI_OnSliderChanged_m7F0C02A312DECAAF83E713CEC12BFD280A0877E2 (void);
 extern void QuestionnaireUI_UpdateSliderText_mCF6E26506443E23D305F37D3CC458C625500630A (void);
 extern void QuestionnaireUI_OnConfirm_m0EA63C71C1F67586B3653FD7F300C5665B457A06 (void);
+extern void QuestionnaireUI_OnTrialStarted_mFC791EBB11FD78CF840632DE231B1C7AC01BEE9E (void);
 extern void QuestionnaireUI__ctor_m1DA5C8E7F5214C810D58FC5A55001825B6C7BD5C (void);
 extern void SensoryManager_Start_mF2350D030A8A6393D5B10757BACF35938B31A73B (void);
 extern void SensoryManager_Update_mD77C6F2178ED19B2F48C10D25023F051A7587FB7 (void);
@@ -407,7 +408,7 @@ extern void U3CWarpTextU3Ed__8_MoveNext_mCE7A826C5E4854C2C509C77BD18F5A9B6D691B0
 extern void U3CWarpTextU3Ed__8_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_mD80368E9B7E259311C03E406B75161ED6F7618E3 (void);
 extern void U3CWarpTextU3Ed__8_System_Collections_IEnumerator_Reset_m07746C332D2D8CE5DEA59873C26F2FAD4B369B42 (void);
 extern void U3CWarpTextU3Ed__8_System_Collections_IEnumerator_get_Current_m71D7F84D9DEF63BEC6B44866515DDCF35B142A19 (void);
-static Il2CppMethodPointer s_methodPointers[400] = 
+static Il2CppMethodPointer s_methodPointers[401] = 
 {
 	DroneController_Start_m845711AE6688093E343C5E9D5E0458A0BC3FDD0F,
 	DroneController_Update_m2A32A202931F956DDC0E1AC00385B11071289B5E,
@@ -474,14 +475,15 @@ static Il2CppMethodPointer s_methodPointers[400] =
 	MirrorDroneController__ctor_mEAABE9D1E5183A840CD759EE47054FADFE61DD8B,
 	PropellerSpin_Update_mDF10A7C8C4FD85092EAAD27F109DDD6B4CB34A76,
 	PropellerSpin__ctor_m812DA1453CAC204085BC37457BA0EA6D1E4C8D6E,
+	QuestionnaireUI_SetDebug_m3C919C23F0AABB62EAA0D79A8FB1F5EC0D229611,
 	QuestionnaireUI_Start_mDD63E162FE9B3E865D4606944F172EA38E861E8E,
 	QuestionnaireUI_Update_m06784F5C19D645950FF9B9D25E04CE07A812CFBB,
-	QuestionnaireUI_OnTrialStarted_mFC791EBB11FD78CF840632DE231B1C7AC01BEE9E,
 	QuestionnaireUI_ShowQuestionnaire_mDBCC38D4E1851D034C635B20D35D5A590DFCE4A0,
 	QuestionnaireUI_HideQuestionnaire_m766A97813D4A57719674AA0C81597937EC8DE937,
 	QuestionnaireUI_OnSliderChanged_m7F0C02A312DECAAF83E713CEC12BFD280A0877E2,
 	QuestionnaireUI_UpdateSliderText_mCF6E26506443E23D305F37D3CC458C625500630A,
 	QuestionnaireUI_OnConfirm_m0EA63C71C1F67586B3653FD7F300C5665B457A06,
+	QuestionnaireUI_OnTrialStarted_mFC791EBB11FD78CF840632DE231B1C7AC01BEE9E,
 	QuestionnaireUI__ctor_m1DA5C8E7F5214C810D58FC5A55001825B6C7BD5C,
 	SensoryManager_Start_mF2350D030A8A6393D5B10757BACF35938B31A73B,
 	SensoryManager_Update_mD77C6F2178ED19B2F48C10D25023F051A7587FB7,
@@ -810,7 +812,7 @@ static Il2CppMethodPointer s_methodPointers[400] =
 	U3CWarpTextU3Ed__8_System_Collections_IEnumerator_Reset_m07746C332D2D8CE5DEA59873C26F2FAD4B369B42,
 	U3CWarpTextU3Ed__8_System_Collections_IEnumerator_get_Current_m71D7F84D9DEF63BEC6B44866515DDCF35B142A19,
 };
-static const int32_t s_InvokerIndices[400] = 
+static const int32_t s_InvokerIndices[401] = 
 {
 	21448,
 	21448,
@@ -877,12 +879,13 @@ static const int32_t s_InvokerIndices[400] =
 	21448,
 	21448,
 	21448,
-	21448,
+	16038,
 	21448,
 	21448,
 	21448,
 	21448,
 	16142,
+	21448,
 	21448,
 	21448,
 	21448,
@@ -1217,7 +1220,7 @@ IL2CPP_EXTERN_C const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule;
 const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule = 
 {
 	"Assembly-CSharp.dll",
-	400,
+	401,
 	s_methodPointers,
 	0,
 	NULL,
