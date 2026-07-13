@@ -37,6 +37,7 @@ public class TrialReceiver : MonoBehaviour
     [Header("Drone Mode (set by StartupMenu)")]
     [Tooltip("True = MIRROR (opposite X). False = MASK (same direction). Set automatically by StartupMenu.cs")]
     public bool isMirrorMode = true;
+    private volatile bool _isMirrorModeInternal = true;
 
     [Header("Movement Smoothing")]
     public float moveSpeed = 3.0f;
@@ -48,7 +49,7 @@ public class TrialReceiver : MonoBehaviour
     // Internal
     private UdpClient udpClient;
     private Thread udpThread;
-    private bool isRunning = false;
+    private volatile bool isRunning = false;
     private readonly object dataLock = new object();
 
     private string lastAffordance = "-";
@@ -72,13 +73,14 @@ public class TrialReceiver : MonoBehaviour
         if (droneTransform == null)
             droneTransform = transform;
 
-        unityStartPosition = droneTransform.position;
+        // Store these under lock so background thread can safely read them
+        lock (dataLock)
+        {
+            unityStartPosition = droneTransform.position;
+            mirroredTargetPosition = droneTransform.position;
+            _isMirrorModeInternal = isMirrorMode;
+        }
 
-        // Initialize target to drone's actual placed position —
-        // prevents drone from sliding toward (0,0,0) before first packet arrives
-        mirroredTargetPosition = droneTransform.position;
-
-        // Cache IP once on startup — never call GetLocalIP() per frame
         cachedLocalIP = GetLocalIP();
 
         StartUDP();
@@ -188,27 +190,25 @@ public class TrialReceiver : MonoBehaviour
                     {
                         if (isRunning)
                             Debug.LogWarning("[TrialReceiver] Receive error: " + e.Message);
-                        break;
+                        if (!isRunning) break;
                     }
                 }
             });
             udpThread.IsBackground = true;
             udpThread.Start();
             Debug.Log("[TrialReceiver] UDP listening on port " + listenPort);
-            if (statusText != null)
-                statusText.text = $"UDP Listening on port {listenPort}\nDevice IP: {cachedLocalIP}\nWaiting for trial data...";
+            // NOTE: do NOT touch statusText here — this runs on main thread
+            // but statusText update is handled in Update() via uiDirty flag
+            uiDirty = true;
         }
         catch (Exception e)
         {
             Debug.LogError("[TrialReceiver] Failed to start UDP: " + e.Message);
-            if (statusText != null)
-                statusText.text = "UDP FAILED: " + e.Message;
         }
     }
 
     void ParsePacket(string json)
     {
-        // Log raw message first before any parsing
         Debug.Log($"[TrialReceiver] ParsePacket received: '{json}'");
 
         try
@@ -218,13 +218,11 @@ public class TrialReceiver : MonoBehaviour
 
             if (type == "HOVER")
             {
-                // Sent by Python right after takeoff, before any trials.
-                // Sets the baseline so the first TRIAL packet produces
-                // a real non-zero delta and moves the drone immediately.
                 float x = ExtractFloatField(json, "x");
                 float y = ExtractFloatField(json, "y");
                 float z = ExtractFloatField(json, "z");
 
+                // Axis swap: Crazyflie Y→Unity Z, Crazyflie Z→Unity Y
                 float unityX = x;
                 float unityY = z;
                 float unityZ = y;
@@ -245,77 +243,59 @@ public class TrialReceiver : MonoBehaviour
 
                 Vector3 real = new Vector3(x, y, z);
 
-                // ── Mode now comes from Unity's own StartupMenu choice ───
-                // (Python no longer sends "mode" — removed from the packet)
-                bool isMirror = isMirrorMode;
-
-                // ── Axis conversion: Crazyflie → Unity ──────────────────
-                // Crazyflie X → Unity X (horizontal, same)
-                // Crazyflie Y → Unity Z (horizontal depth)
-                // Crazyflie Z → Unity Y (vertical height) ← KEY SWAP
+                // Axis swap: Crazyflie Y→Unity Z, Crazyflie Z→Unity Y
                 float unityX = x;
-                float unityY = z; // Crazyflie Z (altitude) → Unity Y (up)
-                float unityZ = y; // Crazyflie Y (depth)    → Unity Z (depth)
+                float unityY = z;
+                float unityZ = y;
 
-                // ── Baseline handling ─────────────────────────────────────
-                // The baseline is set from a HOVER packet sent by Python
-                // BEFORE the first trial. This ensures every TRIAL packet
-                // produces a real non-zero delta from the hover position.
-                // If no HOVER packet was received yet, use current position
-                // as baseline but DON'T move — wait for next packet.
-                bool isFirstPacket = false;
-                lock (dataLock) { isFirstPacket = !baselineSet; }
+                // Read all shared state under lock — thread safe
+                bool isFirstPacket;
+                bool mirrorMode;
+                Vector3 baseline;
+                Vector3 unityStart;
+
+                lock (dataLock)
+                {
+                    isFirstPacket = !baselineSet;
+                    mirrorMode = _isMirrorModeInternal;
+                    baseline = realBaseline;
+                    unityStart = unityStartPosition;
+                }
 
                 if (isFirstPacket)
                 {
+                    // No HOVER received yet — set baseline from this packet
+                    // Apply affordance but skip movement this round
                     lock (dataLock)
                     {
                         realBaseline = new Vector3(unityX, unityY, unityZ);
                         baselineSet = true;
-                    }
-                    Debug.Log($"[TrialReceiver] No HOVER baseline set — using first TRIAL as baseline. Drone stays at start. Send HOVER packet before trials.");
-                    // Still update affordance
-                    lock (dataLock)
-                    {
                         latestRealPosition = real;
                         lastAffordance = affordance;
                         hasNewAffordance = true;
                         lastRawMessage = json;
                         messageCount++;
                     }
-                    return; // skip movement this packet
+                    Debug.Log("[TrialReceiver] First packet — baseline set, skipping movement");
+                    return;
                 }
 
-                // ── Compute relative offset from baseline ─────────────────
-                // This runs on EVERY packet including the first one,
-                // so the drone moves immediately on the first trial packet.
-                Vector3 baseline;
-                Vector3 unityStart;
-                lock (dataLock)
-                {
-                    baseline = realBaseline;
-                    unityStart = unityStartPosition;
-                }
-
+                // Compute delta from baseline
                 Vector3 delta = new Vector3(unityX, unityY, unityZ) - baseline;
 
-                // ── Apply mask or mirror on delta ────────────────────────
-                // MASK:   delta applies as-is (same direction)
-                // MIRROR: flip X only, Y and Z stay the same
+                // Apply mirror or mask
                 Vector3 mirroredDelta = new Vector3(
-                    isMirror ? -delta.x : delta.x,   // flip X for mirror, keep for mask
-                    delta.y,                           // Y always same (vertical height)
-                    delta.z                            // Z always same (horizontal depth)
+                    mirrorMode ? -delta.x : delta.x,
+                    delta.y,
+                    delta.z
                 );
 
-                // ── Final target = Unity start position + mirrored delta ──
+                // Final target position
                 Vector3 mirrored = unityStart + mirroredDelta;
 
-                // ── Safety clamp in Unity space ───────────────────────────
-                // Prevent virtual drone from going behind the user (Unity Z < 0)
-                // or below the floor (Unity Y < 0)
-                mirrored.y = Mathf.Max(0f, mirrored.y);  // never below floor
-                mirrored.z = Mathf.Max(0f, mirrored.z);  // never behind user
+                // Safety clamp
+                mirrored.y = Mathf.Max(0f, mirrored.y);
+                mirrored.z = Mathf.Max(0f, mirrored.z);
 
                 lock (dataLock)
                 {
@@ -327,7 +307,7 @@ public class TrialReceiver : MonoBehaviour
                     messageCount++;
                 }
 
-                Debug.Log($"[TrialReceiver] TRIAL '{affordance}' mode={(isMirror ? "MIRROR" : "MASK")} real=({x:F2},{y:F2},{z:F2}) → unity=({(unityStart + mirroredDelta).x:F2},{(unityStart + mirroredDelta).y:F2},{(unityStart + mirroredDelta).z:F2})");
+                Debug.Log($"[TrialReceiver] TRIAL '{affordance}' mode={(mirrorMode ? "MIRROR" : "MASK")} → unity=({mirrored.x:F2},{mirrored.y:F2},{mirrored.z:F2})");
             }
             else
             {
@@ -416,6 +396,7 @@ public class TrialReceiver : MonoBehaviour
     public void SetMirrorMode(bool mirror)
     {
         isMirrorMode = mirror;
+        lock (dataLock) { _isMirrorModeInternal = mirror; }
         Debug.Log($"[TrialReceiver] Mode set to: {(mirror ? "MIRROR" : "MASK")}");
     }
 }

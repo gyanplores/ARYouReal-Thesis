@@ -1184,6 +1184,7 @@ extern void LingerOption__ctor_m0BECD7DEA12AC52917D065B27818677F4DE7CEBC (void);
 extern void LingerOption_set_Enabled_mEDF2FED046EA58F9C23BEF3BF1184C3A890419DB (void);
 extern void LingerOption_set_LingerTime_mDC6B06F96C04C5A69E19912EBB37DC5BDE5A6DFB (void);
 extern void SendPacketsElement__ctor_m274DF7526AE9E78F32C1247F7DE1390FE910C9CC (void);
+extern void TcpClient__ctor_m709FAC4D5B9DDB279F9B97D90D3164B92E1F2C87 (void);
 extern void TcpClient__ctor_m94DC92A387808F584010C708C071197B52B48B55 (void);
 extern void TcpClient__ctor_m8FDA6AE13D95E071F7952F7DB34C729ABCF7AEE8 (void);
 extern void TcpClient_get_Client_m38B7DCD73EB42C6BBE6340B5E4C0A8432C1140C0 (void);
@@ -1288,7 +1289,7 @@ extern void WebRequestModuleElementCollection__ctor_m62C156D78336B2E37EA6F10D477
 extern void DiagnosticsConfigurationHandler__ctor_mDFB0000E6218840F66D21BB6C9BF3F647CCBC5A3 (void);
 extern void DiagnosticsConfigurationHandler_Create_mF21B1CC68B87DE078690B2B493FCDC5F728CBAAB (void);
 extern void ThrowStub_ThrowNotSupportedException_m14168B43936EF78B7B8AC08BD815254DAA1D9FA2 (void);
-static Il2CppMethodPointer s_methodPointers[1449] = 
+static Il2CppMethodPointer s_methodPointers[1450] = 
 {
 	OidLookup_ToOid_m084AE2948BA1D784EAC148B97B6D5EF94F0D58B0,
 	OidLookup_ShouldUseCache_mAF605BA00A22EA400B99D24286837F6904C84ED0,
@@ -2635,6 +2636,7 @@ static Il2CppMethodPointer s_methodPointers[1449] =
 	LingerOption_set_Enabled_mEDF2FED046EA58F9C23BEF3BF1184C3A890419DB,
 	LingerOption_set_LingerTime_mDC6B06F96C04C5A69E19912EBB37DC5BDE5A6DFB,
 	SendPacketsElement__ctor_m274DF7526AE9E78F32C1247F7DE1390FE910C9CC,
+	TcpClient__ctor_m709FAC4D5B9DDB279F9B97D90D3164B92E1F2C87,
 	TcpClient__ctor_m94DC92A387808F584010C708C071197B52B48B55,
 	TcpClient__ctor_m8FDA6AE13D95E071F7952F7DB34C729ABCF7AEE8,
 	TcpClient_get_Client_m38B7DCD73EB42C6BBE6340B5E4C0A8432C1140C0,
@@ -2765,7 +2767,7 @@ static Il2CppTokenAdjustorThunkPair s_adjustorThunks[11] =
 	{ 0x0600053C, IPPacketInformation_Equals_mF2E8CBE60B68F20394E51286666D25B54F8EC2B7_AdjustorThunk },
 	{ 0x0600053D, IPPacketInformation_GetHashCode_mF1429DDA203ED791CB45EDB87A9006E58BB12A81_AdjustorThunk },
 };
-static const int32_t s_InvokerIndices[1449] = 
+static const int32_t s_InvokerIndices[1450] = 
 {
 	26267,
 	33192,
@@ -4112,6 +4114,7 @@ static const int32_t s_InvokerIndices[1449] =
 	15803,
 	15949,
 	21448,
+	21448,
 	15949,
 	16038,
 	21220,
@@ -4620,7 +4623,7 @@ IL2CPP_EXTERN_C const Il2CppCodeGenModule g_System_CodeGenModule;
 const Il2CppCodeGenModule g_System_CodeGenModule = 
 {
 	"System.dll",
-	1449,
+	1450,
 	s_methodPointers,
 	11,
 	s_adjustorThunks,
