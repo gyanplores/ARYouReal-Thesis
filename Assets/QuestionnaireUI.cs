@@ -1,44 +1,58 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 /// <summary>
-/// Attach to a GameObject inside your ReticleCanvas.
-/// Controls the questionnaire panel that appears 5 seconds after each trial.
+/// Attach to ReticleCanvas (always-active parent).
+/// Shows 3 questions each with a slider 1-7.
+/// On confirm: sends all 3 answers to Python via TCPClient.
 ///
-/// Shows:
-///   "Which drone is real?"
-///   Slider 1-7 with current value displayed
-///   Confirm button
+/// Python receives: {"cmd":"ANSWER","q1":3,"q2":5,"q3":2}
 ///
-/// On confirm: sends the answer to Python via TCPClient, hides itself.
-/// Call ShowQuestionnaire() to show, HideQuestionnaire() to hide.
-/// TrialReceiver calls ShowQuestionnaire() after the 5s delay.
+/// Unity Setup:
+/// - Assign 3 QuestionRow objects (each has a label TMP + Slider + ValueText TMP)
+/// - Assign confirmButton and questionnairePanel
 /// </summary>
 public class QuestionnaireUI : MonoBehaviour
 {
     [Header("References")]
     public TCPClient tcpClient;
+    public HeadGazeReticle headGazeReticle; // to read gaze time on confirm
 
-    [Header("UI Elements")]
+    [Header("Panel")]
     public GameObject questionnairePanel;
-    public TextMeshProUGUI questionText;
-    public Slider answerSlider;
-    public TextMeshProUGUI sliderValueText;
-    public TextMeshProUGUI leftLabel;
-    public TextMeshProUGUI rightLabel;
+    public GameObject waitingPanel;
+
+    [Header("Question 1 — Which drone is real?")]
+    public TextMeshProUGUI q1Label;
+    public Slider q1Slider;
+    public TextMeshProUGUI q1ValueText;
+
+    [Header("Question 2 — Which drone is closer?")]
+    public TextMeshProUGUI q2Label;
+    public Slider q2Slider;
+    public TextMeshProUGUI q2ValueText;
+
+    [Header("Question 3 — Which drone is more safe?")]
+    public TextMeshProUGUI q3Label;
+    public Slider q3Slider;
+    public TextMeshProUGUI q3ValueText;
+
+    [Header("Shared Labels (optional)")]
+    public TextMeshProUGUI leftLabel;    // "Left (1)" shown once at bottom
+    public TextMeshProUGUI rightLabel;   // "Right (7)" shown once at bottom
+
+    [Header("Confirm Button")]
     public Button confirmButton;
 
-    [Header("Waiting Screen")]
-    public GameObject waitingPanel;  // Panel with "Please wait..." text
-
-    [Header("Debug — assign any visible TMP text to see status in headset")]
-    public TextMeshProUGUI debugText;
-
-    [Header("Settings")]
-    public string question = "Which drone is real?";
+    [Header("Timing")]
     public float delayAfterTrialSeconds = 5f;
 
+    [Header("Debug")]
+    public TextMeshProUGUI debugText;
+
+    // Internal
     private float timer = 0f;
     private bool timerRunning = false;
 
@@ -51,42 +65,53 @@ public class QuestionnaireUI : MonoBehaviour
 
     void Start()
     {
-        // Force panel active first so this Start() actually runs
-        // (if panel is inactive, Start() never gets called)
+        // Force panel active so Start() runs, then hide it
         if (questionnairePanel != null)
             questionnairePanel.SetActive(true);
 
-        // Setup slider
-        if (answerSlider != null)
-        {
-            answerSlider.minValue = 1;
-            answerSlider.maxValue = 7;
-            answerSlider.wholeNumbers = true;
-            answerSlider.value = 4;
-            answerSlider.onValueChanged.AddListener(OnSliderChanged);
-        }
+        // Setup Q1
+        SetupSlider(q1Slider, q1ValueText);
+        if (q1Label != null) q1Label.text = "Which drone is real?";
 
-        if (questionText != null)
-            questionText.text = question;
+        // Setup Q2
+        SetupSlider(q2Slider, q2ValueText);
+        if (q2Label != null) q2Label.text = "Which drone is closer?";
 
-        if (leftLabel != null)
-            leftLabel.text = "Left\n(1)";
+        // Setup Q3
+        SetupSlider(q3Slider, q3ValueText);
+        if (q3Label != null) q3Label.text = "Which drone is more safe?";
 
-        if (rightLabel != null)
-            rightLabel.text = "Right\n(7)";
+        // Shared labels
+        if (leftLabel != null) leftLabel.text = "Left (1)";
+        if (rightLabel != null) rightLabel.text = "Right (7)";
 
-        UpdateSliderText();
-
+        // Confirm button
         if (confirmButton != null)
             confirmButton.onClick.AddListener(OnConfirm);
 
+        // Hide everything by default
         HideQuestionnaire();
-
-        // Hide waiting panel by default
         if (waitingPanel != null)
             waitingPanel.SetActive(false);
 
         SetDebug("Initialized OK");
+    }
+
+    void SetupSlider(Slider slider, TextMeshProUGUI valueText)
+    {
+        if (slider == null) return;
+        slider.minValue = 1;
+        slider.maxValue = 7;
+        slider.wholeNumbers = true;
+        slider.value = 4;
+        slider.onValueChanged.AddListener(_ => UpdateValueText(slider, valueText));
+        UpdateValueText(slider, valueText);
+    }
+
+    void UpdateValueText(Slider slider, TextMeshProUGUI valueText)
+    {
+        if (valueText != null && slider != null)
+            valueText.text = ((int)slider.value).ToString();
     }
 
     void Update()
@@ -102,23 +127,30 @@ public class QuestionnaireUI : MonoBehaviour
         }
     }
 
+    // ─── PUBLIC API ───────────────────────────────────────────────
+
+    public void OnTrialStarted()
+    {
+        SetDebug("OnTrialStarted called");
+        if (waitingPanel != null) waitingPanel.SetActive(false);
+        HideQuestionnaire();
+        timer = delayAfterTrialSeconds;
+        timerRunning = true;
+    }
+
+    // ─── INTERNAL ─────────────────────────────────────────────────
+
     void ShowQuestionnaire()
     {
-        SetDebug("Showing panel...");
+        // Reset all sliders to middle
+        if (q1Slider != null) q1Slider.value = 4;
+        if (q2Slider != null) q2Slider.value = 4;
+        if (q3Slider != null) q3Slider.value = 4;
+
         if (questionnairePanel != null)
-        {
             questionnairePanel.SetActive(true);
-            SetDebug("Panel shown!");
-        }
-        else
-        {
-            SetDebug("ERROR: panel is null!");
-        }
 
-        if (answerSlider != null)
-            answerSlider.value = 4;
-
-        UpdateSliderText();
+        SetDebug("Panel shown!");
     }
 
     void HideQuestionnaire()
@@ -128,41 +160,21 @@ public class QuestionnaireUI : MonoBehaviour
             questionnairePanel.SetActive(false);
     }
 
-    void OnSliderChanged(float value)
-    {
-        UpdateSliderText();
-    }
-
-    void UpdateSliderText()
-    {
-        if (sliderValueText != null && answerSlider != null)
-            sliderValueText.text = ((int)answerSlider.value).ToString();
-    }
-
     void OnConfirm()
     {
-        int answer = (int)answerSlider.value;
+        int a1 = q1Slider != null ? (int)q1Slider.value : 4;
+        int a2 = q2Slider != null ? (int)q2Slider.value : 4;
+        int a3 = q3Slider != null ? (int)q3Slider.value : 4;
+        float gazeTime = headGazeReticle != null ? headGazeReticle.GetGazeTime() : 0f;
+
         if (tcpClient != null)
-            tcpClient.SendAnswer(answer);
+            tcpClient.SendAnswers(a1, a2, a3, gazeTime);
+
         HideQuestionnaire();
 
-        // Show waiting screen until next trial arrives
         if (waitingPanel != null)
             waitingPanel.SetActive(true);
 
-        SetDebug($"Confirmed: {answer} — waiting for next trial");
-    }
-
-    public void OnTrialStarted()
-    {
-        SetDebug("OnTrialStarted called");
-
-        // Hide waiting screen when new trial arrives
-        if (waitingPanel != null)
-            waitingPanel.SetActive(false);
-
-        HideQuestionnaire();
-        timer = delayAfterTrialSeconds;
-        timerRunning = true;
+        SetDebug($"Confirmed: Q1={a1} Q2={a2} Q3={a3} Gaze={gazeTime:F1}s");
     }
 }

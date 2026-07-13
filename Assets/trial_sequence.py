@@ -2,6 +2,7 @@ import time
 import socket
 import json
 import random
+import threading
 
 import cflib.crtp
 
@@ -14,23 +15,19 @@ from cflib.crazyflie.log import LogConfig
 # VALID AFFORDANCE COMBINATIONS
 # ==================================================
 
-VALID_COMBOS = {
-    "VAH", "VA", "AH", "VH", "V", "A", "H"
-}
+VALID_COMBOS = {"VAH", "VA", "AH", "VH", "V", "A", "H"}
 
 
 # ==================================================
 # STEP 1: ALL USER INPUTS BEFORE DRONE CONNECTS
-# (IP, eye level, mode, affordance sequence)
 # ==================================================
 
 print("=" * 50)
-print("  AR You Real — Trial Setup")
+print("  AR You Real — Trial Setup (Real Drone)")
 print("=" * 50)
 print()
 
 UNITY_IP = input("Enter Quest / Unity IP: ").strip()
-
 USER_Z = float(input("Enter subject eye level vertical height in meters: "))
 
 print()
@@ -57,19 +54,56 @@ while True:
 
 print(f"\n  {len(combos)} combination(s) entered.")
 print()
+
+
+# ==================================================
+# STEP 2: TCP SERVER — wait for Unity READY signal
+# ==================================================
+
+TCP_PORT = 5007
+UDP_PORT = 5005
+
+tcp_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+tcp_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+tcp_server.bind(("0.0.0.0", TCP_PORT))
+tcp_server.listen(1)
+
+print(f"Waiting for Unity to connect (TCP port {TCP_PORT})...")
+print("Start your Quest app now.\n")
+
+tcp_conn, addr = tcp_server.accept()
+print(f"Unity connected from {addr}")
+
+# Wait for READY signal from Unity
+# Unity sends this the moment the app starts (before Mirror/Mask selection)
+buffer = ""
+while True:
+    data = tcp_conn.recv(4096).decode()
+    buffer += data
+    if "\n" in buffer:
+        msg_raw, buffer = buffer.split("\n", 1)
+        msg = json.loads(msg_raw)
+        if msg.get("cmd") == "READY":
+            print("Unity sent READY signal — proceeding.\n")
+            break
+
 input("Press Enter to connect to the drone and begin...")
 
 
 # ==================================================
-# NETWORK
+# NETWORK — UDP
 # ==================================================
 
-UDP_PORT = 5005
+udp_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-udp_send = socket.socket(
-    socket.AF_INET,
-    socket.SOCK_DGRAM
-)
+
+# ==================================================
+# GLOBAL STATE
+# ==================================================
+
+answers = []            # stores {trial, affordance, x, y, z, answer} per trial
+current_answer = None
+running = True
 
 
 # ==================================================
@@ -80,15 +114,7 @@ URI = "radio://0/80/2M"
 
 USER_X = 0.0
 USER_Y = -2.0
-
 MIN_DISTANCE = 1.5
-
-
-# ==================================================
-# GLOBAL STATE
-# ==================================================
-
-running = True
 
 current_x = 0.0
 current_y = 0.0
@@ -108,7 +134,43 @@ def send_udp(packet):
             (UNITY_IP, UDP_PORT)
         )
     except Exception as e:
-        print("UDP SEND ERROR", e)
+        print(f"[UDP ERROR] {e}")
+
+
+# ==================================================
+# TCP LISTENER — receives ANSWER from Unity
+# Runs in background thread
+# ==================================================
+
+def listen_unity():
+    global current_answer, running
+
+    buf = ""
+    while running:
+        try:
+            data = tcp_conn.recv(4096)
+            if not data:
+                break
+
+            buf += data.decode()
+
+            while "\n" in buf:
+                msg_raw, buf = buf.split("\n", 1)
+                msg = json.loads(msg_raw)
+                print(f"\n[UNITY] Received: {msg}")
+
+                if msg.get("cmd") == "ANSWER":
+                    current_answer = {
+                        "q1": msg.get("q1", 4),
+                        "q2": msg.get("q2", 4),
+                        "q3": msg.get("q3", 4),
+                        "gazeTime": round(msg.get("gazeTime", 0.0), 2)
+                    }
+                    print(f"[UNITY] Q1={current_answer['q1']} Q2={current_answer['q2']} Q3={current_answer['q3']} Gaze={current_answer['gazeTime']}s")
+
+        except Exception as e:
+            if running:
+                print(f"[TCP ERROR] {e}")
 
 
 # ==================================================
@@ -132,22 +194,10 @@ def log_position(ts, data, logconf):
 # SAFETY — BOUNDS + LIGHTHOUSE BARRIERS + USER RADIUS
 # ==================================================
 
-def clamp_user_distance(x, y, z):
-
-    # ==========================================
-    # HARD WORLD BOUNDS
-    # X: [-2, 2]   Y: [-2, 2]   Z: [0, 2]
-    # X/Y are horizontal axes, Z is vertical altitude
-    # ==========================================
-
+def clamp(x, y, z):
     x = max(-2.0, min(2.0, x))
     y = max(-2.0, min(2.0, y))
-    z = max(0.0, min(2.0, z))
-
-    # ==========================================
-    # USER SAFETY RADIUS
-    # user at (0, -2)
-    # ==========================================
+    z = max(0.0,  min(2.0, z))
 
     dx = x - USER_X
     dy = y - USER_Y
@@ -155,53 +205,40 @@ def clamp_user_distance(x, y, z):
 
     if d < MIN_DISTANCE:
         if d < 0.001:
-            dx = 0
-            dy = 1
-            d = 1
-
+            dx, dy, d = 0, 1, 1
         scale = MIN_DISTANCE / d
         x = USER_X + dx * scale
         y = USER_Y + dy * scale
-
         print("\n[SAFETY] User radius correction")
-
-    # ==========================================
-    # LIGHTHOUSE BARRIER
-    #
-    # top-left:     x:[-2,-1.5]  y:[1.5,2]
-    # bottom-right: x:[1.5,2]    y:[-2,-1.5]
-    # ==========================================
 
     INSIDE_TOP_LEFT = (-2.0 <= x <= -1.5) and (1.5 <= y <= 2.0)
     INSIDE_BOTTOM_RIGHT = (1.5 <= x <= 2.0) and (-2.0 <= y <= -1.5)
 
     if INSIDE_TOP_LEFT:
-        x = -1.49
-        y = 1.49
+        x, y = -1.49, 1.49
         print("\n[SAFETY] Lighthouse 1 barrier")
 
     if INSIDE_BOTTOM_RIGHT:
-        x = 1.49
-        y = -1.49
+        x, y = 1.49, -1.49
         print("\n[SAFETY] Lighthouse 2 barrier")
 
-    # Final clamp
-    x = max(-2.0, min(2.0, x))
-    y = max(-2.0, min(2.0, y))
-    z = max(0.0, min(2.0, z))
-
-    return (x, y, z)
+    return (
+        max(-2.0, min(2.0, x)),
+        max(-2.0, min(2.0, y)),
+        max(0.0,  min(2.0, z))
+    )
 
 
 # ==================================================
 # RANDOM COORDINATE GENERATOR
 # ==================================================
 
-def generate_safe_coordinate():
-    x = random.uniform(-2.0, 2.0)
-    y = random.uniform(-2.0, 2.0)
-    z = random.uniform(0.0, 2.0)
-    return clamp_user_distance(x, y, z)
+def generate_coordinate():
+    return clamp(
+        random.uniform(-2.0, 2.0),
+        random.uniform(-2.0, 2.0),
+        random.uniform(0.0,  2.0)
+    )
 
 
 # ==================================================
@@ -209,13 +246,13 @@ def generate_safe_coordinate():
 # ==================================================
 
 def move_drone(x, y, z, affordance, hold=3):
+    x, y, z = clamp(x, y, z)
 
-    x, y, z = clamp_user_distance(x, y, z)
-
+    print(f"\n[DRONE] Flying to ({x:.2f}, {y:.2f}, {z:.2f})...")
     commander.go_to(x, y, z, 0, 2)
+    time.sleep(hold)
+    print(f"[DRONE] Arrived.")
 
-    # Tell Unity the real drone position and the affordance.
-    # Unity itself decides MASK vs MIRROR via its own startup menu.
     send_udp({
         "type": "TRIAL",
         "affordance": affordance,
@@ -224,9 +261,7 @@ def move_drone(x, y, z, affordance, hold=3):
         "z": z
     })
 
-    print(f"\n[MOVE] affordance={affordance} -> ({x:.2f}, {y:.2f}, {z:.2f})")
-
-    time.sleep(hold)
+    print(f"[UDP] Sent → affordance={affordance} ({x:.2f}, {y:.2f}, {z:.2f})")
 
 
 # ==================================================
@@ -234,16 +269,11 @@ def move_drone(x, y, z, affordance, hold=3):
 # ==================================================
 
 def build_trials(combo_list):
-    trials = []
-    for combo in combo_list:
-        x, y, z = generate_safe_coordinate()
-        trials.append({
-            "affordance": combo,
-            "x": x,
-            "y": y,
-            "z": z
-        })
-    return trials
+    return [
+        {"affordance": c, "x": x, "y": y, "z": z}
+        for c in combo_list
+        for x, y, z in [generate_coordinate()]
+    ]
 
 
 # ==================================================
@@ -251,17 +281,19 @@ def build_trials(combo_list):
 # ==================================================
 
 def run_trials(trials):
+    global current_answer
+
     print("\n" + "=" * 50)
     print("  TRIAL SEQUENCE")
     print("=" * 50)
-    for i, trial in enumerate(trials, 1):
-        print(f"  {i}. {trial['affordance']:<4} -> "
-              f"({trial['x']:.2f}, {trial['y']:.2f}, {trial['z']:.2f})")
+    for i, t in enumerate(trials, 1):
+        print(f"  {i}. {t['affordance']:<4} → ({t['x']:.2f}, {t['y']:.2f}, {t['z']:.2f})")
     print()
 
     for i, trial in enumerate(trials, 1):
-        input(f"\nPress Enter to move to trial {i}/{len(trials)} "
-              f"[{trial['affordance']}]...")
+        input(f"\nPress Enter to start trial {i}/{len(trials)} [{trial['affordance']}]...")
+
+        current_answer = None
 
         move_drone(
             trial["x"],
@@ -270,10 +302,40 @@ def run_trials(trials):
             trial["affordance"]
         )
 
-        print(f"[TRIAL {i}/{len(trials)}] {trial['affordance']} "
-              f"active at ({trial['x']:.2f}, {trial['y']:.2f}, {trial['z']:.2f})")
+        print(f"[TRIAL {i}] Waiting for participant answers (3 sliders 1-7)...")
+        while current_answer is None:
+            time.sleep(0.1)
 
-    input("\nPress Enter to land the drone and end the session...")
+        print(f"[TRIAL {i}] Q1={current_answer['q1']} Q2={current_answer['q2']} Q3={current_answer['q3']} Gaze={current_answer['gazeTime']}s")
+        answers.append({
+            "trial": i,
+            "affordance": trial["affordance"],
+            "x": round(trial["x"], 2),
+            "y": round(trial["y"], 2),
+            "z": round(trial["z"], 2),
+            "q1": current_answer["q1"],
+            "q2": current_answer["q2"],
+            "q3": current_answer["q3"],
+            "gazeTime": current_answer["gazeTime"]
+        })
+
+    print("\nAll trials complete.")
+
+
+# ==================================================
+# PRINT RESULTS TABLE
+# ==================================================
+
+def print_results():
+    print("\n" + "=" * 85)
+    print("  RESULTS")
+    print("=" * 85)
+    print(f"  {'Trial':<8} {'Affordance':<12} {'Position':<22} {'Q1 Real':<10} {'Q2 Closer':<12} {'Q3 Safe':<10} {'Gaze (s)'}")
+    print(f"  {'-'*8} {'-'*12} {'-'*22} {'-'*10} {'-'*12} {'-'*10} {'-'*8}")
+    for r in answers:
+        pos = f"({r['x']:.2f}, {r['y']:.2f}, {r['z']:.2f})"
+        print(f"  {r['trial']:<8} {r['affordance']:<12} {pos:<22} {r['q1']:<10} {r['q2']:<12} {r['q3']:<10} {r['gazeTime']}")
+    print()
 
 
 # ==================================================
@@ -288,7 +350,6 @@ with SyncCrazyflie(
 ) as scf:
 
     cf = scf.cf
-
     print("Connected to Crazyflie")
 
     cf.param.set_value("stabilizer.estimator", "2")
@@ -320,16 +381,32 @@ with SyncCrazyflie(
     commander.takeoff(1.5, 3)
     time.sleep(4)
 
+    # Send HOVER packet to Unity to establish baseline position
+    # Uses the actual drone position after takeoff stabilizes
+    send_udp({"type": "HOVER", "x": current_x, "y": current_y, "z": current_z})
+    print(f"[UDP] Sent HOVER baseline ({current_x:.2f}, {current_y:.2f}, {current_z:.2f})")
+    time.sleep(0.5)
+
+    # Start TCP listener thread
+    threading.Thread(target=listen_unity, daemon=True).start()
+
     try:
         trials = build_trials(combos)
         run_trials(trials)
+        print_results()
 
     except KeyboardInterrupt:
         print("\n[EMERGENCY] Stopping early.")
+        if answers:
+            print_results()
 
     finally:
+        running = False
         commander.land(0, 3)
         time.sleep(4)
         commander.stop()
         logconf.stop()
-        print("\nDone")
+        tcp_conn.close()
+        tcp_server.close()
+        udp_send.close()
+        print("\nDone.")

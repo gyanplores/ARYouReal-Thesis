@@ -68,19 +68,24 @@ public class TCPClient : MonoBehaviour
     // ─── PUBLIC API — called by QuestionnaireUI ───────────────────
 
     /// <summary>
-    /// Call this when the participant confirms their slider answer.
-    /// Sends {"cmd":"ANSWER","value":N} to Python.
+    /// Sends all 3 answers to Python.
+    /// Python receives: {"cmd":"ANSWER","q1":3,"q2":5,"q3":2}
     /// </summary>
-    public void SendAnswer(int value)
+    public void SendAnswers(int q1, int q2, int q3, float gazeTime = 0f)
     {
         if (!isConnected)
         {
-            Debug.LogWarning("[TCPClient] Not connected — answer not sent");
+            Debug.LogWarning("[TCPClient] Not connected — answers not sent");
             return;
         }
 
-        SendPacket(new AnswerPacket { cmd = "ANSWER", value = value });
-        Debug.Log($"[TCPClient] Sent answer: {value}");
+        SendPacket(new AnswerPacket { cmd = "ANSWER", q1 = q1, q2 = q2, q3 = q3, gazeTime = Mathf.Round(gazeTime * 100f) / 100f });
+        Debug.Log($"[TCPClient] Sent answers: Q1={q1} Q2={q2} Q3={q3} Gaze={gazeTime:F2}s");
+    }
+
+    public void SendAnswer(int value)
+    {
+        SendAnswers(value, value, value, 0f);
     }
 
     // ─── INTERNAL ─────────────────────────────────────────────────
@@ -124,6 +129,9 @@ public class TCPClient : MonoBehaviour
     private class AnswerPacket
     {
         public string cmd;
-        public int value;
+        public int q1;
+        public int q2;
+        public int q3;
+        public float gazeTime;
     }
 }

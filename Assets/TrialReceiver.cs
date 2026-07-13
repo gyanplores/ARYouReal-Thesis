@@ -31,6 +31,9 @@ public class TrialReceiver : MonoBehaviour
     [Tooltip("Drag QuestionnaireUI here so it gets notified when a new trial arrives")]
     public QuestionnaireUI questionnaireUI;
 
+    [Tooltip("Drag HeadGazeReticle here so gaze timer resets on each new trial")]
+    public HeadGazeReticle headGazeReticle;
+
     [Header("Drone Mode (set by StartupMenu)")]
     [Tooltip("True = MIRROR (opposite X). False = MASK (same direction). Set automatically by StartupMenu.cs")]
     public bool isMirrorMode = true;
@@ -121,6 +124,10 @@ public class TrialReceiver : MonoBehaviour
         if (newAffordance && questionnaireUI != null)
             questionnaireUI.OnTrialStarted();
 
+        // Reset gaze timer for new trial
+        if (newAffordance && headGazeReticle != null)
+            headGazeReticle.ResetGazeTimer();
+
         // Only update UI when new data arrived — not every frame
         if (newAffordance)
         {
@@ -209,7 +216,27 @@ public class TrialReceiver : MonoBehaviour
             string type = ExtractStringField(json, "type");
             Debug.Log($"[TrialReceiver] Extracted type: '{type}'");
 
-            if (type == "TRIAL")
+            if (type == "HOVER")
+            {
+                // Sent by Python right after takeoff, before any trials.
+                // Sets the baseline so the first TRIAL packet produces
+                // a real non-zero delta and moves the drone immediately.
+                float x = ExtractFloatField(json, "x");
+                float y = ExtractFloatField(json, "y");
+                float z = ExtractFloatField(json, "z");
+
+                float unityX = x;
+                float unityY = z;
+                float unityZ = y;
+
+                lock (dataLock)
+                {
+                    realBaseline = new Vector3(unityX, unityY, unityZ);
+                    baselineSet = true;
+                }
+                Debug.Log($"[TrialReceiver] HOVER baseline set: ({unityX:F2},{unityY:F2},{unityZ:F2})");
+            }
+            else if (type == "TRIAL")
             {
                 string affordance = ExtractStringField(json, "affordance");
                 float x = ExtractFloatField(json, "x");
@@ -230,27 +257,38 @@ public class TrialReceiver : MonoBehaviour
                 float unityY = z; // Crazyflie Z (altitude) → Unity Y (up)
                 float unityZ = y; // Crazyflie Y (depth)    → Unity Z (depth)
 
-                // ── Set baseline on first packet ─────────────────────────
-                // We capture the real drone's starting Crazyflie position
-                // and the Unity drone's starting scene position once,
-                // then all subsequent moves are deltas from that baseline.
+                // ── Baseline handling ─────────────────────────────────────
+                // The baseline is set from a HOVER packet sent by Python
+                // BEFORE the first trial. This ensures every TRIAL packet
+                // produces a real non-zero delta from the hover position.
+                // If no HOVER packet was received yet, use current position
+                // as baseline but DON'T move — wait for next packet.
                 bool isFirstPacket = false;
                 lock (dataLock) { isFirstPacket = !baselineSet; }
 
                 if (isFirstPacket)
                 {
-                    // Use the cached unityStartPosition set in Start() on main thread
-                    // NEVER access droneTransform from background thread — Unity components
-                    // are not thread safe and will crash silently on Android
                     lock (dataLock)
                     {
                         realBaseline = new Vector3(unityX, unityY, unityZ);
                         baselineSet = true;
                     }
-                    Debug.Log($"[TrialReceiver] Baseline set — real: ({unityX:F2},{unityY:F2},{unityZ:F2}) unity start: {unityStartPosition}");
+                    Debug.Log($"[TrialReceiver] No HOVER baseline set — using first TRIAL as baseline. Drone stays at start. Send HOVER packet before trials.");
+                    // Still update affordance
+                    lock (dataLock)
+                    {
+                        latestRealPosition = real;
+                        lastAffordance = affordance;
+                        hasNewAffordance = true;
+                        lastRawMessage = json;
+                        messageCount++;
+                    }
+                    return; // skip movement this packet
                 }
 
                 // ── Compute relative offset from baseline ─────────────────
+                // This runs on EVERY packet including the first one,
+                // so the drone moves immediately on the first trial packet.
                 Vector3 baseline;
                 Vector3 unityStart;
                 lock (dataLock)

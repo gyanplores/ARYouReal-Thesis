@@ -1,41 +1,46 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Attach to any GameObject in the scene.
 /// Casts a ray from the CenterEyeAnchor forward every frame.
 /// Shows a small reticle dot in the center of the screen.
 /// Dot changes color when the gaze ray hits the drone.
-///
-/// Setup:
-/// 1. Attach this script to any GameObject
-/// 2. Create a Canvas (World Space or Screen Space Overlay) with a small Image (the reticle dot)
-/// 3. Assign CenterEyeAnchor, ReticleImage, and DroneTransform in Inspector
+/// Also tracks cumulative gaze time per trial.
 /// </summary>
 public class HeadGazeReticle : MonoBehaviour
 {
     [Header("Gaze Settings")]
-    public Transform centerEyeAnchor;   // OVRCameraRig → TrackingSpace → CenterEyeAnchor
-    public float gazeDistance = 20f;    // how far the ray extends
+    public Transform centerEyeAnchor;
+    public float gazeDistance = 20f;
 
     [Header("Target")]
-    public Transform droneTransform;    // the drone GameObject to detect gaze on
+    public Transform droneTransform;
 
     [Header("Reticle")]
-    public Image reticleImage;          // small circle Image on a Canvas
-    public Color idleColor = Color.white;    // color when not looking at drone
-    public Color gazeColor = Color.green;    // color when looking at drone
-    public float reticleIdleSize = 20f;      // size in pixels when idle
-    public float reticleGazeSize = 30f;      // slightly bigger when hitting drone
+    public Image reticleImage;
+    public Color idleColor = Color.white;
+    public Color gazeColor = Color.green;
+    public float reticleIdleSize = 20f;
+    public float reticleGazeSize = 30f;
 
     [Header("Smoothing")]
     public float colorSmoothSpeed = 8f;
     public float sizeSmoothSpeed = 8f;
 
+    [Header("Gaze Timer Display (optional)")]
+    [Tooltip("Assign a TMP text to show live gaze time in headset")]
+    public TextMeshProUGUI gazeTimerText;
+
     // Internal
     private bool isGazingAtDrone = false;
     private Color currentColor;
     private float currentSize;
+
+    // Gaze timer — counts up while looking, pauses when not
+    private float totalGazeTime = 0f;
+    private bool timerActive = false;
 
     void Start()
     {
@@ -56,6 +61,7 @@ public class HeadGazeReticle : MonoBehaviour
 
         CastGazeRay();
         UpdateReticleVisuals();
+        UpdateGazeTimer();
     }
 
     void CastGazeRay()
@@ -65,7 +71,6 @@ public class HeadGazeReticle : MonoBehaviour
 
         if (Physics.Raycast(gazeRay, out RaycastHit hit, gazeDistance))
         {
-            // Check if ray hit the drone or any of its children
             if (droneTransform != null &&
                 (hit.collider.gameObject == droneTransform.gameObject ||
                  hit.collider.transform.IsChildOf(droneTransform)))
@@ -74,37 +79,36 @@ public class HeadGazeReticle : MonoBehaviour
             }
         }
 
-        // Fire events on state change
         if (hitDrone && !isGazingAtDrone)
         {
             isGazingAtDrone = true;
-            OnGazeEnter();
+            timerActive = true;
+            Debug.Log("[HeadGazeReticle] Gaze ENTER drone");
         }
         else if (!hitDrone && isGazingAtDrone)
         {
             isGazingAtDrone = false;
-            OnGazeExit();
+            timerActive = false;
+            Debug.Log($"[HeadGazeReticle] Gaze EXIT drone — total gaze: {totalGazeTime:F2}s");
         }
     }
 
-    void OnGazeEnter()
+    void UpdateGazeTimer()
     {
-        Debug.Log("[HeadGazeReticle] Gaze ENTER drone");
-    }
+        if (!timerActive) return;
 
-    void OnGazeExit()
-    {
-        Debug.Log("[HeadGazeReticle] Gaze EXIT drone");
+        totalGazeTime += Time.deltaTime;
+
+        if (gazeTimerText != null)
+            gazeTimerText.text = $"Gaze: {totalGazeTime:F1}s";
     }
 
     void UpdateReticleVisuals()
     {
-        // Smoothly interpolate color
         Color targetColor = isGazingAtDrone ? gazeColor : idleColor;
         currentColor = Color.Lerp(currentColor, targetColor, Time.deltaTime * colorSmoothSpeed);
         reticleImage.color = currentColor;
 
-        // Smoothly interpolate size (pulse slightly when gazing)
         float targetSize = isGazingAtDrone ? reticleGazeSize : reticleIdleSize;
         currentSize = Mathf.Lerp(currentSize, targetSize, Time.deltaTime * sizeSmoothSpeed);
 
@@ -112,6 +116,25 @@ public class HeadGazeReticle : MonoBehaviour
         rt.sizeDelta = new Vector2(currentSize, currentSize);
     }
 
-    // Public getter so other scripts can check if user is gazing at drone
+    // ─── PUBLIC API ───────────────────────────────────────────────
+
     public bool IsGazingAtDrone() => isGazingAtDrone;
+
+    /// <summary>
+    /// Returns total cumulative gaze time for this trial in seconds.
+    /// Called by QuestionnaireUI on confirm.
+    /// </summary>
+    public float GetGazeTime() => totalGazeTime;
+
+    /// <summary>
+    /// Resets gaze timer to 0 — called by TrialReceiver when new trial starts.
+    /// </summary>
+    public void ResetGazeTimer()
+    {
+        totalGazeTime = 0f;
+        timerActive = false;
+        if (gazeTimerText != null)
+            gazeTimerText.text = "Gaze: 0.0s";
+        Debug.Log("[HeadGazeReticle] Gaze timer reset");
+    }
 }
