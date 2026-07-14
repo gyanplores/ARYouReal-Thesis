@@ -165,16 +165,17 @@ public class QuestionnaireUI : MonoBehaviour
         int a1 = q1Slider != null ? (int)q1Slider.value : 4;
         int a2 = q2Slider != null ? (int)q2Slider.value : 4;
         int a3 = q3Slider != null ? (int)q3Slider.value : 4;
-        float gazeTime = headGazeReticle != null ? headGazeReticle.GetGazeTime() : 0f;
+        float virtualGaze = headGazeReticle != null ? headGazeReticle.GetVirtualGazeTime() : 0f;
+        float realGaze = headGazeReticle != null ? headGazeReticle.GetRealGazeTime() : 0f;
 
         if (tcpClient != null)
-            tcpClient.SendAnswers(a1, a2, a3, gazeTime);
+            tcpClient.SendAnswers(a1, a2, a3, virtualGaze, realGaze);
 
         HideQuestionnaire();
 
         if (waitingPanel != null)
             waitingPanel.SetActive(true);
 
-        SetDebug($"Confirmed: Q1={a1} Q2={a2} Q3={a3} Gaze={gazeTime:F1}s");
+        SetDebug($"Confirmed: Q1={a1} Q2={a2} Q3={a3} VGaze={virtualGaze:F1}s RGaze={realGaze:F1}s");
     }
 }

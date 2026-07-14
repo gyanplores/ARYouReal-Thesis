@@ -71,7 +71,7 @@ public class TCPClient : MonoBehaviour
     /// Sends all 3 answers to Python.
     /// Python receives: {"cmd":"ANSWER","q1":3,"q2":5,"q3":2}
     /// </summary>
-    public void SendAnswers(int q1, int q2, int q3, float gazeTime = 0f)
+    public void SendAnswers(int q1, int q2, int q3, float virtualGazeTime = 0f, float realGazeTime = 0f)
     {
         if (!isConnected)
         {
@@ -79,13 +79,21 @@ public class TCPClient : MonoBehaviour
             return;
         }
 
-        SendPacket(new AnswerPacket { cmd = "ANSWER", q1 = q1, q2 = q2, q3 = q3, gazeTime = Mathf.Round(gazeTime * 100f) / 100f });
-        Debug.Log($"[TCPClient] Sent answers: Q1={q1} Q2={q2} Q3={q3} Gaze={gazeTime:F2}s");
+        SendPacket(new AnswerPacket
+        {
+            cmd = "ANSWER",
+            q1 = q1,
+            q2 = q2,
+            q3 = q3,
+            gazeTime = Mathf.Round(virtualGazeTime * 100f) / 100f,
+            realGazeTime = Mathf.Round(realGazeTime * 100f) / 100f
+        });
+        Debug.Log($"[TCPClient] Sent: Q1={q1} Q2={q2} Q3={q3} VGaze={virtualGazeTime:F2}s RGaze={realGazeTime:F2}s");
     }
 
     public void SendAnswer(int value)
     {
-        SendAnswers(value, value, value, 0f);
+        SendAnswers(value, value, value, 0f, 0f);
     }
 
     // ─── INTERNAL ─────────────────────────────────────────────────
@@ -133,5 +141,6 @@ public class TCPClient : MonoBehaviour
         public int q2;
         public int q3;
         public float gazeTime;
+        public float realGazeTime;
     }
 }

@@ -164,9 +164,10 @@ def listen_unity():
                         "q1": msg.get("q1", 4),
                         "q2": msg.get("q2", 4),
                         "q3": msg.get("q3", 4),
-                        "gazeTime": round(msg.get("gazeTime", 0.0), 2)
+                        "virtualGaze": round(msg.get("gazeTime", 0.0), 2),
+                        "realGaze":    round(msg.get("realGazeTime", 0.0), 2)
                     }
-                    print(f"[UNITY] Q1={current_answer['q1']} Q2={current_answer['q2']} Q3={current_answer['q3']} Gaze={current_answer['gazeTime']}s")
+                    print(f"[UNITY] Q1={current_answer['q1']} Q2={current_answer['q2']} Q3={current_answer['q3']} VGaze={current_answer['virtualGaze']}s RGaze={current_answer['realGaze']}s")
 
         except Exception as e:
             if running:
@@ -241,6 +242,16 @@ def generate_coordinate():
     )
 
 
+def get_drone_side(x):
+    """Returns 'Right' if x > 0, 'Left' if x < 0, 'Center' if x == 0"""
+    if x > 0:
+        return "Right"
+    elif x < 0:
+        return "Left"
+    else:
+        return "Center"
+
+
 # ==================================================
 # MOVE REAL DRONE + NOTIFY UNITY
 # ==================================================
@@ -306,17 +317,26 @@ def run_trials(trials):
         while current_answer is None:
             time.sleep(0.1)
 
-        print(f"[TRIAL {i}] Q1={current_answer['q1']} Q2={current_answer['q2']} Q3={current_answer['q3']} Gaze={current_answer['gazeTime']}s")
+        print(f"[TRIAL {i}] Q1={current_answer['q1']} Q2={current_answer['q2']} Q3={current_answer['q3']} VGaze={current_answer['virtualGaze']}s RGaze={current_answer['realGaze']}s")
+
+        real_side    = get_drone_side(trial["x"])
+        virtual_x    = -trial["x"]
+        virtual_side = get_drone_side(virtual_x)
+
         answers.append({
             "trial": i,
             "affordance": trial["affordance"],
+            "drone_side": real_side,
+            "real_gaze_label":    f"{real_side} drone duration",
+            "virtual_gaze_label": f"{virtual_side} drone duration",
+            "real_gaze":    current_answer["realGaze"],
+            "virtual_gaze": current_answer["virtualGaze"],
             "x": round(trial["x"], 2),
             "y": round(trial["y"], 2),
             "z": round(trial["z"], 2),
             "q1": current_answer["q1"],
             "q2": current_answer["q2"],
-            "q3": current_answer["q3"],
-            "gazeTime": current_answer["gazeTime"]
+            "q3": current_answer["q3"]
         })
 
     print("\nAll trials complete.")
@@ -327,14 +347,17 @@ def run_trials(trials):
 # ==================================================
 
 def print_results():
-    print("\n" + "=" * 85)
+    print("\n" + "=" * 100)
     print("  RESULTS")
-    print("=" * 85)
-    print(f"  {'Trial':<8} {'Affordance':<12} {'Position':<22} {'Q1 Real':<10} {'Q2 Closer':<12} {'Q3 Safe':<10} {'Gaze (s)'}")
-    print(f"  {'-'*8} {'-'*12} {'-'*22} {'-'*10} {'-'*12} {'-'*10} {'-'*8}")
+    print("=" * 100)
     for r in answers:
         pos = f"({r['x']:.2f}, {r['y']:.2f}, {r['z']:.2f})"
-        print(f"  {r['trial']:<8} {r['affordance']:<12} {pos:<22} {r['q1']:<10} {r['q2']:<12} {r['q3']:<10} {r['gazeTime']}")
+        print(f"\n  Trial {r['trial']} — Affordance: {r['affordance']} | Real drone: {r['drone_side']} | Position: {pos}")
+        print(f"    {r['real_gaze_label']}:    {r['real_gaze']}s")
+        print(f"    {r['virtual_gaze_label']}: {r['virtual_gaze']}s")
+        print(f"    Q1 (Which drone is real?):   {r['q1']}")
+        print(f"    Q2 (Which drone is closer?): {r['q2']}")
+        print(f"    Q3 (Which drone is safer?):  {r['q3']}")
     print()
 
 

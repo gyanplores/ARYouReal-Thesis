@@ -28,6 +28,9 @@ public class TrialReceiver : MonoBehaviour
     [Tooltip("The drone GameObject to move")]
     public Transform droneTransform;
 
+    [Tooltip("Invisible proxy object that tracks the REAL drone's position in Unity space. Used for gaze tracking of the physical drone.")]
+    public Transform realDroneProxy;
+
     [Tooltip("Drag QuestionnaireUI here so it gets notified when a new trial arrives")]
     public QuestionnaireUI questionnaireUI;
 
@@ -103,8 +106,7 @@ public class TrialReceiver : MonoBehaviour
             hasNewAffordance = false; // consume affordance flag once
         }
 
-        // Always move toward the current target every frame until we arrive
-        // (don't gate on newPosition — that flag was only true for one frame)
+        // Move virtual drone toward mirrored target
         if (droneTransform != null)
         {
             float distanceToTarget = Vector3.Distance(droneTransform.position, target);
@@ -116,6 +118,30 @@ public class TrialReceiver : MonoBehaviour
                     moveSpeed * Time.deltaTime
                 );
             }
+        }
+
+        // Move real drone proxy to actual real position (axis-swapped, NOT mirrored)
+        // This is what gaze tracking uses to detect "looking at the real drone"
+        if (realDroneProxy != null)
+        {
+            Vector3 realPos;
+            lock (dataLock) { realPos = latestRealPosition; }
+
+            // Apply same axis swap as TRIAL packet: CF Y→Unity Z, CF Z→Unity Y
+            Vector3 proxyTarget = new Vector3(
+                realPos.x,
+                realPos.z,  // CF Z (altitude) → Unity Y
+                realPos.y   // CF Y (depth) → Unity Z
+            );
+            // Apply offset from baseline so proxy matches real world position
+            Vector3 baselineSnap;
+            Vector3 unityStartSnap;
+            lock (dataLock) { baselineSnap = realBaseline; unityStartSnap = unityStartPosition; }
+            Vector3 proxyDelta = proxyTarget - baselineSnap;
+            Vector3 proxyFinal = unityStartSnap + new Vector3(proxyDelta.x, proxyDelta.y, proxyDelta.z);
+            proxyFinal.y = Mathf.Max(0f, proxyFinal.y);
+            proxyFinal.z = Mathf.Max(0f, proxyFinal.z);
+            realDroneProxy.position = proxyFinal;
         }
 
         // Apply affordance to SensoryManager once per new trial

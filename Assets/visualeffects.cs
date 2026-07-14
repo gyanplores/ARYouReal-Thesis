@@ -202,7 +202,7 @@ public class VisualEffects : MonoBehaviour
 
     void AnimateLEDs()
     {
-        PulseMode(4, 4.0f, 0.1f);//led 4 yellow blinking sometimes
-        PulseMode(5, 0.25f, 0.5f);//led 1 red blinking constant
+        PulseMode(5, 4.0f, 0.1f);//led 4 yellow blinking sometimes
+        PulseMode(2, 0.25f, 0.5f);//led 1 red blinking constant
     }
 }

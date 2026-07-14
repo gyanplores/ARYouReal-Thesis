@@ -4,10 +4,13 @@ using TMPro;
 
 /// <summary>
 /// Attach to any GameObject in the scene.
-/// Casts a ray from the CenterEyeAnchor forward every frame.
-/// Shows a small reticle dot in the center of the screen.
-/// Dot changes color when the gaze ray hits the drone.
-/// Also tracks cumulative gaze time per trial.
+/// Tracks head gaze against TWO targets:
+///   1. droneTransform     — the virtual drone
+///   2. realDroneProxy     — invisible proxy at real drone's position
+///
+/// Maintains separate cumulative gaze times per trial for each.
+/// Both timers reset when ResetGazeTimer() is called (new trial).
+/// GetVirtualGazeTime() and GetRealGazeTime() return seconds gazed.
 /// </summary>
 public class HeadGazeReticle : MonoBehaviour
 {
@@ -15,8 +18,9 @@ public class HeadGazeReticle : MonoBehaviour
     public Transform centerEyeAnchor;
     public float gazeDistance = 20f;
 
-    [Header("Target")]
-    public Transform droneTransform;
+    [Header("Targets")]
+    public Transform droneTransform;    // virtual drone
+    public Transform realDroneProxy;    // invisible proxy for real drone
 
     [Header("Reticle")]
     public Image reticleImage;
@@ -30,17 +34,19 @@ public class HeadGazeReticle : MonoBehaviour
     public float sizeSmoothSpeed = 8f;
 
     [Header("Gaze Timer Display (optional)")]
-    [Tooltip("Assign a TMP text to show live gaze time in headset")]
     public TextMeshProUGUI gazeTimerText;
 
-    // Internal
-    private bool isGazingAtDrone = false;
+    // Internal — virtual drone gaze
+    private bool isGazingAtVirtual = false;
+    private float virtualGazeTime = 0f;
+
+    // Internal — real drone proxy gaze
+    private bool isGazingAtReal = false;
+    private float realGazeTime = 0f;
+
+    // Reticle visuals
     private Color currentColor;
     private float currentSize;
-
-    // Gaze timer — counts up while looking, pauses when not
-    private float totalGazeTime = 0f;
-    private bool timerActive = false;
 
     void Start()
     {
@@ -60,81 +66,109 @@ public class HeadGazeReticle : MonoBehaviour
         if (centerEyeAnchor == null || reticleImage == null) return;
 
         CastGazeRay();
+        UpdateTimers();
         UpdateReticleVisuals();
-        UpdateGazeTimer();
+        UpdateTimerDisplay();
     }
 
     void CastGazeRay()
     {
         Ray gazeRay = new Ray(centerEyeAnchor.position, centerEyeAnchor.forward);
-        bool hitDrone = false;
+
+        bool hitVirtual = false;
+        bool hitReal = false;
 
         if (Physics.Raycast(gazeRay, out RaycastHit hit, gazeDistance))
         {
+            // Check virtual drone
             if (droneTransform != null &&
                 (hit.collider.gameObject == droneTransform.gameObject ||
                  hit.collider.transform.IsChildOf(droneTransform)))
             {
-                hitDrone = true;
+                hitVirtual = true;
+            }
+
+            // Check real drone proxy
+            if (realDroneProxy != null &&
+                (hit.collider.gameObject == realDroneProxy.gameObject ||
+                 hit.collider.transform.IsChildOf(realDroneProxy)))
+            {
+                hitReal = true;
             }
         }
 
-        if (hitDrone && !isGazingAtDrone)
+        // Virtual drone gaze enter/exit
+        if (hitVirtual && !isGazingAtVirtual)
         {
-            isGazingAtDrone = true;
-            timerActive = true;
-            Debug.Log("[HeadGazeReticle] Gaze ENTER drone");
+            isGazingAtVirtual = true;
+            Debug.Log("[HeadGazeReticle] Gaze ENTER virtual drone");
         }
-        else if (!hitDrone && isGazingAtDrone)
+        else if (!hitVirtual && isGazingAtVirtual)
         {
-            isGazingAtDrone = false;
-            timerActive = false;
-            Debug.Log($"[HeadGazeReticle] Gaze EXIT drone — total gaze: {totalGazeTime:F2}s");
+            isGazingAtVirtual = false;
+            Debug.Log($"[HeadGazeReticle] Gaze EXIT virtual drone — total: {virtualGazeTime:F2}s");
+        }
+
+        // Real drone proxy gaze enter/exit
+        if (hitReal && !isGazingAtReal)
+        {
+            isGazingAtReal = true;
+            Debug.Log("[HeadGazeReticle] Gaze ENTER real drone proxy");
+        }
+        else if (!hitReal && isGazingAtReal)
+        {
+            isGazingAtReal = false;
+            Debug.Log($"[HeadGazeReticle] Gaze EXIT real drone proxy — total: {realGazeTime:F2}s");
         }
     }
 
-    void UpdateGazeTimer()
+    void UpdateTimers()
     {
-        if (!timerActive) return;
-
-        totalGazeTime += Time.deltaTime;
-
-        if (gazeTimerText != null)
-            gazeTimerText.text = $"Gaze: {totalGazeTime:F1}s";
+        if (isGazingAtVirtual) virtualGazeTime += Time.deltaTime;
+        if (isGazingAtReal) realGazeTime += Time.deltaTime;
     }
 
     void UpdateReticleVisuals()
     {
-        Color targetColor = isGazingAtDrone ? gazeColor : idleColor;
+        // Turn green if looking at either drone
+        bool gazingAtAny = isGazingAtVirtual || isGazingAtReal;
+        Color targetColor = gazingAtAny ? gazeColor : idleColor;
         currentColor = Color.Lerp(currentColor, targetColor, Time.deltaTime * colorSmoothSpeed);
         reticleImage.color = currentColor;
 
-        float targetSize = isGazingAtDrone ? reticleGazeSize : reticleIdleSize;
+        float targetSize = gazingAtAny ? reticleGazeSize : reticleIdleSize;
         currentSize = Mathf.Lerp(currentSize, targetSize, Time.deltaTime * sizeSmoothSpeed);
+        reticleImage.rectTransform.sizeDelta = new Vector2(currentSize, currentSize);
+    }
 
-        RectTransform rt = reticleImage.rectTransform;
-        rt.sizeDelta = new Vector2(currentSize, currentSize);
+    void UpdateTimerDisplay()
+    {
+        if (gazeTimerText != null)
+            gazeTimerText.text = $"Virtual: {virtualGazeTime:F1}s | Real: {realGazeTime:F1}s";
     }
 
     // ─── PUBLIC API ───────────────────────────────────────────────
 
-    public bool IsGazingAtDrone() => isGazingAtDrone;
+    public bool IsGazingAtDrone() => isGazingAtVirtual;
+    public bool IsGazingAtReal() => isGazingAtReal;
+
+    public float GetVirtualGazeTime() => virtualGazeTime;
+    public float GetRealGazeTime() => realGazeTime;
 
     /// <summary>
-    /// Returns total cumulative gaze time for this trial in seconds.
-    /// Called by QuestionnaireUI on confirm.
-    /// </summary>
-    public float GetGazeTime() => totalGazeTime;
-
-    /// <summary>
-    /// Resets gaze timer to 0 — called by TrialReceiver when new trial starts.
+    /// Resets both gaze timers — call on new trial.
     /// </summary>
     public void ResetGazeTimer()
     {
-        totalGazeTime = 0f;
-        timerActive = false;
+        virtualGazeTime = 0f;
+        realGazeTime = 0f;
+        isGazingAtVirtual = false;
+        isGazingAtReal = false;
         if (gazeTimerText != null)
-            gazeTimerText.text = "Gaze: 0.0s";
-        Debug.Log("[HeadGazeReticle] Gaze timer reset");
+            gazeTimerText.text = "Virtual: 0.0s | Real: 0.0s";
+        Debug.Log("[HeadGazeReticle] Both gaze timers reset");
     }
+
+    // Keep old method name for backwards compatibility
+    public float GetGazeTime() => virtualGazeTime;
 }
