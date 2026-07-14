@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /*
@@ -29,24 +31,20 @@ public class VisualEffects : MonoBehaviour
     PROPELLERS
     ==========================
     */
+    class Propeller
+    {
+        public Transform propeller;
+        public bool clockwise;
+        public Vector3 rotationAxis;
+    }
+
+    private Propeller[] propellers;
 
     [Header("Propellers")]
-
-    [Tooltip("Drag propeller transforms here")]
-    [SerializeField]
-    private Transform[] propellers;
-
-    [Tooltip("Clockwise rotation")]
-    [SerializeField]
-    private bool[] clockwise;
 
     [Tooltip("Degrees per second")]
     [SerializeField]
     private float propellerSpeed = 3000f;
-
-    //test
-    [SerializeField]
-    private Vector3[] rotationAxis;
 
     /*
     ==========================
@@ -54,235 +52,157 @@ public class VisualEffects : MonoBehaviour
     ==========================
     */
 
-    [Header("LED Lights")]
+    class LED
+    {
+        public Renderer renderer;
+        public Light pointLight;
 
-    [Tooltip("Drag LED renderers here")]
-    [SerializeField]
-    private Renderer[] ledRenderers;
+        public Material onMaterial;
+        public Material offMaterial;
+    }
 
-    /*[Tooltip("Emission colors")]
-    [SerializeField]
-    private Color[] ledColors;*/
-
-    [Tooltip("Glow intensity")]
-    [SerializeField]
-    [Range(0,100)]
-    private float ledIntensity = 25f;
-
-    [Tooltip("Blink frequency")]
-    [SerializeField]
-    private float blinkSpeed = 4f;
-
-    [Tooltip("Smooth pulse instead")]
-    [SerializeField]
-    private bool isPulsing = false;
-
-    //test
-    private Material[] ledMaterials;
-
-    [SerializeField]
-    private Material[] ledOnMaterials;
-
-    [SerializeField]
-    private Material[] ledOffMaterials;
+    private LED[] leds;
 
     void Start()
     {
-        ledMaterials = new Material[ledRenderers.Length];
+        //LED SETUP
 
-        for (int i = 0; i < ledRenderers.Length; i++)
+        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+
+        foreach (Renderer r in renderers)
         {
-            if (ledRenderers[i] == null)
+            Debug.Log(r.name);
+        }
+
+        List<LED> foundLEDs = new List<LED>();
+
+        Material offMaterial =
+            Resources.Load<Material>("Materials/LED_glow off");
+
+        foreach (Renderer r in renderers)
+        {
+            if (!r.name.ToLower().StartsWith("led"))
                 continue;
 
-            ledMaterials[i] = ledRenderers[i].material;
-            ledMaterials[i].EnableKeyword("_EMISSION");
+            LED led = new LED();
+
+            led.renderer = r;
+
+            // Finds the Point Light underneath this LED mesh
+            led.pointLight = r.GetComponentInChildren<Light>(true);
+
+            string n = r.name.ToLower();
+
+            if (n.Contains("red"))
+                led.onMaterial =
+                    Resources.Load<Material>("Materials/LED_glow red");
+
+            else if (n.Contains("yellow"))
+                led.onMaterial =
+                    Resources.Load<Material>("Materials/LED_glow yellow");
+
+            else if (n.Contains("green"))
+                led.onMaterial =
+                    Resources.Load<Material>("Materials/LED_glow green");
+
+            else if (n.Contains("blue"))
+                led.onMaterial =
+                    Resources.Load<Material>("Materials/LED_glow blue");
+
+            led.offMaterial = offMaterial;
+
+            foundLEDs.Add(led);
         }
-        //ConfigureLEDs();
+
+        leds = foundLEDs.ToArray();
+
+        //Constant light up
+        SetLED(0, true);//led 5 green (pcb)
+        SetLED(1, true);//led 6 blue (pcb)
+        SetLED(2, true);//led 2 blue
+        SetLED(3, true);//led 3 blue
+
+        //PROPELLER SETUP
+
+        List<Propeller> foundPropellers = new List<Propeller>();
+        foreach (Transform t in GetComponentsInChildren<Transform>(true))
+        {
+            if (!t.name.ToLower().StartsWith("rotor"))
+                continue;
+
+            Propeller p = new Propeller();
+
+            p.propeller = t;
+
+            // Default axis
+            p.rotationAxis = Vector3.up;
+
+            foundPropellers.Add(p);
+        }
+
+        propellers = foundPropellers.ToArray();
+
+        Debug.Log("Found " + propellers.Length + " propellers.");
     }
-
-
 
     void Update()
     {
         RotatePropellers();
-
         AnimateLEDs();
     }
-
-
 
     /*
     ==================================
     PROPELLERS
     ==================================
     */
-
     void RotatePropellers()
     {
-        if (propellers == null)
-            return;
-
-        for (int i = 0; i < propellers.Length; i++)
+        foreach (Propeller p in propellers)
         {
-            if (propellers[i] == null)
-                continue;
+            float direction = p.clockwise ? 1f : -1f;
 
-            float direction =
-                (i < clockwise.Length && clockwise[i])
-                ? 1f
-                : -1f;
-
-            Vector3 axis = (i < rotationAxis.Length)
-            ? rotationAxis[i]
-            : Vector3.forward;
-
-            propellers[i].Rotate(
-                axis,
-                propellerSpeed *
-                direction *
-                Time.deltaTime,
+            p.propeller.Rotate(
+                p.rotationAxis,
+                direction * propellerSpeed * Time.deltaTime,
                 Space.Self
             );
         }
     }
-
-
 
     /*
     ==================================
     LEDS
     ==================================
     */
-
-    void ConfigureLEDs()
+    void SetLED(int index, bool on)
     {
-        foreach (Renderer r in ledRenderers)
-        {
-            if (r == null)
-                continue;
+        if (index < 0 || index >= leds.Length)
+            return;
 
-            r.material.EnableKeyword(
-                "_EMISSION"
-            );
-        }
+        LED led = leds[index];
+
+        if (on)
+            led.renderer.material = led.onMaterial;
+        else
+            led.renderer.material = led.offMaterial;
+
+        if (led.pointLight != null)
+            led.pointLight.enabled = on;
     }
 
-    void PulseMode(int index)
+    void PulseMode(int index, float onTime, float offTime)
     {
-        if (index < 0 || index >= ledRenderers.Length)
-            return;
+        float cycle = onTime + offTime;
 
-        if (ledRenderers[index] == null)
-            return;
+        bool isOn = (Time.time % cycle) < onTime;
 
-        bool isOn =
-            isPulsing
-            ? Mathf.Sin(Time.time * blinkSpeed) > 0
-            : Mathf.Floor(Time.time * blinkSpeed) % 2 == 0;
-
-        if (isOn)
-        {
-            if (index < ledOnMaterials.Length &&
-                ledOnMaterials[index] != null)
-            {
-                ledRenderers[index].material =
-                    ledOnMaterials[index];
-            }
-        }
-        else
-        {
-            if (index < ledOffMaterials.Length &&
-                ledOffMaterials[index] != null)
-            {
-                ledRenderers[index].material =
-                    ledOffMaterials[index];
-            }
-        }
+        SetLED(index, isOn);
     }
 
     void AnimateLEDs()
     {
-        PulseMode(0);//red led constant blinking
-        ledRenderers[1].material = ledOnMaterials[1];
-        ledRenderers[2].material = ledOnMaterials[2];
-        PulseMode(3);//yellow led sometimes
-        
-
-        /*if (
-            ledRenderers == null ||
-            ledColors == null
-        )
-            return;*/
-
-        /*float brightness;
-
-        if (isPulsing)
-        {
-            brightness =
-                Mathf.Lerp(
-                    ledIntensity * 0.5f,
-                    ledIntensity,
-                    Mathf.Sin(
-                        Time.time *
-                        blinkSpeed
-                    ) * 0.5f + 0.5f
-                );
-        }
-        else
-        {
-            brightness =
-                Mathf.Floor(
-                    Time.time *
-                    blinkSpeed
-                ) % 2 == 0
-
-                ?
-
-                ledIntensity
-
-                :
-
-                0f;
-        }*/
-
-
-        //ledRenderers is the old one
-        /*for (
-            int i = 0;
-            i < ledMaterials.Length;
-            i++
-        )
-        {
-            if (
-                ledMaterials[i] == null
-            )
-                continue;
-
-
-
-            Color color =
-                (
-                    i < ledColors.Length
-                )
-
-                ?
-
-                ledColors[i]
-
-                :
-
-                Color.white;
-
-            ledMaterials[i].SetColor("_EmissionColor", color * brightness);*/
-
-        /*ledRenderers[i]
-            .material
-            .SetColor(
-                "_EmissionColor",
-                color *
-                brightness
-            );*/
-        /*}*/
+        PulseMode(4, 4.0f, 0.1f);//led 4 yellow blinking sometimes
+        PulseMode(5, 0.25f, 0.5f);//led 1 red blinking constant
     }
 }

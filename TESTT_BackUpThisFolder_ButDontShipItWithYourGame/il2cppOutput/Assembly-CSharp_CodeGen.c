@@ -156,10 +156,12 @@ extern void UDPTest__ctor_mFB0FDEDB28098A7023B025600CD488116733CF90 (void);
 extern void VisualEffects_Start_mEEB343F0B0A4C55A5901F1D39BC3D4701127DE69 (void);
 extern void VisualEffects_Update_mC14CFF315E6A3C3751D8BEA28F3595115EDD9327 (void);
 extern void VisualEffects_RotatePropellers_mB3FF5E50D9126D3DBAEECA2FD30EADC2FD75B74E (void);
-extern void VisualEffects_ConfigureLEDs_m03616B3D3D0A87BEACD49658EF25ACE47ED36EBF (void);
-extern void VisualEffects_PulseMode_m6B5A229805A315271D77ABB043EDF375AA1EB6F4 (void);
+extern void VisualEffects_SetLED_m4AD16ABF94B6611C4F66E8A793189B7F37D52B8F (void);
+extern void VisualEffects_PulseMode_m97132444E326AA0AD867B3ABB3104202FE2753F0 (void);
 extern void VisualEffects_AnimateLEDs_mB890FD415034F13E33281058F4BE562895AC2314 (void);
 extern void VisualEffects__ctor_m5B2AB439C412EA6DBB320F7DA92BC9C06A1CD200 (void);
+extern void Propeller__ctor_mCF91F4884189259FF70C8856D2FF878700D4A0F4 (void);
+extern void LED__ctor_m3CFF2171E5E0A94CEBB5F7490591F44688C1D7A3 (void);
 extern void UnitySourceGeneratedAssemblyMonoScriptTypes_v1_Get_mBEB95BEB954BB63E9710BBC7AD5E78C4CB0A0033 (void);
 extern void UnitySourceGeneratedAssemblyMonoScriptTypes_v1__ctor_mE70FB23ACC1EA12ABC948AA22C2E78B2D0AA39B1 (void);
 extern void TMP_DigitValidator_Validate_m786CF8A4D85EB9E1BE8785A58007F8796991BDB9 (void);
@@ -412,7 +414,7 @@ extern void U3CWarpTextU3Ed__8_MoveNext_mCE7A826C5E4854C2C509C77BD18F5A9B6D691B0
 extern void U3CWarpTextU3Ed__8_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_mD80368E9B7E259311C03E406B75161ED6F7618E3 (void);
 extern void U3CWarpTextU3Ed__8_System_Collections_IEnumerator_Reset_m07746C332D2D8CE5DEA59873C26F2FAD4B369B42 (void);
 extern void U3CWarpTextU3Ed__8_System_Collections_IEnumerator_get_Current_m71D7F84D9DEF63BEC6B44866515DDCF35B142A19 (void);
-static Il2CppMethodPointer s_methodPointers[405] = 
+static Il2CppMethodPointer s_methodPointers[407] = 
 {
 	DroneController_Start_m845711AE6688093E343C5E9D5E0458A0BC3FDD0F,
 	DroneController_Update_m2A32A202931F956DDC0E1AC00385B11071289B5E,
@@ -563,10 +565,12 @@ static Il2CppMethodPointer s_methodPointers[405] =
 	VisualEffects_Start_mEEB343F0B0A4C55A5901F1D39BC3D4701127DE69,
 	VisualEffects_Update_mC14CFF315E6A3C3751D8BEA28F3595115EDD9327,
 	VisualEffects_RotatePropellers_mB3FF5E50D9126D3DBAEECA2FD30EADC2FD75B74E,
-	VisualEffects_ConfigureLEDs_m03616B3D3D0A87BEACD49658EF25ACE47ED36EBF,
-	VisualEffects_PulseMode_m6B5A229805A315271D77ABB043EDF375AA1EB6F4,
+	VisualEffects_SetLED_m4AD16ABF94B6611C4F66E8A793189B7F37D52B8F,
+	VisualEffects_PulseMode_m97132444E326AA0AD867B3ABB3104202FE2753F0,
 	VisualEffects_AnimateLEDs_mB890FD415034F13E33281058F4BE562895AC2314,
 	VisualEffects__ctor_m5B2AB439C412EA6DBB320F7DA92BC9C06A1CD200,
+	Propeller__ctor_mCF91F4884189259FF70C8856D2FF878700D4A0F4,
+	LED__ctor_m3CFF2171E5E0A94CEBB5F7490591F44688C1D7A3,
 	UnitySourceGeneratedAssemblyMonoScriptTypes_v1_Get_mBEB95BEB954BB63E9710BBC7AD5E78C4CB0A0033,
 	UnitySourceGeneratedAssemblyMonoScriptTypes_v1__ctor_mE70FB23ACC1EA12ABC948AA22C2E78B2D0AA39B1,
 	TMP_DigitValidator_Validate_m786CF8A4D85EB9E1BE8785A58007F8796991BDB9,
@@ -820,7 +824,7 @@ static Il2CppMethodPointer s_methodPointers[405] =
 	U3CWarpTextU3Ed__8_System_Collections_IEnumerator_Reset_m07746C332D2D8CE5DEA59873C26F2FAD4B369B42,
 	U3CWarpTextU3Ed__8_System_Collections_IEnumerator_get_Current_m71D7F84D9DEF63BEC6B44866515DDCF35B142A19,
 };
-static const int32_t s_InvokerIndices[405] = 
+static const int32_t s_InvokerIndices[407] = 
 {
 	21448,
 	21448,
@@ -971,8 +975,10 @@ static const int32_t s_InvokerIndices[405] =
 	21448,
 	21448,
 	21448,
+	7310,
+	3497,
 	21448,
-	15949,
+	21448,
 	21448,
 	21448,
 	35753,
@@ -1232,7 +1238,7 @@ IL2CPP_EXTERN_C const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule;
 const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule = 
 {
 	"Assembly-CSharp.dll",
-	405,
+	407,
 	s_methodPointers,
 	0,
 	NULL,
