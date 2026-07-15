@@ -3,6 +3,9 @@ import socket
 import json
 import random
 import threading
+import csv
+import os
+from datetime import datetime
 
 import cflib.crtp
 
@@ -361,6 +364,71 @@ def print_results():
     print()
 
 
+def save_csv():
+    if not answers:
+        print("[CSV] No answers to save.")
+        return
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"results_{timestamp}.csv"
+
+    fieldnames = [
+        "Trial",
+        "Affordance",
+        "Left Drone",
+        "Right Drone",
+        "Left Drone Coordinates",
+        "Right Drone Coordinates",
+        "Which drone is more real? (1=Left 7=Right)",
+        "Which drone feels closer? (1=Left 7=Right)",
+        "Which drone is more safe? (1=Left 7=Right)",
+        "Left Drone Gaze Duration (s)",
+        "Right Drone Gaze Duration (s)"
+    ]
+
+    with open(filename, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for r in answers:
+            real_side    = r["drone_side"]
+            virtual_side = "Left" if real_side == "Right" else "Right"
+
+            real_coords    = f"({r['x']:.2f}, {r['y']:.2f}, {r['z']:.2f})"
+            virtual_coords = f"({-r['x']:.2f}, {r['y']:.2f}, {r['z']:.2f})"
+
+            if real_side == "Left":
+                left_drone   = "Physical"
+                right_drone  = "Virtual"
+                left_coords  = real_coords
+                right_coords = virtual_coords
+                left_gaze    = r["real_gaze"]
+                right_gaze   = r["virtual_gaze"]
+            else:
+                left_drone   = "Virtual"
+                right_drone  = "Physical"
+                left_coords  = virtual_coords
+                right_coords = real_coords
+                left_gaze    = r["virtual_gaze"]
+                right_gaze   = r["real_gaze"]
+
+            writer.writerow({
+                "Trial":                                          r["trial"],
+                "Affordance":                                     r["affordance"],
+                "Left Drone":                                     left_drone,
+                "Right Drone":                                    right_drone,
+                "Left Drone Coordinates":                         left_coords,
+                "Right Drone Coordinates":                        right_coords,
+                "Which drone is more real? (1=Left 7=Right)":    r["q1"],
+                "Which drone feels closer? (1=Left 7=Right)":    r["q2"],
+                "Which drone is more safe? (1=Left 7=Right)":    r["q3"],
+                "Left Drone Gaze Duration (s)":                   left_gaze,
+                "Right Drone Gaze Duration (s)":                  right_gaze
+            })
+
+    print(f"\n[CSV] Results saved to: {os.path.abspath(filename)}")
+
+
 # ==================================================
 # MAIN — DRONE CONNECTION + FLIGHT
 # ==================================================
@@ -417,11 +485,13 @@ with SyncCrazyflie(
         trials = build_trials(combos)
         run_trials(trials)
         print_results()
+        save_csv()
 
     except KeyboardInterrupt:
         print("\n[EMERGENCY] Stopping early.")
         if answers:
             print_results()
+            save_csv()
 
     finally:
         running = False

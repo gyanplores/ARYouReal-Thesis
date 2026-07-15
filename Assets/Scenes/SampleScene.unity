@@ -3255,8 +3255,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.92
+  m_Center: {x: 0, y: 0, z: 0.03}
 --- !u!23 &301224813
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5957,7 +5957,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3546224017811503037, guid: 6e7ee8cb9da8f25458df1e5d33ef5cc1, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7201,6 +7201,188 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VisualEffects
   propellerSpeed: 3000
+--- !u!4 &707895996 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4658190296186004239, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
+  m_PrefabInstance: {fileID: 1796300166}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &707895997
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707895993}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0.24, z: 0}
+--- !u!114 &707895998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707895993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d00663e65fc9074d9d060b45a47aa4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DroneSway
+  maxTiltAngle: 15
+  tiltSmoothing: 5
+  speedForMaxTilt: 2
+  enableIdleSway: 1
+  idleTiltAmount: 2.5
+  idleBobAmount: 0.02
+  idleSwaySpeed: 1.2
+--- !u!114 &707895999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707895993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24da9399a752c05428af4ad58dad1282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrialReceiver
+  listenPort: 5005
+  sensoryManager: {fileID: 1741312760}
+  droneTransform: {fileID: 707895996}
+  realDroneProxy: {fileID: 301224811}
+  questionnaireUI: {fileID: 1828580932}
+  headGazeReticle: {fileID: 910772658}
+  isMirrorMode: 1
+  moveSpeed: 3
+  statusText: {fileID: 1479923171}
+  receivedText: {fileID: 986580960}
+--- !u!114 &707896000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707895993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 441de1efc05f3e944ba28b35a26797c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DroneHaptics
+  frequency: 0.5
+  amplitude: 0.5
+  rayDistance: 20
+  leftHandAnchor: {fileID: 1011665194}
+  rightHandAnchor: {fileID: 1725252174}
+  hapticsConditionActive: 0
+--- !u!82 &707896001
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707895993}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 2dd8aa6de7d8d5b45b78cb0b6b5a60b7, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &708777986
 GameObject:
   m_ObjectHideFlags: 0
@@ -8387,8 +8569,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 160.8}
+  m_AnchoredPosition: {x: 352, y: 103}
+  m_SizeDelta: {x: 100, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &857276440
 Canvas:
@@ -9007,7 +9189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HeadGazeReticle
   centerEyeAnchor: {fileID: 411485200}
   gazeDistance: 20
-  droneTransform: {fileID: 914246481}
+  droneTransform: {fileID: 707895996}
   realDroneProxy: {fileID: 301224811}
   reticleImage: {fileID: 1646264470}
   idleColor: {r: 1, g: 1, b: 1, a: 1}
@@ -9089,7 +9271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24da9399a752c05428af4ad58dad1282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrialReceiver
-  listenPort: 5008
+  listenPort: 5005
   sensoryManager: {fileID: 1741312760}
   droneTransform: {fileID: 914246481}
   realDroneProxy: {fileID: 301224811}
@@ -9881,7 +10063,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _position: {x: 0, y: 0, z: 0}
-  _size: {x: 1101, y: 510.5, z: 0.01}
+  _size: {x: 1101, y: 10000, z: 0.01}
 --- !u!114 &1007346365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13842,7 +14024,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _position: {x: 0, y: 0, z: 0}
-  _size: {x: 1101, y: 510.5, z: 0.01}
+  _size: {x: 1101, y: 10000, z: 0.01}
 --- !u!114 &1436991141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15051,7 +15233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05cf556f53157974e970ab7aac737dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartupMenu
-  trialReceiver: {fileID: 914246484}
+  trialReceiver: {fileID: 707895999}
   sensoryManager: {fileID: 1741312760}
   blackBox: {fileID: 1236802730}
   menuRoot: {fileID: 1607934758}
@@ -16452,8 +16634,8 @@ MonoBehaviour:
   listenPort: 5006
   blackBox: {fileID: 1236802730}
   whiteNoiseSource: {fileID: 1880571443}
-  droneAudioSource: {fileID: 377044088}
-  droneHaptics: {fileID: 914246485}
+  droneAudioSource: {fileID: 707896001}
+  droneHaptics: {fileID: 707896000}
   waitForStartupMenu: 1
 --- !u!4 &1741312761
 Transform:
@@ -17362,11 +17544,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4658190296186004239, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.362
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4658190296186004239, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4658190296186004239, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -17406,7 +17588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 292066399684412612, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17415,6 +17597,21 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 292066399684412612, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 707895995}
+    - targetCorrespondingSourceObject: {fileID: 292066399684412612, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 707896001}
+    - targetCorrespondingSourceObject: {fileID: 292066399684412612, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 707896000}
+    - targetCorrespondingSourceObject: {fileID: 292066399684412612, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 707895999}
+    - targetCorrespondingSourceObject: {fileID: 292066399684412612, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 707895998}
+    - targetCorrespondingSourceObject: {fileID: 292066399684412612, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 707895997}
     - targetCorrespondingSourceObject: {fileID: 3945772607384532272, guid: e0e7ce7bf1c33774c8e5b4adf932cbc9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 84394465}
@@ -17774,7 +17971,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1101, y: 510.5}
+  m_SizeDelta: {x: 1101, y: 10000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1828580932
 MonoBehaviour:
@@ -19712,7 +19909,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfa9240742c0d824aa3675bfb404ea45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VisualEffects
-  propellerSpeed: 3000
 --- !u!1 &2016314554
 GameObject:
   m_ObjectHideFlags: 0
