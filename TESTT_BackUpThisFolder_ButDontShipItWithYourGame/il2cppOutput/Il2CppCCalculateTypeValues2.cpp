@@ -3919,6 +3919,7 @@ struct AnswerPacket_t6B8FB51BD2D25613935475CE18A306D117588D82  : public RuntimeO
 	int32_t ___q2;
 	int32_t ___q3;
 	float ___gazeTime;
+	float ___realGazeTime;
 };
 struct ReadyPacket_t3D17CC85EC1F111A85201DFB8456A9A74555F59A  : public RuntimeObject
 {
@@ -25695,6 +25696,7 @@ struct HeadGazeReticle_t02ACA9FD62DFD118EB719E937234F36E5978D59B  : public MonoB
 	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___centerEyeAnchor;
 	float ___gazeDistance;
 	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___droneTransform;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___realDroneProxy;
 	Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* ___reticleImage;
 	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___idleColor;
 	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___gazeColor;
@@ -25703,11 +25705,12 @@ struct HeadGazeReticle_t02ACA9FD62DFD118EB719E937234F36E5978D59B  : public MonoB
 	float ___colorSmoothSpeed;
 	float ___sizeSmoothSpeed;
 	TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* ___gazeTimerText;
-	bool ___isGazingAtDrone;
+	bool ___isGazingAtVirtual;
+	float ___virtualGazeTime;
+	bool ___isGazingAtReal;
+	float ___realGazeTime;
 	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___currentColor;
 	float ___currentSize;
-	float ___totalGazeTime;
-	bool ___timerActive;
 };
 struct HideHandVisualOnGrab_t0A089F27E0391D0D4DED25457833C9A1D5511218  : public MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71
 {
@@ -26973,6 +26976,7 @@ struct TrialReceiver_tA61A15A2B8303D73B64B5F6726953976C6B88BF7  : public MonoBeh
 	int32_t ___listenPort;
 	SensoryManager_t09C03C68121A63FD6B960707827FFD8A9B70F85C* ___sensoryManager;
 	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___droneTransform;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___realDroneProxy;
 	QuestionnaireUI_tE4BC47653687E347F0882BFE15E4E52EC77572B1* ___questionnaireUI;
 	HeadGazeReticle_t02ACA9FD62DFD118EB719E937234F36E5978D59B* ___headGazeReticle;
 	bool ___isMirrorMode;

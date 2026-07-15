@@ -137,9 +137,16 @@ public class TrialReceiver : MonoBehaviour
             Vector3 baselineSnap;
             Vector3 unityStartSnap;
             lock (dataLock) { baselineSnap = realBaseline; unityStartSnap = unityStartPosition; }
-            Vector3 proxyDelta = proxyTarget - baselineSnap;
-            Vector3 proxyFinal = unityStartSnap + new Vector3(proxyDelta.x, proxyDelta.y, proxyDelta.z);
-            proxyFinal.y = Mathf.Max(0f, proxyFinal.y);
+            Vector3 proxyDelta = new Vector3(
+                proxyTarget.x - baselineSnap.x,
+                0f,  // height absolute
+                proxyTarget.z - baselineSnap.z
+            );
+            Vector3 proxyFinal = new Vector3(
+                unityStartSnap.x + proxyDelta.x,
+                proxyTarget.y,   // absolute height
+                unityStartSnap.z + proxyDelta.z
+            );
             proxyFinal.z = Mathf.Max(0f, proxyFinal.z);
             realDroneProxy.position = proxyFinal;
         }
@@ -306,21 +313,31 @@ public class TrialReceiver : MonoBehaviour
                     return;
                 }
 
-                // Compute delta from baseline
-                Vector3 delta = new Vector3(unityX, unityY, unityZ) - baseline;
+                // Compute delta from baseline — X and Z only
+                // Y (height) is treated as ABSOLUTE not relative,
+                // since Unity floor is always Y=0 regardless of
+                // where the Crazyflie room origin is
+                Vector3 delta = new Vector3(
+                    new Vector3(unityX, unityY, unityZ).x - baseline.x,
+                    0f,  // height handled separately below
+                    new Vector3(unityX, unityY, unityZ).z - baseline.z
+                );
 
-                // Apply mirror or mask
+                // Apply mirror or mask on X delta only
                 Vector3 mirroredDelta = new Vector3(
                     mirrorMode ? -delta.x : delta.x,
-                    delta.y,
+                    0f,
                     delta.z
                 );
 
-                // Final target position
-                Vector3 mirrored = unityStart + mirroredDelta;
+                // Final target — X and Z from delta, Y absolute from packet
+                Vector3 mirrored = new Vector3(
+                    unityStart.x + mirroredDelta.x,
+                    unityY,        // absolute height from Crazyflie Z
+                    unityStart.z + mirroredDelta.z
+                );
 
-                // Safety clamp
-                mirrored.y = Mathf.Max(0f, mirrored.y);
+                // Only clamp Z to prevent drone going behind user
                 mirrored.z = Mathf.Max(0f, mirrored.z);
 
                 lock (dataLock)

@@ -259,6 +259,9 @@ def run_trials(trials):
             "virtual_gaze_label": f"{virtual_side} drone duration",
             "real_gaze":    current_answer["realGaze"],
             "virtual_gaze": current_answer["virtualGaze"],
+            "x": round(trial["x"], 2),
+            "y": round(trial["y"], 2),
+            "z": round(trial["z"], 2),
             "q1": current_answer["q1"],
             "q2": current_answer["q2"],
             "q3": current_answer["q3"]
