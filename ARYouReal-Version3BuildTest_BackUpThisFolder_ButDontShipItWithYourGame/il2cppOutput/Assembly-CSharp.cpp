@@ -3143,6 +3143,7 @@ struct SensoryManager_t09C03C68121A63FD6B960707827FFD8A9B70F85C  : public MonoBe
 	AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* ___whiteNoiseSource;
 	AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* ___droneAudioSource;
 	DroneHaptics_tF535AB47AA9E420A2ABDC179F51DF0FDE5E901B4* ___droneHaptics;
+	DroneHaptics_tF535AB47AA9E420A2ABDC179F51DF0FDE5E901B4* ___proxyHaptics;
 	UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* ___udpClient;
 	Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* ___udpThread;
 	bool ___isRunning;
@@ -11365,7 +11366,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_Start_mF2350D030A8A6393D5
 	}
 	bool V_0 = false;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:50>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:53>
 		bool L_0 = __this->___waitForStartupMenu;
 		V_0 = L_0;
 		bool L_1 = V_0;
@@ -11375,28 +11376,28 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_Start_mF2350D030A8A6393D5
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:54>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:57>
 		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:55>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:58>
 		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)1, NULL);
 		goto IL_0039;
 	}
 
 IL_001f:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:60>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:63>
 		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:61>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:64>
 		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:62>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:65>
 		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)1, NULL);
 	}
 
 IL_0039:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:65>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:68>
 		SensoryManager_StartUDP_m1F202CF7FF3BE6E2BD44C19EB5A63B155A50D91F(__this, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:66>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:69>
 		int32_t L_2 = __this->___listenPort;
 		int32_t L_3 = L_2;
 		RuntimeObject* L_4 = Box(il2cpp_defaults.int32_class, &L_3);
@@ -11404,7 +11405,7 @@ IL_0039:
 		L_5 = String_Format_mA8DBB4C2516B9723C5A41E6CB1E2FAF4BBE96DD8(_stringLiteralC5E0BB49CC377B8F4EAAED5A84AEE6B1307BAF7E, L_4, NULL);
 		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 		Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_5, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:67>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:70>
 		return;
 	}
 }
@@ -11417,9 +11418,9 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_Update_mD77C6F2178ED19B2F
 	bool V_3 = false;
 	int32_t G_B8_0 = 0;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:72>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:75>
 		V_0 = (-1);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:73>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:76>
 		RuntimeObject* L_0 = __this->___modeLock;
 		V_1 = L_0;
 		V_2 = (bool)0;
@@ -11452,10 +11453,10 @@ IL_0031:
 		{
 			RuntimeObject* L_3 = V_1;
 			Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_3, (&V_2), NULL);
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:75>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:78>
 			int32_t L_4 = __this->___pendingMode;
 			V_0 = L_4;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:76>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:79>
 			__this->___pendingMode = (-1);
 			goto IL_0032;
 		}
@@ -11467,7 +11468,7 @@ IL_0031:
 
 IL_0032:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:79>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:82>
 		int32_t L_5 = V_0;
 		if ((((int32_t)L_5) < ((int32_t)1)))
 		{
@@ -11495,14 +11496,14 @@ IL_0040:
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:80>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:83>
 		int32_t L_8 = V_0;
 		SensoryManager_ApplyMode_m8F84A94B674EF031B9CB242CE77FF48E9B2D5BFE(__this, L_8, NULL);
 	}
 
 IL_004c:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:81>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:84>
 		return;
 	}
 }
@@ -11526,7 +11527,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_ApplyAffordanceString_mD4
 	bool V_2 = false;
 	bool V_3 = false;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:92>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:95>
 		String_t* L_0 = ___0_affordance;
 		bool L_1;
 		L_1 = String_IsNullOrEmpty_mEA9E3FB005AC28FE02E69FCF95A7B8456192B478(L_0, NULL);
@@ -11538,49 +11539,49 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_ApplyAffordanceString_mD4
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:94>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:97>
 		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 		Debug_LogWarning_m33EF1B897E0C7C6FF538989610BFAFFEF4628CA9(_stringLiteral4AB7C8573DF4A3F9B22BFFCBE96FD0A92013F1CD, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:95>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:98>
 		goto IL_0092;
 	}
 
 IL_0019:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:98>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:101>
 		String_t* L_3 = ___0_affordance;
 		NullCheck(L_3);
 		String_t* L_4;
 		L_4 = String_ToUpper_m5F499BC30C2A5F5C96248B4C3D1A3B4694748B49(L_3, NULL);
 		___0_affordance = L_4;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:100>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:103>
 		String_t* L_5 = ___0_affordance;
 		NullCheck(L_5);
 		bool L_6;
 		L_6 = String_Contains_m6D77B121FADA7CA5F397C0FABB65DA62DF03B6C3(L_5, _stringLiteral5377EFB7D3540F7856D33807A13661041629AB2F, NULL);
 		V_0 = L_6;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:101>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:104>
 		String_t* L_7 = ___0_affordance;
 		NullCheck(L_7);
 		bool L_8;
 		L_8 = String_Contains_m6D77B121FADA7CA5F397C0FABB65DA62DF03B6C3(L_7, _stringLiteralEF420ABFDDBDA7B9EE665D85EF62E4A437554003, NULL);
 		V_1 = L_8;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:102>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:105>
 		String_t* L_9 = ___0_affordance;
 		NullCheck(L_9);
 		bool L_10;
 		L_10 = String_Contains_m6D77B121FADA7CA5F397C0FABB65DA62DF03B6C3(L_9, _stringLiteral410E5346BCA8EE150FFD507311DD85789F2E171E, NULL);
 		V_2 = L_10;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:104>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:107>
 		bool L_11 = V_0;
 		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, L_11, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:105>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:108>
 		bool L_12 = V_1;
 		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, L_12, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:106>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:109>
 		bool L_13 = V_2;
 		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, L_13, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:108>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:111>
 		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_14 = (ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)SZArrayNew(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918_il2cpp_TypeInfo_var, (uint32_t)4);
 		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_15 = L_14;
 		String_t* L_16 = ___0_affordance;
@@ -11616,7 +11617,7 @@ IL_0019:
 
 IL_0092:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:109>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:112>
 		return;
 	}
 }
@@ -11634,7 +11635,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_ApplyMode_m8F84A94B674EF0
 	int32_t V_0 = 0;
 	int32_t V_1 = 0;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:115>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:118>
 		int32_t L_0 = ___0_mode;
 		V_1 = L_0;
 		int32_t L_1 = V_1;
@@ -11678,91 +11679,91 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_ApplyMode_m8F84A94B674EF0
 
 IL_002e:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:118>
-		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:119>
-		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:120>
-		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)1, NULL);
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:121>
+		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:122>
+		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:123>
+		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:124>
 		goto IL_00ea;
 	}
 
 IL_004b:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:123>
-		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:124>
-		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:125>
-		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)0, NULL);
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:126>
+		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:127>
+		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:128>
+		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)0, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:129>
 		goto IL_00ea;
 	}
 
 IL_0068:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:128>
-		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:129>
-		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)0, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:130>
-		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)1, NULL);
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:131>
+		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:132>
+		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)0, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:133>
+		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:134>
 		goto IL_00ea;
 	}
 
 IL_0082:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:133>
-		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)0, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:134>
-		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:135>
-		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)1, NULL);
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:136>
+		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)0, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:137>
+		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:138>
+		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:139>
 		goto IL_00ea;
 	}
 
 IL_009c:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:138>
-		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:139>
-		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)0, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:140>
-		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)0, NULL);
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:141>
+		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:142>
+		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)0, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:143>
+		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)0, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:144>
 		goto IL_00ea;
 	}
 
 IL_00b6:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:143>
-		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)0, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:144>
-		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:145>
-		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)0, NULL);
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:146>
+		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)0, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:147>
+		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:148>
+		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)0, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:149>
 		goto IL_00ea;
 	}
 
 IL_00d0:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:148>
-		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)0, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:149>
-		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)0, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:150>
-		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)1, NULL);
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:151>
+		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)0, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:152>
+		SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6(__this, (bool)0, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:153>
+		SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E(__this, (bool)1, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:154>
 		goto IL_00ea;
 	}
 
 IL_00ea:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:154>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:157>
 		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_3 = (ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)SZArrayNew(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918_il2cpp_TypeInfo_var, (uint32_t)4);
 		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_4 = L_3;
 		int32_t L_5 = ___0_mode;
@@ -11796,7 +11797,7 @@ IL_00ea:
 		L_20 = String_Format_m918500C1EFB475181349A79989BB79BB36102894(_stringLiteralD598B70441CFCD11C0EC70A508E0618B12493A74, L_16, NULL);
 		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 		Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_20, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:155>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:158>
 		return;
 	}
 }
@@ -11811,10 +11812,10 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_SetVisual_m9A473021A5AA4E
 	}
 	bool V_0 = false;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:161>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:164>
 		bool L_0 = ___0_enabled;
 		__this->___visualEnabled = L_0;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:163>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:166>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_1 = __this->___blackBox;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_2;
@@ -11827,7 +11828,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_SetVisual_m9A473021A5AA4E
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:164>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:167>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_4 = __this->___blackBox;
 		bool L_5 = ___0_enabled;
 		NullCheck(L_4);
@@ -11836,7 +11837,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_SetVisual_m9A473021A5AA4E
 
 IL_0028:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:165>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:168>
 		return;
 	}
 }
@@ -11855,10 +11856,10 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_SetAudio_m38740C58B5F9714
 	bool V_3 = false;
 	bool V_4 = false;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:169>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:172>
 		bool L_0 = ___0_enabled;
 		__this->___audioEnabled = L_0;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:172>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:175>
 		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_1 = __this->___whiteNoiseSource;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_2;
@@ -11871,7 +11872,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_SetAudio_m38740C58B5F9714
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:174>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:177>
 		bool L_4 = ___0_enabled;
 		V_1 = (bool)((((int32_t)L_4) == ((int32_t)0))? 1 : 0);
 		bool L_5 = V_1;
@@ -11881,11 +11882,11 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_SetAudio_m38740C58B5F9714
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:176>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:179>
 		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_6 = __this->___whiteNoiseSource;
 		NullCheck(L_6);
 		AudioSource_set_loop_m834A590939D8456008C0F897FD80B0ECFFB7FE56(L_6, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:177>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:180>
 		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_7 = __this->___whiteNoiseSource;
 		NullCheck(L_7);
 		AudioSource_Play_m95DF07111C61D0E0F00257A00384D31531D590C3(L_7, NULL);
@@ -11894,7 +11895,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_SetAudio_m38740C58B5F9714
 
 IL_003e:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:181>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:184>
 		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_8 = __this->___whiteNoiseSource;
 		NullCheck(L_8);
 		AudioSource_Stop_m318F17F17A147C77FF6E0A5A7A6BE057DB90F537(L_8, NULL);
@@ -11906,7 +11907,7 @@ IL_004c:
 
 IL_004d:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:186>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:189>
 		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_9 = __this->___droneAudioSource;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_10;
@@ -11919,7 +11920,7 @@ IL_004d:
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:188>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:191>
 		bool L_12 = ___0_enabled;
 		V_3 = L_12;
 		bool L_13 = V_3;
@@ -11929,7 +11930,7 @@ IL_004d:
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:190>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:193>
 		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_14 = __this->___droneAudioSource;
 		NullCheck(L_14);
 		bool L_15;
@@ -11942,7 +11943,7 @@ IL_004d:
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:191>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:194>
 		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_17 = __this->___droneAudioSource;
 		NullCheck(L_17);
 		AudioSource_Play_m95DF07111C61D0E0F00257A00384D31531D590C3(L_17, NULL);
@@ -11955,7 +11956,7 @@ IL_0084:
 
 IL_0087:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:195>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:198>
 		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_18 = __this->___droneAudioSource;
 		NullCheck(L_18);
 		AudioSource_Stop_m318F17F17A147C77FF6E0A5A7A6BE057DB90F537(L_18, NULL);
@@ -11967,7 +11968,7 @@ IL_0095:
 
 IL_0096:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:198>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:201>
 		return;
 	}
 }
@@ -11983,11 +11984,12 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_SetHaptics_mAAC36C7CD524A
 	}
 	bool V_0 = false;
 	bool V_1 = false;
+	bool V_2 = false;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:202>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:205>
 		bool L_0 = ___0_enabled;
 		__this->___hapticsEnabled = L_0;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:207>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:209>
 		DroneHaptics_tF535AB47AA9E420A2ABDC179F51DF0FDE5E901B4* L_1 = __this->___droneHaptics;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_2;
@@ -12000,7 +12002,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_SetHaptics_mAAC36C7CD524A
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:208>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:210>
 		DroneHaptics_tF535AB47AA9E420A2ABDC179F51DF0FDE5E901B4* L_4 = __this->___droneHaptics;
 		bool L_5 = ___0_enabled;
 		NullCheck(L_4);
@@ -12009,26 +12011,48 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_SetHaptics_mAAC36C7CD524A
 
 IL_0025:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:210>
-		bool L_6 = ___0_enabled;
-		V_1 = (bool)((((int32_t)L_6) == ((int32_t)0))? 1 : 0);
-		bool L_7 = V_1;
-		if (!L_7)
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:212>
+		DroneHaptics_tF535AB47AA9E420A2ABDC179F51DF0FDE5E901B4* L_6 = __this->___proxyHaptics;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_7;
+		L_7 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_6, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		V_1 = L_7;
+		bool L_8 = V_1;
+		if (!L_8)
 		{
-			goto IL_0051;
+			goto IL_0042;
 		}
 	}
 	{
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:213>
+		DroneHaptics_tF535AB47AA9E420A2ABDC179F51DF0FDE5E901B4* L_9 = __this->___proxyHaptics;
+		bool L_10 = ___0_enabled;
+		NullCheck(L_9);
+		DroneHaptics_SetHapticsCondition_mE794FBBF2F94BE4FE1096EE9291C58F5FC3CD3D0(L_9, L_10, NULL);
+	}
+
+IL_0042:
+	{
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:215>
+		bool L_11 = ___0_enabled;
+		V_2 = (bool)((((int32_t)L_11) == ((int32_t)0))? 1 : 0);
+		bool L_12 = V_2;
+		if (!L_12)
+		{
+			goto IL_006e;
+		}
+	}
+	{
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:217>
 		il2cpp_codegen_runtime_class_init_inline(OVRInput_t759D9CC8F14D8539AD78A0375A2306C39D77100A_il2cpp_TypeInfo_var);
 		OVRInput_SetControllerVibration_m7DE7256047DAAB0F6F5E327250A23B9D7074871E((0.0f), (0.0f), 1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:214>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:218>
 		OVRInput_SetControllerVibration_m7DE7256047DAAB0F6F5E327250A23B9D7074871E((0.0f), (0.0f), 2, NULL);
 	}
 
-IL_0051:
+IL_006e:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:216>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:220>
 		return;
 	}
 }
@@ -12050,26 +12074,26 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_StartUDP_m1F202CF7FF3BE6E
 	}
 	try
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:224>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:228>
 		int32_t L_0 = __this->___listenPort;
 		UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* L_1 = (UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8*)il2cpp_codegen_object_new(UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8_il2cpp_TypeInfo_var);
 		UdpClient__ctor_m6DCF61B7A404114E51B86974B1B4E028F45C3442(L_1, L_0, NULL);
 		__this->___udpClient = L_1;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___udpClient), (void*)L_1);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:225>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:229>
 		__this->___isRunning = (bool)1;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:226>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:230>
 		ThreadStart_t7662D98F1793EDE90192D7304D1C3C44119328A2* L_2 = (ThreadStart_t7662D98F1793EDE90192D7304D1C3C44119328A2*)il2cpp_codegen_object_new(ThreadStart_t7662D98F1793EDE90192D7304D1C3C44119328A2_il2cpp_TypeInfo_var);
 		ThreadStart__ctor_m35CE51F76358F20E4A0C8F2963C3AE14E5FF7E71(L_2, __this, (intptr_t)((void*)SensoryManager_ReceiveLoop_m1E9FD878D35C67F5119BB355B1D16FDF9FF90388_RuntimeMethod_var), NULL);
 		Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* L_3 = (Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F*)il2cpp_codegen_object_new(Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F_il2cpp_TypeInfo_var);
 		Thread__ctor_m1FA23A179DF4F5B659689D6FA40DE903086212E2(L_3, L_2, NULL);
 		__this->___udpThread = L_3;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___udpThread), (void*)L_3);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:227>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:231>
 		Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* L_4 = __this->___udpThread;
 		NullCheck(L_4);
 		Thread_set_IsBackground_m45F00BD4C46F9B8A7C46A20A170B22BABB8FBA30(L_4, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:228>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:232>
 		Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* L_5 = __this->___udpThread;
 		NullCheck(L_5);
 		Thread_Start_m2230799AA331CA9ACEF49D5500281D0C1A9F72FA(L_5, NULL);
@@ -12088,9 +12112,9 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_StartUDP_m1F202CF7FF3BE6E
 CATCH_004d:
 	{
 		Exception_t* L_6 = ((Exception_t*)IL2CPP_GET_ACTIVE_EXCEPTION(Exception_t*));;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:230>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:234>
 		V_0 = L_6;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:232>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:236>
 		Exception_t* L_7 = V_0;
 		NullCheck(L_7);
 		String_t* L_8;
@@ -12105,7 +12129,7 @@ CATCH_004d:
 
 IL_0068:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:234>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:238>
 		return;
 	}
 }
@@ -12135,7 +12159,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_ReceiveLoop_m1E9FD878D35C
 	bool V_9 = false;
 	il2cpp::utils::ExceptionSupportStack<RuntimeObject*, 1> __active_exceptions;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:238>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:242>
 		il2cpp_codegen_runtime_class_init_inline(IPAddress_t2F4486449B0D73FF2D3B36A9FE5E9C3F63116484_il2cpp_TypeInfo_var);
 		IPAddress_t2F4486449B0D73FF2D3B36A9FE5E9C3F63116484* L_0 = ((IPAddress_t2F4486449B0D73FF2D3B36A9FE5E9C3F63116484_StaticFields*)il2cpp_codegen_static_fields_for(IPAddress_t2F4486449B0D73FF2D3B36A9FE5E9C3F63116484_il2cpp_TypeInfo_var))->___Any;
 		IPEndPoint_t2F09CBA7A808B67724B4E2954EEDC46D910F4ECB* L_1 = (IPEndPoint_t2F09CBA7A808B67724B4E2954EEDC46D910F4ECB*)il2cpp_codegen_object_new(IPEndPoint_t2F09CBA7A808B67724B4E2954EEDC46D910F4ECB_il2cpp_TypeInfo_var);
@@ -12150,13 +12174,13 @@ IL_0012:
 	try
 	{
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:243>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:247>
 			UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* L_2 = __this->___udpClient;
 			NullCheck(L_2);
 			ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_3;
 			L_3 = UdpClient_Receive_mC682A8DE6CD86CEFA3CE52852574FD3437EC7DA9(L_2, (&V_0), NULL);
 			V_1 = L_3;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:244>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:248>
 			Encoding_t65CDEF28CF20A7B8C92E85A4E808920C2465F095* L_4;
 			L_4 = Encoding_get_UTF8_m9FA98A53CE96FD6D02982625C5246DD36C1235C9(NULL);
 			ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_5 = V_1;
@@ -12167,13 +12191,13 @@ IL_0012:
 			String_t* L_7;
 			L_7 = String_Trim_mCD6D8C6D4CFD15225D12DB7D3E0544CA80FB8DA5(L_6, NULL);
 			V_2 = L_7;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:245>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:249>
 			String_t* L_8 = V_2;
 			String_t* L_9;
 			L_9 = String_Concat_m9E3155FB84015C823606188F53B47CB44C444991(_stringLiteralDC2B2C906E72BA22D2D314E789E39D8A988CC546, L_8, NULL);
 			il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 			Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_9, NULL);
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:247>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:251>
 			String_t* L_10 = V_2;
 			bool L_11;
 			L_11 = Int32_TryParse_mC928DE2FEC1C35ED5298BDDCA9868076E94B8A21(L_10, (&V_3), NULL);
@@ -12185,7 +12209,7 @@ IL_0012:
 			}
 		}
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:249>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:253>
 			RuntimeObject* L_13 = __this->___modeLock;
 			V_5 = L_13;
 			V_6 = (bool)0;
@@ -12218,7 +12242,7 @@ IL_007d_1:
 			{
 				RuntimeObject* L_16 = V_5;
 				Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_16, (&V_6), NULL);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:250>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:254>
 				int32_t L_17 = V_3;
 				__this->___pendingMode = L_17;
 				goto IL_007e_1;
@@ -12236,7 +12260,7 @@ IL_007e_1:
 
 IL_0081_1:
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:254>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:258>
 			String_t* L_18 = V_2;
 			String_t* L_19;
 			L_19 = String_Concat_m8855A6DE10F84DA7F4EC113CADDB59873A25573B(_stringLiteralE9664717AB38C756D07544270FAF4F22C9E8313B, L_18, _stringLiteral605E9FEE12A50AA76408427ED38F6521D64C452D, NULL);
@@ -12263,9 +12287,9 @@ CATCH_009c:
 	{
 		{
 			Exception_t* L_20 = ((Exception_t*)IL2CPP_GET_ACTIVE_EXCEPTION(Exception_t*));;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:257>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:261>
 			V_7 = L_20;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:259>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:263>
 			bool L_21 = __this->___isRunning;
 			V_8 = L_21;
 			bool L_22 = V_8;
@@ -12275,7 +12299,7 @@ CATCH_009c:
 			}
 		}
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:260>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:264>
 			Exception_t* L_23 = V_7;
 			NullCheck(L_23);
 			String_t* L_24;
@@ -12299,7 +12323,7 @@ IL_00c5:
 
 IL_00c6:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:239>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:243>
 		bool L_26 = __this->___isRunning;
 		V_9 = L_26;
 		bool L_27 = V_9;
@@ -12309,7 +12333,7 @@ IL_00c6:
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:263>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:267>
 		return;
 	}
 }
@@ -12327,14 +12351,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_OnDestroy_m57DB46E529859C
 	Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* G_B5_0 = NULL;
 	Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* G_B4_0 = NULL;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:269>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:273>
 		__this->___isRunning = (bool)0;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:270>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:274>
 		il2cpp_codegen_runtime_class_init_inline(OVRInput_t759D9CC8F14D8539AD78A0375A2306C39D77100A_il2cpp_TypeInfo_var);
 		OVRInput_SetControllerVibration_m7DE7256047DAAB0F6F5E327250A23B9D7074871E((0.0f), (0.0f), 1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:271>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:275>
 		OVRInput_SetControllerVibration_m7DE7256047DAAB0F6F5E327250A23B9D7074871E((0.0f), (0.0f), 2, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:272>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:276>
 		UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* L_0 = __this->___udpClient;
 		UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* L_1 = L_0;
 		if (L_1)
@@ -12356,7 +12380,7 @@ IL_0036:
 
 IL_003c:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:273>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:277>
 		Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* L_2 = __this->___udpThread;
 		Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* L_3 = L_2;
 		if (L_3)
@@ -12378,7 +12402,7 @@ IL_0048:
 
 IL_004e:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:274>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:278>
 		return;
 	}
 }
@@ -12393,14 +12417,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager_ReleaseControlFromMenu_mB
 		s_Il2CppMethodInitialized = true;
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:285>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:289>
 		__this->___menuHasReleasedControl = (bool)1;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:286>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:290>
 		SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609(__this, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:287>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:291>
 		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 		Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(_stringLiteralA67F16166CA0EE0C09C4B009E95573BDE4D627F1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:288>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:292>
 		return;
 	}
 }
@@ -12416,24 +12440,24 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SensoryManager__ctor_mCD19A66BA7CCF97050
 	{
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:15>
 		__this->___listenPort = ((int32_t)5006);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:35>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:38>
 		__this->___isRunning = (bool)0;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:36>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:39>
 		__this->___pendingMode = (-1);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:37>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:40>
 		RuntimeObject* L_0 = (RuntimeObject*)il2cpp_codegen_object_new(RuntimeObject_il2cpp_TypeInfo_var);
 		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(L_0, NULL);
 		__this->___modeLock = L_0;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___modeLock), (void*)L_0);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:39>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:42>
 		__this->___visualEnabled = (bool)1;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:40>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:43>
 		__this->___audioEnabled = (bool)1;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:41>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:44>
 		__this->___hapticsEnabled = (bool)0;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:45>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:48>
 		__this->___waitForStartupMenu = (bool)1;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:46>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/SensoryManager.cs:49>
 		__this->___menuHasReleasedControl = (bool)0;
 		MonoBehaviour__ctor_m592DB0105CA0BC97AA1C5F4AD27B12D68A3B7C1E(__this, NULL);
 		return;
@@ -14183,7 +14207,7 @@ IL_00a1:
 		bool L_25 = V_8;
 		if (!L_25)
 		{
-			goto IL_01a4;
+			goto IL_01b4;
 		}
 	}
 	{
@@ -14295,199 +14319,203 @@ IL_0136:
 IL_0137:
 	{
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:140>
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_43 = V_10;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_44 = V_11;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_45;
-		L_45 = Vector3_op_Subtraction_mE42023FF80067CB44A1D4A27EB7CF2B24CABB828_inline(L_43, L_44, NULL);
-		V_13 = L_45;
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:141>
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_46 = V_12;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_47 = V_13;
-		float L_48 = L_47.___x;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_49 = V_13;
-		float L_50 = L_49.___y;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_51 = V_13;
-		float L_52 = L_51.___z;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_53;
-		memset((&L_53), 0, sizeof(L_53));
-		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_53), L_48, L_50, L_52, NULL);
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_54;
-		L_54 = Vector3_op_Addition_m78C0EC70CB66E8DCAC225743D82B268DAEE92067_inline(L_46, L_53, NULL);
-		V_14 = L_54;
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:142>
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_55 = V_14;
-		float L_56 = L_55.___y;
-		float L_57;
-		L_57 = Mathf_Max_mF5379E63D2BBAC76D090748695D833934F8AD051_inline((0.0f), L_56, NULL);
-		(&V_14)->___y = L_57;
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:143>
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_58 = V_14;
-		float L_59 = L_58.___z;
-		float L_60;
-		L_60 = Mathf_Max_mF5379E63D2BBAC76D090748695D833934F8AD051_inline((0.0f), L_59, NULL);
-		(&V_14)->___z = L_60;
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:144>
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_61 = __this->___realDroneProxy;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_62 = V_14;
-		NullCheck(L_61);
-		Transform_set_position_mA1A817124BB41B685043DED2A9BA48CDF37C4156(L_61, L_62, NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_43 = V_10;
+		float L_44 = L_43.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_45 = V_11;
+		float L_46 = L_45.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_47 = V_10;
+		float L_48 = L_47.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_49 = V_11;
+		float L_50 = L_49.___z;
+		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&V_13), ((float)il2cpp_codegen_subtract(L_44, L_46)), (0.0f), ((float)il2cpp_codegen_subtract(L_48, L_50)), NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:145>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:146>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:147>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:148>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:149>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_51 = V_12;
+		float L_52 = L_51.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_53 = V_13;
+		float L_54 = L_53.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_55 = V_10;
+		float L_56 = L_55.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_57 = V_12;
+		float L_58 = L_57.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_59 = V_13;
+		float L_60 = L_59.___z;
+		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&V_14), ((float)il2cpp_codegen_add(L_52, L_54)), L_56, ((float)il2cpp_codegen_add(L_58, L_60)), NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:150>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_61 = V_14;
+		float L_62 = L_61.___z;
+		float L_63;
+		L_63 = Mathf_Max_mF5379E63D2BBAC76D090748695D833934F8AD051_inline((0.0f), L_62, NULL);
+		(&V_14)->___z = L_63;
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:151>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_64 = __this->___realDroneProxy;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_65 = V_14;
+		NullCheck(L_64);
+		Transform_set_position_mA1A817124BB41B685043DED2A9BA48CDF37C4156(L_64, L_65, NULL);
 	}
 
-IL_01a4:
+IL_01b4:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:148>
-		bool L_63 = V_1;
-		if (!L_63)
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:155>
+		bool L_66 = V_1;
+		if (!L_66)
 		{
-			goto IL_01b5;
+			goto IL_01c5;
 		}
 	}
 	{
-		SensoryManager_t09C03C68121A63FD6B960707827FFD8A9B70F85C* L_64 = __this->___sensoryManager;
+		SensoryManager_t09C03C68121A63FD6B960707827FFD8A9B70F85C* L_67 = __this->___sensoryManager;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
-		bool L_65;
-		L_65 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_64, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
-		G_B24_0 = ((int32_t)(L_65));
-		goto IL_01b6;
+		bool L_68;
+		L_68 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_67, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		G_B24_0 = ((int32_t)(L_68));
+		goto IL_01c6;
 	}
 
-IL_01b5:
+IL_01c5:
 	{
 		G_B24_0 = 0;
 	}
 
-IL_01b6:
+IL_01c6:
 	{
 		V_19 = (bool)G_B24_0;
-		bool L_66 = V_19;
-		if (!L_66)
-		{
-			goto IL_01c9;
-		}
-	}
-	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:149>
-		SensoryManager_t09C03C68121A63FD6B960707827FFD8A9B70F85C* L_67 = __this->___sensoryManager;
-		String_t* L_68 = V_2;
-		NullCheck(L_67);
-		SensoryManager_ApplyAffordanceString_mD47808A119D92C60485BF592800E5A19B0F69D82(L_67, L_68, NULL);
-	}
-
-IL_01c9:
-	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:152>
-		bool L_69 = V_1;
+		bool L_69 = V_19;
 		if (!L_69)
 		{
-			goto IL_01da;
+			goto IL_01d9;
 		}
 	}
 	{
-		QuestionnaireUI_tE4BC47653687E347F0882BFE15E4E52EC77572B1* L_70 = __this->___questionnaireUI;
-		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
-		bool L_71;
-		L_71 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_70, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
-		G_B29_0 = ((int32_t)(L_71));
-		goto IL_01db;
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:156>
+		SensoryManager_t09C03C68121A63FD6B960707827FFD8A9B70F85C* L_70 = __this->___sensoryManager;
+		String_t* L_71 = V_2;
+		NullCheck(L_70);
+		SensoryManager_ApplyAffordanceString_mD47808A119D92C60485BF592800E5A19B0F69D82(L_70, L_71, NULL);
 	}
 
-IL_01da:
+IL_01d9:
+	{
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:159>
+		bool L_72 = V_1;
+		if (!L_72)
+		{
+			goto IL_01ea;
+		}
+	}
+	{
+		QuestionnaireUI_tE4BC47653687E347F0882BFE15E4E52EC77572B1* L_73 = __this->___questionnaireUI;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_74;
+		L_74 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_73, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		G_B29_0 = ((int32_t)(L_74));
+		goto IL_01eb;
+	}
+
+IL_01ea:
 	{
 		G_B29_0 = 0;
 	}
 
-IL_01db:
+IL_01eb:
 	{
 		V_20 = (bool)G_B29_0;
-		bool L_72 = V_20;
-		if (!L_72)
+		bool L_75 = V_20;
+		if (!L_75)
 		{
-			goto IL_01ed;
+			goto IL_01fd;
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:153>
-		QuestionnaireUI_tE4BC47653687E347F0882BFE15E4E52EC77572B1* L_73 = __this->___questionnaireUI;
-		NullCheck(L_73);
-		QuestionnaireUI_OnTrialStarted_mFC791EBB11FD78CF840632DE231B1C7AC01BEE9E(L_73, NULL);
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:160>
+		QuestionnaireUI_tE4BC47653687E347F0882BFE15E4E52EC77572B1* L_76 = __this->___questionnaireUI;
+		NullCheck(L_76);
+		QuestionnaireUI_OnTrialStarted_mFC791EBB11FD78CF840632DE231B1C7AC01BEE9E(L_76, NULL);
 	}
 
-IL_01ed:
+IL_01fd:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:156>
-		bool L_74 = V_1;
-		if (!L_74)
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:163>
+		bool L_77 = V_1;
+		if (!L_77)
 		{
-			goto IL_01fe;
+			goto IL_020e;
 		}
 	}
 	{
-		HeadGazeReticle_t02ACA9FD62DFD118EB719E937234F36E5978D59B* L_75 = __this->___headGazeReticle;
+		HeadGazeReticle_t02ACA9FD62DFD118EB719E937234F36E5978D59B* L_78 = __this->___headGazeReticle;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
-		bool L_76;
-		L_76 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_75, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
-		G_B34_0 = ((int32_t)(L_76));
-		goto IL_01ff;
+		bool L_79;
+		L_79 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_78, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		G_B34_0 = ((int32_t)(L_79));
+		goto IL_020f;
 	}
 
-IL_01fe:
+IL_020e:
 	{
 		G_B34_0 = 0;
 	}
 
-IL_01ff:
+IL_020f:
 	{
 		V_21 = (bool)G_B34_0;
-		bool L_77 = V_21;
-		if (!L_77)
-		{
-			goto IL_0211;
-		}
-	}
-	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:157>
-		HeadGazeReticle_t02ACA9FD62DFD118EB719E937234F36E5978D59B* L_78 = __this->___headGazeReticle;
-		NullCheck(L_78);
-		HeadGazeReticle_ResetGazeTimer_mD7E5EF0BA80FEFC88480D37024FA258D02AEDAA7(L_78, NULL);
-	}
-
-IL_0211:
-	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:160>
-		bool L_79 = V_1;
-		V_22 = L_79;
-		bool L_80 = V_22;
+		bool L_80 = V_21;
 		if (!L_80)
 		{
 			goto IL_0221;
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:162>
-		__this->___uiDirty = (bool)1;
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:164>
+		HeadGazeReticle_t02ACA9FD62DFD118EB719E937234F36E5978D59B* L_81 = __this->___headGazeReticle;
+		NullCheck(L_81);
+		HeadGazeReticle_ResetGazeTimer_mD7E5EF0BA80FEFC88480D37024FA258D02AEDAA7(L_81, NULL);
 	}
 
 IL_0221:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:165>
-		bool L_81 = __this->___uiDirty;
-		V_23 = L_81;
-		bool L_82 = V_23;
-		if (!L_82)
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:167>
+		bool L_82 = V_1;
+		V_22 = L_82;
+		bool L_83 = V_22;
+		if (!L_83)
 		{
-			goto IL_023d;
+			goto IL_0231;
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:167>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:169>
+		__this->___uiDirty = (bool)1;
+	}
+
+IL_0231:
+	{
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:172>
+		bool L_84 = __this->___uiDirty;
+		V_23 = L_84;
+		bool L_85 = V_23;
+		if (!L_85)
+		{
+			goto IL_024d;
+		}
+	}
+	{
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:174>
 		TrialReceiver_UpdateUI_m4037F2EA5977A3EAE1302770FCF4F1EAB08454DB(__this, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:168>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:175>
 		__this->___uiDirty = (bool)0;
 	}
 
-IL_023d:
+IL_024d:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:170>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:177>
 		return;
 	}
 }
@@ -14515,7 +14543,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_UpdateUI_m4037F2EA5977A3EA
 	bool V_7 = false;
 	bool V_8 = false;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:178>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:185>
 		RuntimeObject* L_0 = __this->___dataLock;
 		V_5 = L_0;
 		V_6 = (bool)0;
@@ -14548,19 +14576,19 @@ IL_004a:
 		{
 			RuntimeObject* L_3 = V_5;
 			Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_3, (&V_6), NULL);
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:180>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:187>
 			String_t* L_4 = __this->___lastRawMessage;
 			V_0 = L_4;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:181>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:188>
 			int32_t L_5 = __this->___messageCount;
 			V_2 = L_5;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:182>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:189>
 			String_t* L_6 = __this->___lastAffordance;
 			V_1 = L_6;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:183>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:190>
 			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_7 = __this->___latestRealPosition;
 			V_3 = L_7;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:184>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:191>
 			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8 = __this->___mirroredTargetPosition;
 			V_4 = L_8;
 			goto IL_004b;
@@ -14573,7 +14601,7 @@ IL_004a:
 
 IL_004b:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:187>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:194>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_9 = __this->___statusText;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_10;
@@ -14586,7 +14614,7 @@ IL_004b:
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:188>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:195>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_12 = __this->___statusText;
 		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_13 = (ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)SZArrayNew(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918_il2cpp_TypeInfo_var, (uint32_t)4);
 		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_14 = L_13;
@@ -14621,7 +14649,7 @@ IL_004b:
 
 IL_009d:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:190>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:197>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_27 = __this->___receivedText;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_28;
@@ -14634,7 +14662,7 @@ IL_009d:
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:191>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:198>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_30 = __this->___receivedText;
 		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_31 = (ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)SZArrayNew(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918_il2cpp_TypeInfo_var, (uint32_t)7);
 		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_32 = L_31;
@@ -14698,7 +14726,7 @@ IL_009d:
 
 IL_0126:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:192>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:199>
 		return;
 	}
 }
@@ -14722,22 +14750,15 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_StartUDP_m73A843D86B7B4D26
 	}
 	try
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:200>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:207>
 		int32_t L_0 = __this->___listenPort;
 		UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* L_1 = (UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8*)il2cpp_codegen_object_new(UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8_il2cpp_TypeInfo_var);
 		UdpClient__ctor_m6DCF61B7A404114E51B86974B1B4E028F45C3442(L_1, L_0, NULL);
 		__this->___udpClient = L_1;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___udpClient), (void*)L_1);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:201>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:208>
 		il2cpp_codegen_memory_barrier();
 		__this->___isRunning = (bool)1;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:202>
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:203>
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:204>
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:205>
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:206>
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:207>
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:208>
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:209>
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:210>
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:211>
@@ -14752,21 +14773,28 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_StartUDP_m73A843D86B7B4D26
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:220>
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:221>
 		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:222>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:223>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:224>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:225>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:226>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:227>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:228>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:229>
 		ThreadStart_t7662D98F1793EDE90192D7304D1C3C44119328A2* L_2 = (ThreadStart_t7662D98F1793EDE90192D7304D1C3C44119328A2*)il2cpp_codegen_object_new(ThreadStart_t7662D98F1793EDE90192D7304D1C3C44119328A2_il2cpp_TypeInfo_var);
 		ThreadStart__ctor_m35CE51F76358F20E4A0C8F2963C3AE14E5FF7E71(L_2, __this, (intptr_t)((void*)TrialReceiver_U3CStartUDPU3Eb__29_0_m67E7171B1EA52115B3C1E948A5B033D5A35DD466_RuntimeMethod_var), NULL);
 		Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* L_3 = (Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F*)il2cpp_codegen_object_new(Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F_il2cpp_TypeInfo_var);
 		Thread__ctor_m1FA23A179DF4F5B659689D6FA40DE903086212E2(L_3, L_2, NULL);
 		__this->___udpThread = L_3;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___udpThread), (void*)L_3);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:223>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:230>
 		Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* L_4 = __this->___udpThread;
 		NullCheck(L_4);
 		Thread_set_IsBackground_m45F00BD4C46F9B8A7C46A20A170B22BABB8FBA30(L_4, (bool)1, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:224>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:231>
 		Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* L_5 = __this->___udpThread;
 		NullCheck(L_5);
 		Thread_Start_m2230799AA331CA9ACEF49D5500281D0C1A9F72FA(L_5, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:225>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:232>
 		int32_t* L_6 = (int32_t*)(&__this->___listenPort);
 		String_t* L_7;
 		L_7 = Int32_ToString_m030E01C24E294D6762FB0B6F37CB541581F55CA5(L_6, NULL);
@@ -14774,7 +14802,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_StartUDP_m73A843D86B7B4D26
 		L_8 = String_Concat_m9E3155FB84015C823606188F53B47CB44C444991(_stringLiteral44145B23395CB8E32576139A6FA78B5201CD0D82, L_7, NULL);
 		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 		Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_8, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:228>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:235>
 		__this->___uiDirty = (bool)1;
 		goto IL_008c;
 	}
@@ -14791,9 +14819,9 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_StartUDP_m73A843D86B7B4D26
 CATCH_0071:
 	{
 		Exception_t* L_9 = ((Exception_t*)IL2CPP_GET_ACTIVE_EXCEPTION(Exception_t*));;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:230>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:237>
 		V_0 = L_9;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:232>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:239>
 		Exception_t* L_10 = V_0;
 		NullCheck(L_10);
 		String_t* L_11;
@@ -14808,7 +14836,7 @@ CATCH_0071:
 
 IL_008c:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:234>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:241>
 		return;
 	}
 }
@@ -14899,7 +14927,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_ParsePacket_m62C0FF225870B
 	ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* G_B32_3 = NULL;
 	String_t* G_B32_4 = NULL;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:238>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:245>
 		String_t* L_0 = ___0_json;
 		String_t* L_1;
 		L_1 = String_Concat_m8855A6DE10F84DA7F4EC113CADDB59873A25573B(_stringLiteral5C149A7027AEB4A3FDC2DD37955F1D3C3F6C3E4D, L_0, _stringLiteral42646B33B50B6AA15E22733C8900716F0FE19E1D, NULL);
@@ -14909,18 +14937,18 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_ParsePacket_m62C0FF225870B
 	try
 	{
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:242>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:249>
 			String_t* L_2 = ___0_json;
 			String_t* L_3;
 			L_3 = TrialReceiver_ExtractStringField_m7C083CCCAB11CC0C1A33E4379070B82F76F29932(__this, L_2, _stringLiteralF3C6C902DBF80139640F6554F0C3392016A8ADF7, NULL);
 			V_0 = L_3;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:243>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:250>
 			String_t* L_4 = V_0;
 			String_t* L_5;
 			L_5 = String_Concat_m8855A6DE10F84DA7F4EC113CADDB59873A25573B(_stringLiteral763266364B1D1911E0DB74D9B068A354AF3A6D00, L_4, _stringLiteral42646B33B50B6AA15E22733C8900716F0FE19E1D, NULL);
 			il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 			Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_5, NULL);
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:245>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:252>
 			String_t* L_6 = V_0;
 			bool L_7;
 			L_7 = String_op_Equality_m030E1B219352228970A076136E455C4E568C02C1(L_6, _stringLiteral631F5F4F6D6CFE58651BFF9F2FADEB4F019641FF, NULL);
@@ -14932,31 +14960,31 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_ParsePacket_m62C0FF225870B
 			}
 		}
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:247>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:254>
 			String_t* L_9 = ___0_json;
 			float L_10;
 			L_10 = TrialReceiver_ExtractFloatField_m5B7EA450E298521F393F299227E42B5A34D223FE(__this, L_9, _stringLiteral062DB096C728515E033CF8C48A1C1F0B9A79384B, NULL);
 			V_2 = L_10;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:248>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:255>
 			String_t* L_11 = ___0_json;
 			float L_12;
 			L_12 = TrialReceiver_ExtractFloatField_m5B7EA450E298521F393F299227E42B5A34D223FE(__this, L_11, _stringLiteral9384C6EF2DA5C0BD5274A0DACFF291D0ABBFD8B1, NULL);
 			V_3 = L_12;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:249>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:256>
 			String_t* L_13 = ___0_json;
 			float L_14;
 			L_14 = TrialReceiver_ExtractFloatField_m5B7EA450E298521F393F299227E42B5A34D223FE(__this, L_13, _stringLiteral9CE1604D659135925CCC4DD1F526AFFE42E689F1, NULL);
 			V_4 = L_14;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:252>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:259>
 			float L_15 = V_2;
 			V_5 = L_15;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:253>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:260>
 			float L_16 = V_4;
 			V_6 = L_16;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:254>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:261>
 			float L_17 = V_3;
 			V_7 = L_17;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:256>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:263>
 			RuntimeObject* L_18 = __this->___dataLock;
 			V_8 = L_18;
 			V_9 = (bool)0;
@@ -14989,7 +15017,7 @@ IL_00bd_1:
 			{
 				RuntimeObject* L_21 = V_8;
 				Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_21, (&V_9), NULL);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:258>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:265>
 				float L_22 = V_5;
 				float L_23 = V_6;
 				float L_24 = V_7;
@@ -14997,7 +15025,7 @@ IL_00bd_1:
 				memset((&L_25), 0, sizeof(L_25));
 				Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_25), L_22, L_23, L_24, NULL);
 				__this->___realBaseline = L_25;
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:259>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:266>
 				__this->___baselineSet = (bool)1;
 				goto IL_00be_1;
 			}
@@ -15009,7 +15037,7 @@ IL_00bd_1:
 
 IL_00be_1:
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:261>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:268>
 			float L_26 = V_5;
 			float L_27 = L_26;
 			RuntimeObject* L_28 = Box(il2cpp_defaults.single_class, &L_27);
@@ -15023,12 +15051,12 @@ IL_00be_1:
 			L_35 = String_Format_mA0534D6E2AE4D67A6BD8D45B3321323930EB930C(_stringLiteral4F9114F9757E503BCAEDA874D96C462D31A3769D, L_28, L_31, L_34, NULL);
 			il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 			Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_35, NULL);
-			goto IL_039c_1;
+			goto IL_03c6_1;
 		}
 
 IL_00e9_1:
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:263>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:270>
 			String_t* L_36 = V_0;
 			bool L_37;
 			L_37 = String_op_Equality_m030E1B219352228970A076136E455C4E568C02C1(L_36, _stringLiteral9F51ED54633D4D792A9DF08A7587C9F7A970290C, NULL);
@@ -15036,45 +15064,45 @@ IL_00e9_1:
 			bool L_38 = V_10;
 			if (!L_38)
 			{
-				goto IL_034e_1;
+				goto IL_0378_1;
 			}
 		}
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:265>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:272>
 			String_t* L_39 = ___0_json;
 			String_t* L_40;
 			L_40 = TrialReceiver_ExtractStringField_m7C083CCCAB11CC0C1A33E4379070B82F76F29932(__this, L_39, _stringLiteral359C59A8842EECC3AC2048292E9E39B9A0841CA2, NULL);
 			V_11 = L_40;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:266>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:273>
 			String_t* L_41 = ___0_json;
 			float L_42;
 			L_42 = TrialReceiver_ExtractFloatField_m5B7EA450E298521F393F299227E42B5A34D223FE(__this, L_41, _stringLiteral062DB096C728515E033CF8C48A1C1F0B9A79384B, NULL);
 			V_12 = L_42;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:267>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:274>
 			String_t* L_43 = ___0_json;
 			float L_44;
 			L_44 = TrialReceiver_ExtractFloatField_m5B7EA450E298521F393F299227E42B5A34D223FE(__this, L_43, _stringLiteral9384C6EF2DA5C0BD5274A0DACFF291D0ABBFD8B1, NULL);
 			V_13 = L_44;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:268>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:275>
 			String_t* L_45 = ___0_json;
 			float L_46;
 			L_46 = TrialReceiver_ExtractFloatField_m5B7EA450E298521F393F299227E42B5A34D223FE(__this, L_45, _stringLiteral9CE1604D659135925CCC4DD1F526AFFE42E689F1, NULL);
 			V_14 = L_46;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:270>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:277>
 			float L_47 = V_12;
 			float L_48 = V_13;
 			float L_49 = V_14;
 			Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&V_15), L_47, L_48, L_49, NULL);
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:273>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:280>
 			float L_50 = V_12;
 			V_16 = L_50;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:274>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:281>
 			float L_51 = V_14;
 			V_17 = L_51;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:275>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:282>
 			float L_52 = V_13;
 			V_18 = L_52;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:283>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:290>
 			RuntimeObject* L_53 = __this->___dataLock;
 			V_26 = L_53;
 			V_27 = (bool)0;
@@ -15107,17 +15135,17 @@ IL_0199_1:
 			{
 				RuntimeObject* L_56 = V_26;
 				Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_56, (&V_27), NULL);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:285>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:292>
 				bool L_57 = __this->___baselineSet;
 				V_19 = (bool)((((int32_t)L_57) == ((int32_t)0))? 1 : 0);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:286>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:293>
 				bool L_58 = __this->____isMirrorModeInternal;
 				il2cpp_codegen_memory_barrier();
 				V_20 = L_58;
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:287>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:294>
 				Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_59 = __this->___realBaseline;
 				V_21 = L_59;
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:288>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:295>
 				Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_60 = __this->___unityStartPosition;
 				V_22 = L_60;
 				goto IL_019a_1;
@@ -15130,7 +15158,7 @@ IL_0199_1:
 
 IL_019a_1:
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:291>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:298>
 			bool L_61 = V_19;
 			V_28 = L_61;
 			bool L_62 = V_28;
@@ -15140,7 +15168,7 @@ IL_019a_1:
 			}
 		}
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:295>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:302>
 			RuntimeObject* L_63 = __this->___dataLock;
 			V_29 = L_63;
 			V_30 = (bool)0;
@@ -15173,7 +15201,7 @@ IL_020c_1:
 			{
 				RuntimeObject* L_66 = V_29;
 				Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_66, (&V_30), NULL);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:297>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:304>
 				float L_67 = V_16;
 				float L_68 = V_17;
 				float L_69 = V_18;
@@ -15181,22 +15209,22 @@ IL_020c_1:
 				memset((&L_70), 0, sizeof(L_70));
 				Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_70), L_67, L_68, L_69, NULL);
 				__this->___realBaseline = L_70;
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:298>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:305>
 				__this->___baselineSet = (bool)1;
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:299>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:306>
 				Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_71 = V_15;
 				__this->___latestRealPosition = L_71;
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:300>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:307>
 				String_t* L_72 = V_11;
 				__this->___lastAffordance = L_72;
 				Il2CppCodeGenWriteBarrier((void**)(&__this->___lastAffordance), (void*)L_72);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:301>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:308>
 				__this->___hasNewAffordance = (bool)1;
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:302>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:309>
 				String_t* L_73 = ___0_json;
 				__this->___lastRawMessage = L_73;
 				Il2CppCodeGenWriteBarrier((void**)(&__this->___lastRawMessage), (void*)L_73);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:303>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:310>
 				int32_t L_74 = __this->___messageCount;
 				__this->___messageCount = ((int32_t)il2cpp_codegen_add(L_74, 1));
 				goto IL_020d_1;
@@ -15209,104 +15237,118 @@ IL_020c_1:
 
 IL_020d_1:
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:305>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:312>
 			il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 			Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(_stringLiteralE0DB677A16910C469620EDEAC2554A605E8D5765, NULL);
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:306>
-			goto IL_03c2;
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:313>
+			goto IL_03ec;
 		}
 
 IL_021d_1:
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:310>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:320>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:321>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:322>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:323>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:324>
 			float L_75 = V_16;
 			float L_76 = V_17;
 			float L_77 = V_18;
 			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_78;
 			memset((&L_78), 0, sizeof(L_78));
 			Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_78), L_75, L_76, L_77, NULL);
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_79 = V_21;
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_80;
-			L_80 = Vector3_op_Subtraction_mE42023FF80067CB44A1D4A27EB7CF2B24CABB828_inline(L_78, L_79, NULL);
-			V_23 = L_80;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:313>
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:314>
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:315>
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:316>
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:317>
-			bool L_81 = V_20;
-			if (L_81)
+			float L_79 = L_78.___x;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_80 = V_21;
+			float L_81 = L_80.___x;
+			float L_82 = V_16;
+			float L_83 = V_17;
+			float L_84 = V_18;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_85;
+			memset((&L_85), 0, sizeof(L_85));
+			Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_85), L_82, L_83, L_84, NULL);
+			float L_86 = L_85.___z;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_87 = V_21;
+			float L_88 = L_87.___z;
+			Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&V_23), ((float)il2cpp_codegen_subtract(L_79, L_81)), (0.0f), ((float)il2cpp_codegen_subtract(L_86, L_88)), NULL);
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:327>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:328>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:329>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:330>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:331>
+			bool L_89 = V_20;
+			if (L_89)
 			{
 				G_B23_0 = (&V_24);
-				goto IL_0240_1;
+				goto IL_0268_1;
 			}
 			G_B22_0 = (&V_24);
 		}
 		{
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_82 = V_23;
-			float L_83 = L_82.___x;
-			G_B24_0 = L_83;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_90 = V_23;
+			float L_91 = L_90.___x;
+			G_B24_0 = L_91;
 			G_B24_1 = G_B22_0;
-			goto IL_0248_1;
+			goto IL_0270_1;
 		}
 
-IL_0240_1:
+IL_0268_1:
 		{
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_84 = V_23;
-			float L_85 = L_84.___x;
-			G_B24_0 = ((-L_85));
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_92 = V_23;
+			float L_93 = L_92.___x;
+			G_B24_0 = ((-L_93));
 			G_B24_1 = G_B23_0;
 		}
 
-IL_0248_1:
+IL_0270_1:
 		{
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_86 = V_23;
-			float L_87 = L_86.___y;
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_88 = V_23;
-			float L_89 = L_88.___z;
-			Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline(G_B24_1, G_B24_0, L_87, L_89, NULL);
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:320>
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_90 = V_22;
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_91 = V_24;
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_92;
-			L_92 = Vector3_op_Addition_m78C0EC70CB66E8DCAC225743D82B268DAEE92067_inline(L_90, L_91, NULL);
-			V_25 = L_92;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:323>
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_93 = V_25;
-			float L_94 = L_93.___y;
-			float L_95;
-			L_95 = Mathf_Max_mF5379E63D2BBAC76D090748695D833934F8AD051_inline((0.0f), L_94, NULL);
-			(&V_25)->___y = L_95;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:324>
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_96 = V_25;
-			float L_97 = L_96.___z;
-			float L_98;
-			L_98 = Mathf_Max_mF5379E63D2BBAC76D090748695D833934F8AD051_inline((0.0f), L_97, NULL);
-			(&V_25)->___z = L_98;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:326>
-			RuntimeObject* L_99 = __this->___dataLock;
-			V_31 = L_99;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_94 = V_23;
+			float L_95 = L_94.___z;
+			Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline(G_B24_1, G_B24_0, (0.0f), L_95, NULL);
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:334>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:335>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:336>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:337>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:338>
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_96 = V_22;
+			float L_97 = L_96.___x;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_98 = V_24;
+			float L_99 = L_98.___x;
+			float L_100 = V_17;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_101 = V_22;
+			float L_102 = L_101.___z;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_103 = V_24;
+			float L_104 = L_103.___z;
+			Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&V_25), ((float)il2cpp_codegen_add(L_97, L_99)), L_100, ((float)il2cpp_codegen_add(L_102, L_104)), NULL);
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:341>
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_105 = V_25;
+			float L_106 = L_105.___z;
+			float L_107;
+			L_107 = Mathf_Max_mF5379E63D2BBAC76D090748695D833934F8AD051_inline((0.0f), L_106, NULL);
+			(&V_25)->___z = L_107;
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:343>
+			RuntimeObject* L_108 = __this->___dataLock;
+			V_31 = L_108;
 			V_32 = (bool)0;
 		}
 		{
 			auto __finallyBlock = il2cpp::utils::Finally([&]
 			{
 
-FINALLY_02e3_1:
+FINALLY_030d_1:
 				{
 					{
-						bool L_100 = V_32;
-						if (!L_100)
+						bool L_109 = V_32;
+						if (!L_109)
 						{
-							goto IL_02ef_1;
+							goto IL_0319_1;
 						}
 					}
 					{
-						RuntimeObject* L_101 = V_31;
-						Monitor_Exit_m05B2CF037E2214B3208198C282490A2A475653FA(L_101, NULL);
+						RuntimeObject* L_110 = V_31;
+						Monitor_Exit_m05B2CF037E2214B3208198C282490A2A475653FA(L_110, NULL);
 					}
 
-IL_02ef_1:
+IL_0319_1:
 					{
 						return;
 					}
@@ -15314,28 +15356,28 @@ IL_02ef_1:
 			});
 			try
 			{
-				RuntimeObject* L_102 = V_31;
-				Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_102, (&V_32), NULL);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:328>
-				Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_103 = V_15;
-				__this->___latestRealPosition = L_103;
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:329>
-				Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_104 = V_25;
-				__this->___mirroredTargetPosition = L_104;
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:330>
-				String_t* L_105 = V_11;
-				__this->___lastAffordance = L_105;
-				Il2CppCodeGenWriteBarrier((void**)(&__this->___lastAffordance), (void*)L_105);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:331>
+				RuntimeObject* L_111 = V_31;
+				Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_111, (&V_32), NULL);
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:345>
+				Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_112 = V_15;
+				__this->___latestRealPosition = L_112;
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:346>
+				Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_113 = V_25;
+				__this->___mirroredTargetPosition = L_113;
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:347>
+				String_t* L_114 = V_11;
+				__this->___lastAffordance = L_114;
+				Il2CppCodeGenWriteBarrier((void**)(&__this->___lastAffordance), (void*)L_114);
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:348>
 				__this->___hasNewAffordance = (bool)1;
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:332>
-				String_t* L_106 = ___0_json;
-				__this->___lastRawMessage = L_106;
-				Il2CppCodeGenWriteBarrier((void**)(&__this->___lastRawMessage), (void*)L_106);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:333>
-				int32_t L_107 = __this->___messageCount;
-				__this->___messageCount = ((int32_t)il2cpp_codegen_add(L_107, 1));
-				goto IL_02f0_1;
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:349>
+				String_t* L_115 = ___0_json;
+				__this->___lastRawMessage = L_115;
+				Il2CppCodeGenWriteBarrier((void**)(&__this->___lastRawMessage), (void*)L_115);
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:350>
+				int32_t L_116 = __this->___messageCount;
+				__this->___messageCount = ((int32_t)il2cpp_codegen_add(L_116, 1));
+				goto IL_031a_1;
 			}
 			catch(Il2CppExceptionWrapper& e)
 			{
@@ -15343,28 +15385,28 @@ IL_02ef_1:
 			}
 		}
 
-IL_02f0_1:
+IL_031a_1:
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:336>
-			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_108 = (ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)SZArrayNew(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918_il2cpp_TypeInfo_var, (uint32_t)5);
-			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_109 = L_108;
-			String_t* L_110 = V_11;
-			NullCheck(L_109);
-			ArrayElementTypeCheck (L_109, L_110);
-			(L_109)->SetAt(static_cast<il2cpp_array_size_t>(0), (RuntimeObject*)L_110);
-			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_111 = L_109;
-			bool L_112 = V_20;
-			if (L_112)
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:353>
+			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_117 = (ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918*)SZArrayNew(ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918_il2cpp_TypeInfo_var, (uint32_t)5);
+			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_118 = L_117;
+			String_t* L_119 = V_11;
+			NullCheck(L_118);
+			ArrayElementTypeCheck (L_118, L_119);
+			(L_118)->SetAt(static_cast<il2cpp_array_size_t>(0), (RuntimeObject*)L_119);
+			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_120 = L_118;
+			bool L_121 = V_20;
+			if (L_121)
 			{
 				G_B31_0 = 1;
-				G_B31_1 = L_111;
-				G_B31_2 = L_111;
+				G_B31_1 = L_120;
+				G_B31_2 = L_120;
 				G_B31_3 = _stringLiteral3019DDCB1F730445F420969AD0D9B12F4B0AAE17;
-				goto IL_030d_1;
+				goto IL_0337_1;
 			}
 			G_B30_0 = 1;
-			G_B30_1 = L_111;
-			G_B30_2 = L_111;
+			G_B30_1 = L_120;
+			G_B30_2 = L_120;
 			G_B30_3 = _stringLiteral3019DDCB1F730445F420969AD0D9B12F4B0AAE17;
 		}
 		{
@@ -15373,10 +15415,10 @@ IL_02f0_1:
 			G_B32_2 = G_B30_1;
 			G_B32_3 = G_B30_2;
 			G_B32_4 = G_B30_3;
-			goto IL_0312_1;
+			goto IL_033c_1;
 		}
 
-IL_030d_1:
+IL_0337_1:
 		{
 			G_B32_0 = _stringLiteral162DDD217AAA715151A7C0FF0CBFACE84EE21734;
 			G_B32_1 = G_B31_0;
@@ -15385,68 +15427,68 @@ IL_030d_1:
 			G_B32_4 = G_B31_3;
 		}
 
-IL_0312_1:
+IL_033c_1:
 		{
 			NullCheck(G_B32_2);
 			ArrayElementTypeCheck (G_B32_2, G_B32_0);
 			(G_B32_2)->SetAt(static_cast<il2cpp_array_size_t>(G_B32_1), (RuntimeObject*)G_B32_0);
-			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_113 = G_B32_3;
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_114 = V_25;
-			float L_115 = L_114.___x;
-			float L_116 = L_115;
-			RuntimeObject* L_117 = Box(il2cpp_defaults.single_class, &L_116);
-			NullCheck(L_113);
-			ArrayElementTypeCheck (L_113, L_117);
-			(L_113)->SetAt(static_cast<il2cpp_array_size_t>(2), (RuntimeObject*)L_117);
-			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_118 = L_113;
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_119 = V_25;
-			float L_120 = L_119.___y;
-			float L_121 = L_120;
-			RuntimeObject* L_122 = Box(il2cpp_defaults.single_class, &L_121);
-			NullCheck(L_118);
-			ArrayElementTypeCheck (L_118, L_122);
-			(L_118)->SetAt(static_cast<il2cpp_array_size_t>(3), (RuntimeObject*)L_122);
-			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_123 = L_118;
-			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_124 = V_25;
-			float L_125 = L_124.___z;
-			float L_126 = L_125;
-			RuntimeObject* L_127 = Box(il2cpp_defaults.single_class, &L_126);
-			NullCheck(L_123);
-			ArrayElementTypeCheck (L_123, L_127);
-			(L_123)->SetAt(static_cast<il2cpp_array_size_t>(4), (RuntimeObject*)L_127);
-			String_t* L_128;
-			L_128 = String_Format_m918500C1EFB475181349A79989BB79BB36102894(G_B32_4, L_123, NULL);
+			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_122 = G_B32_3;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_123 = V_25;
+			float L_124 = L_123.___x;
+			float L_125 = L_124;
+			RuntimeObject* L_126 = Box(il2cpp_defaults.single_class, &L_125);
+			NullCheck(L_122);
+			ArrayElementTypeCheck (L_122, L_126);
+			(L_122)->SetAt(static_cast<il2cpp_array_size_t>(2), (RuntimeObject*)L_126);
+			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_127 = L_122;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_128 = V_25;
+			float L_129 = L_128.___y;
+			float L_130 = L_129;
+			RuntimeObject* L_131 = Box(il2cpp_defaults.single_class, &L_130);
+			NullCheck(L_127);
+			ArrayElementTypeCheck (L_127, L_131);
+			(L_127)->SetAt(static_cast<il2cpp_array_size_t>(3), (RuntimeObject*)L_131);
+			ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_132 = L_127;
+			Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_133 = V_25;
+			float L_134 = L_133.___z;
+			float L_135 = L_134;
+			RuntimeObject* L_136 = Box(il2cpp_defaults.single_class, &L_135);
+			NullCheck(L_132);
+			ArrayElementTypeCheck (L_132, L_136);
+			(L_132)->SetAt(static_cast<il2cpp_array_size_t>(4), (RuntimeObject*)L_136);
+			String_t* L_137;
+			L_137 = String_Format_m918500C1EFB475181349A79989BB79BB36102894(G_B32_4, L_132, NULL);
 			il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
-			Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_128, NULL);
-			goto IL_039c_1;
+			Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_137, NULL);
+			goto IL_03c6_1;
 		}
 
-IL_034e_1:
+IL_0378_1:
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:340>
-			RuntimeObject* L_129 = __this->___dataLock;
-			V_33 = L_129;
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:357>
+			RuntimeObject* L_138 = __this->___dataLock;
+			V_33 = L_138;
 			V_34 = (bool)0;
 		}
 		{
 			auto __finallyBlock = il2cpp::utils::Finally([&]
 			{
 
-FINALLY_037d_1:
+FINALLY_03a7_1:
 				{
 					{
-						bool L_130 = V_34;
-						if (!L_130)
+						bool L_139 = V_34;
+						if (!L_139)
 						{
-							goto IL_0389_1;
+							goto IL_03b3_1;
 						}
 					}
 					{
-						RuntimeObject* L_131 = V_33;
-						Monitor_Exit_m05B2CF037E2214B3208198C282490A2A475653FA(L_131, NULL);
+						RuntimeObject* L_140 = V_33;
+						Monitor_Exit_m05B2CF037E2214B3208198C282490A2A475653FA(L_140, NULL);
 					}
 
-IL_0389_1:
+IL_03b3_1:
 					{
 						return;
 					}
@@ -15454,16 +15496,16 @@ IL_0389_1:
 			});
 			try
 			{
-				RuntimeObject* L_132 = V_33;
-				Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_132, (&V_34), NULL);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:342>
-				String_t* L_133 = ___0_json;
-				__this->___lastRawMessage = L_133;
-				Il2CppCodeGenWriteBarrier((void**)(&__this->___lastRawMessage), (void*)L_133);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:343>
-				int32_t L_134 = __this->___messageCount;
-				__this->___messageCount = ((int32_t)il2cpp_codegen_add(L_134, 1));
-				goto IL_038a_1;
+				RuntimeObject* L_141 = V_33;
+				Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_141, (&V_34), NULL);
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:359>
+				String_t* L_142 = ___0_json;
+				__this->___lastRawMessage = L_142;
+				Il2CppCodeGenWriteBarrier((void**)(&__this->___lastRawMessage), (void*)L_142);
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:360>
+				int32_t L_143 = __this->___messageCount;
+				__this->___messageCount = ((int32_t)il2cpp_codegen_add(L_143, 1));
+				goto IL_03b4_1;
 			}
 			catch(Il2CppExceptionWrapper& e)
 			{
@@ -15471,19 +15513,19 @@ IL_0389_1:
 			}
 		}
 
-IL_038a_1:
+IL_03b4_1:
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:345>
-			String_t* L_135 = V_0;
-			String_t* L_136;
-			L_136 = String_Concat_m9E3155FB84015C823606188F53B47CB44C444991(_stringLiteral50F4BACA3187B1973211219733A8970A8B873C62, L_135, NULL);
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:362>
+			String_t* L_144 = V_0;
+			String_t* L_145;
+			L_145 = String_Concat_m9E3155FB84015C823606188F53B47CB44C444991(_stringLiteral50F4BACA3187B1973211219733A8970A8B873C62, L_144, NULL);
 			il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
-			Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_136, NULL);
+			Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_145, NULL);
 		}
 
-IL_039c_1:
+IL_03c6_1:
 		{
-			goto IL_03c2;
+			goto IL_03ec;
 		}
 	}
 	catch(Il2CppExceptionWrapper& e)
@@ -15491,33 +15533,33 @@ IL_039c_1:
 		if(il2cpp_codegen_class_is_assignable_from (((RuntimeClass*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&Exception_t_il2cpp_TypeInfo_var)), il2cpp_codegen_object_class(e.ex)))
 		{
 			IL2CPP_PUSH_ACTIVE_EXCEPTION(e.ex);
-			goto CATCH_039f;
+			goto CATCH_03c9;
 		}
 		throw e;
 	}
 
-CATCH_039f:
+CATCH_03c9:
 	{
-		Exception_t* L_137 = ((Exception_t*)IL2CPP_GET_ACTIVE_EXCEPTION(Exception_t*));;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:348>
-		V_35 = L_137;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:350>
-		String_t* L_138 = ___0_json;
-		Exception_t* L_139 = V_35;
-		NullCheck(L_139);
-		String_t* L_140;
-		L_140 = VirtualFuncInvoker0< String_t* >::Invoke(5, L_139);
-		String_t* L_141;
-		L_141 = String_Concat_m093934F71A9B351911EE46311674ED463B180006(((String_t*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&_stringLiteralEBCA1ECC26B3CF76D1DBE83ACA27FAE0D47A40BF)), L_138, ((String_t*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&_stringLiteral9816E74B93E1C26A72AD4D2196C8A3C7A3C28924)), L_140, NULL);
+		Exception_t* L_146 = ((Exception_t*)IL2CPP_GET_ACTIVE_EXCEPTION(Exception_t*));;
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:365>
+		V_35 = L_146;
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:367>
+		String_t* L_147 = ___0_json;
+		Exception_t* L_148 = V_35;
+		NullCheck(L_148);
+		String_t* L_149;
+		L_149 = VirtualFuncInvoker0< String_t* >::Invoke(5, L_148);
+		String_t* L_150;
+		L_150 = String_Concat_m093934F71A9B351911EE46311674ED463B180006(((String_t*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&_stringLiteralEBCA1ECC26B3CF76D1DBE83ACA27FAE0D47A40BF)), L_147, ((String_t*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&_stringLiteral9816E74B93E1C26A72AD4D2196C8A3C7A3C28924)), L_149, NULL);
 		il2cpp_codegen_runtime_class_init_inline(((RuntimeClass*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var)));
-		Debug_LogWarning_m33EF1B897E0C7C6FF538989610BFAFFEF4628CA9(L_141, NULL);
+		Debug_LogWarning_m33EF1B897E0C7C6FF538989610BFAFFEF4628CA9(L_150, NULL);
 		IL2CPP_POP_ACTIVE_EXCEPTION(Exception_t*);
-		goto IL_03c2;
+		goto IL_03ec;
 	}
 
-IL_03c2:
+IL_03ec:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:352>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:369>
 		return;
 	}
 }
@@ -15541,19 +15583,19 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* TrialReceiver_ExtractStringField_m7
 	bool V_7 = false;
 	int32_t G_B5_0 = 0;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:358>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:375>
 		String_t* L_0 = ___1_key;
 		String_t* L_1;
 		L_1 = String_Concat_m8855A6DE10F84DA7F4EC113CADDB59873A25573B(_stringLiteralC62C64F00567C5368CAE37F4E64E1E82FF785677, L_0, _stringLiteralC62C64F00567C5368CAE37F4E64E1E82FF785677, NULL);
 		V_0 = L_1;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:359>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:376>
 		String_t* L_2 = ___0_json;
 		String_t* L_3 = V_0;
 		NullCheck(L_2);
 		int32_t L_4;
 		L_4 = String_IndexOf_m69E9BDAFD93767C85A7FF861B453415D3B4A200F(L_2, L_3, NULL);
 		V_1 = L_4;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:360>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:377>
 		int32_t L_5 = V_1;
 		V_5 = (bool)((((int32_t)L_5) < ((int32_t)0))? 1 : 0);
 		bool L_6 = V_5;
@@ -15563,35 +15605,35 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* TrialReceiver_ExtractStringField_m7
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:360>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:377>
 		V_6 = _stringLiteralDA39A3EE5E6B4B0D3255BFEF95601890AFD80709;
 		goto IL_007e;
 	}
 
 IL_002d:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:362>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:379>
 		String_t* L_7 = ___0_json;
 		int32_t L_8 = V_1;
 		NullCheck(L_7);
 		int32_t L_9;
 		L_9 = String_IndexOf_m15B90A59047584420D227EE3A7EAC0C5EAF676F4(L_7, ((int32_t)58), L_8, NULL);
 		V_2 = L_9;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:363>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:380>
 		String_t* L_10 = ___0_json;
 		int32_t L_11 = V_2;
 		NullCheck(L_10);
 		int32_t L_12;
 		L_12 = String_IndexOf_m15B90A59047584420D227EE3A7EAC0C5EAF676F4(L_10, ((int32_t)34), ((int32_t)il2cpp_codegen_add(L_11, 1)), NULL);
 		V_3 = L_12;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:364>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:381>
 		String_t* L_13 = ___0_json;
 		int32_t L_14 = V_3;
 		NullCheck(L_13);
 		int32_t L_15;
 		L_15 = String_IndexOf_m15B90A59047584420D227EE3A7EAC0C5EAF676F4(L_13, ((int32_t)34), ((int32_t)il2cpp_codegen_add(L_14, 1)), NULL);
 		V_4 = L_15;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:366>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:383>
 		int32_t L_16 = V_3;
 		if ((((int32_t)L_16) < ((int32_t)0)))
 		{
@@ -15619,14 +15661,14 @@ IL_005c:
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:366>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:383>
 		V_6 = _stringLiteralDA39A3EE5E6B4B0D3255BFEF95601890AFD80709;
 		goto IL_007e;
 	}
 
 IL_006b:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:367>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:384>
 		String_t* L_19 = ___0_json;
 		int32_t L_20 = V_3;
 		int32_t L_21 = V_4;
@@ -15640,7 +15682,7 @@ IL_006b:
 
 IL_007e:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:368>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:385>
 		String_t* L_24 = V_6;
 		return L_24;
 	}
@@ -15667,19 +15709,19 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float TrialReceiver_ExtractFloatField_m5B7EA4
 	bool V_9 = false;
 	int32_t G_B8_0 = 0;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:372>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:389>
 		String_t* L_0 = ___1_key;
 		String_t* L_1;
 		L_1 = String_Concat_m8855A6DE10F84DA7F4EC113CADDB59873A25573B(_stringLiteralC62C64F00567C5368CAE37F4E64E1E82FF785677, L_0, _stringLiteralC62C64F00567C5368CAE37F4E64E1E82FF785677, NULL);
 		V_0 = L_1;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:373>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:390>
 		String_t* L_2 = ___0_json;
 		String_t* L_3 = V_0;
 		NullCheck(L_2);
 		int32_t L_4;
 		L_4 = String_IndexOf_m69E9BDAFD93767C85A7FF861B453415D3B4A200F(L_2, L_3, NULL);
 		V_1 = L_4;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:374>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:391>
 		int32_t L_5 = V_1;
 		V_7 = (bool)((((int32_t)L_5) < ((int32_t)0))? 1 : 0);
 		bool L_6 = V_7;
@@ -15689,24 +15731,24 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float TrialReceiver_ExtractFloatField_m5B7EA4
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:374>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:391>
 		V_8 = (0.0f);
 		goto IL_00a2;
 	}
 
 IL_002d:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:376>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:393>
 		String_t* L_7 = ___0_json;
 		int32_t L_8 = V_1;
 		NullCheck(L_7);
 		int32_t L_9;
 		L_9 = String_IndexOf_m15B90A59047584420D227EE3A7EAC0C5EAF676F4(L_7, ((int32_t)58), L_8, NULL);
 		V_2 = L_9;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:377>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:394>
 		int32_t L_10 = V_2;
 		V_3 = ((int32_t)il2cpp_codegen_add(L_10, 1));
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:378>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:395>
 		int32_t L_11 = V_3;
 		V_4 = L_11;
 		goto IL_0048;
@@ -15714,16 +15756,16 @@ IL_002d:
 
 IL_0040:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:384>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:401>
 		int32_t L_12 = V_4;
 		V_4 = ((int32_t)il2cpp_codegen_add(L_12, 1));
 	}
 
 IL_0048:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:380>
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:381>
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:382>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:397>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:398>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:399>
 		int32_t L_13 = V_4;
 		String_t* L_14 = ___0_json;
 		NullCheck(L_14);
@@ -15770,7 +15812,7 @@ IL_0070:
 		}
 	}
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:387>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:404>
 		String_t* L_23 = ___0_json;
 		int32_t L_24 = V_3;
 		int32_t L_25 = V_4;
@@ -15782,15 +15824,15 @@ IL_0070:
 		String_t* L_28;
 		L_28 = String_Trim_mCD6D8C6D4CFD15225D12DB7D3E0544CA80FB8DA5(L_27, NULL);
 		V_5 = L_28;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:388>
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:389>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:405>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:406>
 		String_t* L_29 = V_5;
 		il2cpp_codegen_runtime_class_init_inline(CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0_il2cpp_TypeInfo_var);
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_30;
 		L_30 = CultureInfo_get_InvariantCulture_mD1E96DC845E34B10F78CB744B0CB5D7D63CEB1E6(NULL);
 		bool L_31;
 		L_31 = Single_TryParse_mFB8CC32F0016FBB6EFCB97953CF3515767EB6431(L_29, ((int32_t)167), L_30, (&V_6), NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:390>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:407>
 		float L_32 = V_6;
 		V_8 = L_32;
 		goto IL_00a2;
@@ -15798,7 +15840,7 @@ IL_0070:
 
 IL_00a2:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:391>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:408>
 		float L_33 = V_8;
 		return L_33;
 	}
@@ -15824,7 +15866,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* TrialReceiver_GetLocalIP_mE3B32E63A
 	try
 	{
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:397>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:414>
 			Socket_t1F49472CDA22B581C29A258225ABF3ADA9DED67E* L_0 = (Socket_t1F49472CDA22B581C29A258225ABF3ADA9DED67E*)il2cpp_codegen_object_new(Socket_t1F49472CDA22B581C29A258225ABF3ADA9DED67E_il2cpp_TypeInfo_var);
 			Socket__ctor_m35F1F4B4872E251867DA16460F06E903A30E4595(L_0, 2, 2, 0, NULL);
 			V_0 = L_0;
@@ -15856,17 +15898,17 @@ IL_0041_1:
 			});
 			try
 			{
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:399>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:416>
 				Socket_t1F49472CDA22B581C29A258225ABF3ADA9DED67E* L_3 = V_0;
 				NullCheck(L_3);
 				Socket_Connect_m993753041D265405B096790E1989EB5895A9CD5E(L_3, _stringLiteral996430AB1219869666B45814CA370C998C55A879, ((int32_t)65530), NULL);
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:400>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:417>
 				Socket_t1F49472CDA22B581C29A258225ABF3ADA9DED67E* L_4 = V_0;
 				NullCheck(L_4);
 				EndPoint_t6233F4E2EB9F0F2D36E187F12BE050E6D8B73564* L_5;
 				L_5 = Socket_get_LocalEndPoint_m3A2B4E60F0096E2DB31F7C28EF3CDE148D256E26(L_4, NULL);
 				V_1 = ((IPEndPoint_t2F09CBA7A808B67724B4E2954EEDC46D910F4ECB*)IsInstClass((RuntimeObject*)L_5, IPEndPoint_t2F09CBA7A808B67724B4E2954EEDC46D910F4ECB_il2cpp_TypeInfo_var));
-				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:401>
+				//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:418>
 				IPEndPoint_t2F09CBA7A808B67724B4E2954EEDC46D910F4ECB* L_6 = V_1;
 				NullCheck(L_6);
 				IPAddress_t2F4486449B0D73FF2D3B36A9FE5E9C3F63116484* L_7;
@@ -15896,8 +15938,8 @@ IL_0041_1:
 CATCH_0042:
 	{
 		RuntimeObject* L_9 = ((RuntimeObject*)IL2CPP_GET_ACTIVE_EXCEPTION(RuntimeObject*));;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:404>
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:406>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:421>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:423>
 		V_2 = ((String_t*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&_stringLiteral5D54E959817188DBAD9E65FA3DB55F06B70F5E3C));
 		IL2CPP_POP_ACTIVE_EXCEPTION(Exception_t*);
 		goto IL_004c;
@@ -15905,7 +15947,7 @@ CATCH_0042:
 
 IL_004c:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:408>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:425>
 		String_t* L_10 = V_2;
 		return L_10;
 	}
@@ -15918,10 +15960,10 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_OnDestroy_mFF19281C7940A75
 	Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* G_B5_0 = NULL;
 	Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* G_B4_0 = NULL;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:412>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:429>
 		il2cpp_codegen_memory_barrier();
 		__this->___isRunning = (bool)0;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:413>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:430>
 		UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* L_0 = __this->___udpClient;
 		UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* L_1 = L_0;
 		if (L_1)
@@ -15943,7 +15985,7 @@ IL_0016:
 
 IL_001c:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:414>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:431>
 		Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* L_2 = __this->___udpThread;
 		Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* L_3 = L_2;
 		if (L_3)
@@ -15965,7 +16007,7 @@ IL_0028:
 
 IL_002e:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:415>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:432>
 		return;
 	}
 }
@@ -15988,10 +16030,10 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_SetMirrorMode_m34C3D30AD8A
 	String_t* G_B8_0 = NULL;
 	String_t* G_B8_1 = NULL;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:424>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:441>
 		bool L_0 = ___0_mirror;
 		__this->___isMirrorMode = L_0;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:425>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:442>
 		RuntimeObject* L_1 = __this->___dataLock;
 		V_0 = L_1;
 		V_1 = (bool)0;
@@ -16024,7 +16066,7 @@ IL_0031:
 		{
 			RuntimeObject* L_4 = V_0;
 			Monitor_Enter_m3CDB589DA1300B513D55FDCFB52B63E879794149(L_4, (&V_1), NULL);
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:425>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:442>
 			bool L_5 = ___0_mirror;
 			il2cpp_codegen_memory_barrier();
 			__this->____isMirrorModeInternal = L_5;
@@ -16038,7 +16080,7 @@ IL_0031:
 
 IL_0032:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:426>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:443>
 		bool L_6 = ___0_mirror;
 		if (L_6)
 		{
@@ -16065,7 +16107,7 @@ IL_0046:
 		L_7 = String_Concat_m9E3155FB84015C823606188F53B47CB44C444991(G_B8_1, G_B8_0, NULL);
 		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 		Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_7, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:427>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:444>
 		return;
 	}
 }
@@ -16158,7 +16200,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_U3CStartUDPU3Eb__29_0_m67E
 	bool V_6 = false;
 	il2cpp::utils::ExceptionSupportStack<RuntimeObject*, 1> __active_exceptions;
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:204>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:211>
 		int32_t* L_0 = (int32_t*)(&__this->___listenPort);
 		String_t* L_1;
 		L_1 = Int32_ToString_m030E01C24E294D6762FB0B6F37CB541581F55CA5(L_0, NULL);
@@ -16166,7 +16208,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TrialReceiver_U3CStartUDPU3Eb__29_0_m67E
 		L_2 = String_Concat_m9E3155FB84015C823606188F53B47CB44C444991(_stringLiteral7C47718507C1AAE09538897CDCFA5A8685946E20, L_1, NULL);
 		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 		Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_2, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:205>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:212>
 		il2cpp_codegen_runtime_class_init_inline(IPAddress_t2F4486449B0D73FF2D3B36A9FE5E9C3F63116484_il2cpp_TypeInfo_var);
 		IPAddress_t2F4486449B0D73FF2D3B36A9FE5E9C3F63116484* L_3 = ((IPAddress_t2F4486449B0D73FF2D3B36A9FE5E9C3F63116484_StaticFields*)il2cpp_codegen_static_fields_for(IPAddress_t2F4486449B0D73FF2D3B36A9FE5E9C3F63116484_il2cpp_TypeInfo_var))->___Any;
 		IPEndPoint_t2F09CBA7A808B67724B4E2954EEDC46D910F4ECB* L_4 = (IPEndPoint_t2F09CBA7A808B67724B4E2954EEDC46D910F4ECB*)il2cpp_codegen_object_new(IPEndPoint_t2F09CBA7A808B67724B4E2954EEDC46D910F4ECB_il2cpp_TypeInfo_var);
@@ -16180,13 +16222,13 @@ IL_002a:
 	}
 	try
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:210>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:217>
 		UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* L_5 = __this->___udpClient;
 		NullCheck(L_5);
 		ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_6;
 		L_6 = UdpClient_Receive_mC682A8DE6CD86CEFA3CE52852574FD3437EC7DA9(L_5, (&V_0), NULL);
 		V_1 = L_6;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:211>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:218>
 		Encoding_t65CDEF28CF20A7B8C92E85A4E808920C2465F095* L_7;
 		L_7 = Encoding_get_UTF8_m9FA98A53CE96FD6D02982625C5246DD36C1235C9(NULL);
 		ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_8 = V_1;
@@ -16194,13 +16236,13 @@ IL_002a:
 		String_t* L_9;
 		L_9 = VirtualFuncInvoker1< String_t*, ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* >::Invoke(33, L_7, L_8);
 		V_2 = L_9;
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:212>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:219>
 		String_t* L_10 = V_2;
 		String_t* L_11;
 		L_11 = String_Concat_m9E3155FB84015C823606188F53B47CB44C444991(_stringLiteral7F7334C22A2F04E9F023A055217EC12BC4AA6F64, L_10, NULL);
 		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
 		Debug_Log_m87A9A3C761FF5C43ED8A53B16190A53D08F818BB(L_11, NULL);
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:213>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:220>
 		String_t* L_12 = V_2;
 		TrialReceiver_ParsePacket_m62C0FF225870BCDF49871FDF3826033CD13978CB(__this, L_12, NULL);
 		goto IL_009e;
@@ -16219,9 +16261,9 @@ CATCH_0062:
 	{
 		{
 			Exception_t* L_13 = ((Exception_t*)IL2CPP_GET_ACTIVE_EXCEPTION(Exception_t*));;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:215>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:222>
 			V_3 = L_13;
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:217>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:224>
 			bool L_14 = __this->___isRunning;
 			il2cpp_codegen_memory_barrier();
 			V_4 = L_14;
@@ -16232,7 +16274,7 @@ CATCH_0062:
 			}
 		}
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:218>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:225>
 			Exception_t* L_16 = V_3;
 			NullCheck(L_16);
 			String_t* L_17;
@@ -16245,7 +16287,7 @@ CATCH_0062:
 
 IL_0088:
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:219>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:226>
 			bool L_19 = __this->___isRunning;
 			il2cpp_codegen_memory_barrier();
 			V_5 = (bool)((((int32_t)L_19) == ((int32_t)0))? 1 : 0);
@@ -16256,7 +16298,7 @@ IL_0088:
 			}
 		}
 		{
-			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:219>
+			//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:226>
 			IL2CPP_POP_ACTIVE_EXCEPTION(Exception_t*);
 			goto IL_00b0;
 		}
@@ -16274,7 +16316,7 @@ IL_009e:
 
 IL_009f:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:206>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:213>
 		bool L_21 = __this->___isRunning;
 		il2cpp_codegen_memory_barrier();
 		V_6 = L_21;
@@ -16287,7 +16329,7 @@ IL_009f:
 
 IL_00b0:
 	{
-		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:222>
+		//<source_info:D:/New folder/UNITYMETAQUESTTEST/Assets/TrialReceiver.cs:229>
 		return;
 	}
 }
