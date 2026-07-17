@@ -1897,7 +1897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 459e0e70d81b8d043988368469cfc4af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TCPClient
-  pythonIP: 192.168.2.203
+  pythonIP: 192.168.1.126
   pythonPort: 5007
 --- !u!4 &184733140
 Transform:
@@ -7870,6 +7870,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5154228344487636165, guid: 2d650091f6de0a9469d2465b7e9bb67b, type: 3}
+      propertyPath: m_Range
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: -5025754671834744899, guid: 2d650091f6de0a9469d2465b7e9bb67b, type: 3}
+      propertyPath: m_Range
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: -1425851054211120428, guid: 2d650091f6de0a9469d2465b7e9bb67b, type: 3}
+      propertyPath: m_Range
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: -660934861193017463, guid: 2d650091f6de0a9469d2465b7e9bb67b, type: 3}
+      propertyPath: m_Range
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2791370976386007404, guid: 2d650091f6de0a9469d2465b7e9bb67b, type: 3}
+      propertyPath: m_Range
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 4641724591180040750, guid: 2d650091f6de0a9469d2465b7e9bb67b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.7
@@ -7925,6 +7945,10 @@ PrefabInstance:
     - target: {fileID: 4641724591180040750, guid: 2d650091f6de0a9469d2465b7e9bb67b, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4939317967018455006, guid: 2d650091f6de0a9469d2465b7e9bb67b, type: 3}
+      propertyPath: m_Range
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8647436001721270856, guid: 2d650091f6de0a9469d2465b7e9bb67b, type: 3}
       propertyPath: m_Name
