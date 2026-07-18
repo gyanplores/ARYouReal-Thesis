@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 
 /*
 =====================================
@@ -57,6 +58,9 @@ public class VisualEffects : MonoBehaviour
         public Renderer renderer;
         public Light pointLight;
 
+        public Renderer glowSphere1;
+        public Renderer glowSphere2;
+
         public Material onMaterial;
         public Material offMaterial;
     }
@@ -111,7 +115,33 @@ public class VisualEffects : MonoBehaviour
 
             led.offMaterial = offMaterial;
 
+            Renderer[] children = r.GetComponentsInChildren<Renderer>(true);
+
+            foreach (Renderer child in children)
+            {
+                if (child == r)
+                    continue;
+
+                if (child.name.ToLower().Contains("glow sphere 1"))
+                    led.glowSphere1 = child;
+
+                else if (child.name.ToLower().Contains("glow sphere 2"))
+                    led.glowSphere2 = child;
+            }
+
             foundLEDs.Add(led);
+
+            //DEBUG
+            Debug.Log(r.name);
+
+            if (led.pointLight != null)
+                Debug.Log("Found light: " + led.pointLight.name);
+
+            if (led.glowSphere1 != null)
+                Debug.Log("Sphere1: " + led.glowSphere1.name);
+
+            if (led.glowSphere2 != null)
+                Debug.Log("Sphere2: " + led.glowSphere2.name);
         }
 
         leds = foundLEDs.ToArray();
@@ -189,6 +219,12 @@ public class VisualEffects : MonoBehaviour
 
         if (led.pointLight != null)
             led.pointLight.enabled = on;
+
+        if (led.glowSphere1 != null)
+            led.glowSphere1.enabled = on;
+
+        if (led.glowSphere2 != null)
+            led.glowSphere2.enabled = on;
     }
 
     void PulseMode(int index, float onTime, float offTime)
@@ -203,6 +239,6 @@ public class VisualEffects : MonoBehaviour
     void AnimateLEDs()
     {
         PulseMode(5, 4.0f, 0.1f);//led 4 yellow blinking sometimes
-        PulseMode(2, 0.25f, 0.5f);//led 1 red blinking constant
+        PulseMode(2, 0.07f, 0.5f);//led 1 red blinking constant
     }
 }

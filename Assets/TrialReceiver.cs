@@ -61,6 +61,7 @@ public class TrialReceiver : MonoBehaviour
     private bool hasNewAffordance = false;
     private string lastRawMessage = "Waiting for data...";
     private int messageCount = 0;
+    private bool pendingShowWaiting = false;
 
     // Relative/offset movement tracking
     private Vector3 realBaseline = Vector3.zero;
@@ -151,9 +152,15 @@ public class TrialReceiver : MonoBehaviour
             realDroneProxy.position = proxyFinal;
         }
 
-        // Apply affordance to SensoryManager once per new trial
+        // Apply affordance FIRST so visual state is correct
         if (newAffordance && sensoryManager != null)
             sensoryManager.ApplyAffordanceString(affordance);
+
+        // Show waiting panel if Python requests it (Trial 1 pre-blind)
+        bool doShowWaiting;
+        lock (dataLock) { doShowWaiting = pendingShowWaiting; pendingShowWaiting = false; }
+        if (doShowWaiting && questionnaireUI != null && questionnaireUI.waitingPanel != null)
+            questionnaireUI.waitingPanel.SetActive(true);
 
         // Notify QuestionnaireUI that a new trial has arrived (starts 5s countdown)
         if (newAffordance && questionnaireUI != null)
@@ -249,7 +256,12 @@ public class TrialReceiver : MonoBehaviour
             string type = ExtractStringField(json, "type");
             Debug.Log($"[TrialReceiver] Extracted type: '{type}'");
 
-            if (type == "HOVER")
+            if (type == "SHOW_WAITING")
+            {
+                lock (dataLock) { pendingShowWaiting = true; }
+                Debug.Log("[TrialReceiver] SHOW_WAITING received");
+            }
+            else if (type == "HOVER")
             {
                 float x = ExtractFloatField(json, "x");
                 float y = ExtractFloatField(json, "y");

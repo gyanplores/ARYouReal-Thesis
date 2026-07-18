@@ -26,8 +26,11 @@ public class SensoryManager : MonoBehaviour
     public AudioSource droneAudioSource;
 
     [Header("Haptics — Drone Hover")]
-    [Tooltip("Drag the DroneHaptics component (on the drone) here. SensoryManager only tells it whether the H condition is active; DroneHaptics handles the actual hover detection and vibration.")]
+    [Tooltip("Drag the DroneHaptics component (on the virtual drone) here.")]
     public DroneHaptics droneHaptics;
+
+    [Tooltip("Drag the DroneHaptics component (on the RealDroneProxy) here.")]
+    public DroneHaptics proxyHaptics;
 
     // Internal
     private UdpClient udpClient;
@@ -201,15 +204,16 @@ public class SensoryManager : MonoBehaviour
     {
         hapticsEnabled = enabled;
 
-        // Tell DroneHaptics whether the H condition is currently active.
-        // DroneHaptics itself decides whether to actually vibrate,
-        // based on whether the controller ray is hovering the drone.
+        // Gate both virtual drone and real drone proxy haptics
+        // based on whether H condition is active
         if (droneHaptics != null)
             droneHaptics.SetHapticsCondition(enabled);
 
+        if (proxyHaptics != null)
+            proxyHaptics.SetHapticsCondition(enabled);
+
         if (!enabled)
         {
-            // Safety — stop all vibrations immediately regardless of hover state
             OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.LTouch);
             OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
         }
