@@ -74,15 +74,7 @@ public class StartupMenu : MonoBehaviour
 
     void ConfirmSelection()
     {
-        // Enable passthrough now that a mode has been chosen
-        if (blackBox != null)
-            blackBox.SetActive(false);
-
-        // Hand off visual control to SensoryManager's normal affordance behavior
-        if (sensoryManager != null)
-            sensoryManager.ReleaseControlFromMenu();
-
-        HideMenu();
+        StartCoroutine(UnblindAfterDelay());
     }
 
     void HideMenu()
@@ -91,5 +83,22 @@ public class StartupMenu : MonoBehaviour
             menuRoot.SetActive(false);
         else
             gameObject.SetActive(false);
+    }
+
+    System.Collections.IEnumerator UnblindAfterDelay()
+    {
+        // Hide the menu immediately
+        HideMenu();
+
+        // Keep the black box active while waiting
+        yield return new WaitForSeconds(2f);
+
+        // Remove the black box
+        if (blackBox != null)
+            blackBox.SetActive(false);
+
+        // Give control back to the SensoryManager
+        if (sensoryManager != null)
+            sensoryManager.ReleaseControlFromMenu();
     }
 }
