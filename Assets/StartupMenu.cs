@@ -95,8 +95,7 @@ public class StartupMenu : MonoBehaviour
 
         // Remove the black box
         if (blackBox != null)
-            blackBox.SetActive(false);
-
+            
         // Give control back to the SensoryManager
         if (sensoryManager != null)
             sensoryManager.ReleaseControlFromMenu();

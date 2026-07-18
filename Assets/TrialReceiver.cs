@@ -18,6 +18,16 @@ using TMPro;
 /// </summary>
 public class TrialReceiver : MonoBehaviour
 {
+
+    [Header("Startup Blindfold")]
+    public GameObject blackBox;
+
+    public float arrivalTolerance = 0.03f;
+    public float revealDelay = 2f;
+
+    private bool revealStarted = false;
+    private bool revealFinished = false;
+
     [Header("UDP Settings")]
     public int listenPort = 5005;
 
@@ -150,6 +160,29 @@ public class TrialReceiver : MonoBehaviour
             proxyFinal.z = Mathf.Max(0f, proxyFinal.z);
             realDroneProxy.position = proxyFinal;
         }
+
+        if (!revealFinished &&
+        !revealStarted &&
+        blackBox != null)
+            {
+                bool virtualReady =
+                    Vector3.Distance(
+                        droneTransform.position,
+                        target
+                    ) <= arrivalTolerance;
+
+                bool realReady =
+                    Vector3.Distance(
+                        realDroneProxy.position,
+                        target
+                    ) <= arrivalTolerance;
+
+                if (virtualReady && realReady)
+                {
+                    revealStarted = true;
+                    StartCoroutine(RevealAfterDelay());
+                }
+            }
 
         // Apply affordance to SensoryManager once per new trial
         if (newAffordance && sensoryManager != null)
@@ -422,6 +455,17 @@ public class TrialReceiver : MonoBehaviour
         {
             return "Unknown";
         }
+    }
+    System.Collections.IEnumerator RevealAfterDelay()
+    {
+        yield return new WaitForSeconds(revealDelay);
+
+        if (blackBox != null)
+            blackBox.SetActive(false);
+
+        revealFinished = true;
+
+        Debug.Log("[TrialReceiver] Both drones in position. Black box removed.");
     }
 
     void OnDestroy()
