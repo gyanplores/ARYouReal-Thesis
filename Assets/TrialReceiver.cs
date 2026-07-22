@@ -37,6 +37,9 @@ public class TrialReceiver : MonoBehaviour
     [Tooltip("Drag HeadGazeReticle here so gaze timer resets on each new trial")]
     public HeadGazeReticle headGazeReticle;
 
+    [Tooltip("Panel shown when all trials are completed — 'Trials Completed!'")]
+    public GameObject completionPanel;
+
     [Header("Drone Mode (set by StartupMenu)")]
     [Tooltip("True = MIRROR (opposite X). False = MASK (same direction). Set automatically by StartupMenu.cs")]
     public bool isMirrorMode = true;
@@ -44,6 +47,10 @@ public class TrialReceiver : MonoBehaviour
 
     [Header("Movement Smoothing")]
     public float moveSpeed = 3.0f;
+
+    [Header("Height Correction")]
+    [Tooltip("Adds a vertical offset to the virtual drone and proxy if they appear too low/high. Positive = move up, Negative = move down.")]
+    public float heightOffsetY = 0.1f;
 
     [Header("UI Display (optional)")]
     public TextMeshProUGUI statusText;
@@ -62,6 +69,7 @@ public class TrialReceiver : MonoBehaviour
     private string lastRawMessage = "Waiting for data...";
     private int messageCount = 0;
     private bool pendingShowWaiting = false;
+    private bool pendingComplete = false;
 
     // Relative/offset movement tracking
     private Vector3 realBaseline = Vector3.zero;
@@ -145,7 +153,7 @@ public class TrialReceiver : MonoBehaviour
             );
             Vector3 proxyFinal = new Vector3(
                 unityStartSnap.x + proxyDelta.x,
-                proxyTarget.y,   // absolute height
+                proxyTarget.y + heightOffsetY,   // absolute height + same offset
                 unityStartSnap.z + proxyDelta.z
             );
             proxyFinal.z = Mathf.Max(0f, proxyFinal.z);
@@ -161,6 +169,21 @@ public class TrialReceiver : MonoBehaviour
         lock (dataLock) { doShowWaiting = pendingShowWaiting; pendingShowWaiting = false; }
         if (doShowWaiting && questionnaireUI != null && questionnaireUI.waitingPanel != null)
             questionnaireUI.waitingPanel.SetActive(true);
+
+        // Show completion panel when all trials done
+        bool doComplete;
+        lock (dataLock) { doComplete = pendingComplete; pendingComplete = false; }
+        if (doComplete)
+        {
+            // Hide waiting panel if showing
+            if (questionnaireUI != null && questionnaireUI.waitingPanel != null)
+                questionnaireUI.waitingPanel.SetActive(false);
+
+            if (completionPanel != null)
+                completionPanel.SetActive(true);
+
+            Debug.Log("[TrialReceiver] All trials complete!");
+        }
 
         // Notify QuestionnaireUI that a new trial has arrived (starts 5s countdown)
         if (newAffordance && questionnaireUI != null)
@@ -256,7 +279,12 @@ public class TrialReceiver : MonoBehaviour
             string type = ExtractStringField(json, "type");
             Debug.Log($"[TrialReceiver] Extracted type: '{type}'");
 
-            if (type == "SHOW_WAITING")
+            if (type == "TRIALS_COMPLETE")
+            {
+                lock (dataLock) { pendingComplete = true; }
+                Debug.Log("[TrialReceiver] TRIALS_COMPLETE received");
+            }
+            else if (type == "SHOW_WAITING")
             {
                 lock (dataLock) { pendingShowWaiting = true; }
                 Debug.Log("[TrialReceiver] SHOW_WAITING received");
@@ -342,10 +370,10 @@ public class TrialReceiver : MonoBehaviour
                     delta.z
                 );
 
-                // Final target — X and Z from delta, Y absolute from packet
+                // Final target — X and Z from delta, Y absolute from packet + offset
                 Vector3 mirrored = new Vector3(
                     unityStart.x + mirroredDelta.x,
-                    unityY,        // absolute height from Crazyflie Z
+                    unityY + heightOffsetY,   // absolute height + tunable offset
                     unityStart.z + mirroredDelta.z
                 );
 

@@ -199,9 +199,9 @@ def log_position(ts, data, logconf):
 # ==================================================
 
 def clamp(x, y, z):
-    x = max(-2.0, min(2.0, x))
-    y = max(-2.0, min(2.0, y))
-    z = max(0.0,  min(2.0, z))
+    x = max(-1.0, min(1.0, x))
+    y = max(-1.0, min(1.0, y))
+    z = max(0.0,  min(1.0, z))
 
     dx = x - USER_X
     dy = y - USER_Y
@@ -215,21 +215,21 @@ def clamp(x, y, z):
         y = USER_Y + dy * scale
         print("\n[SAFETY] User radius correction")
 
-    INSIDE_TOP_LEFT = (-2.0 <= x <= -1.5) and (1.5 <= y <= 2.0)
-    INSIDE_BOTTOM_RIGHT = (1.5 <= x <= 2.0) and (-2.0 <= y <= -1.5)
+    INSIDE_TOP_LEFT     = (-1.0 <= x <= -0.8) and (0.8 <= y <= 1.0)
+    INSIDE_BOTTOM_RIGHT = ( 0.8 <= x <=  1.0) and (-1.0 <= y <= -0.8)
 
     if INSIDE_TOP_LEFT:
-        x, y = -1.49, 1.49
+        x, y = -0.79, 0.79
         print("\n[SAFETY] Lighthouse 1 barrier")
 
     if INSIDE_BOTTOM_RIGHT:
-        x, y = 1.49, -1.49
+        x, y = 0.79, -0.79
         print("\n[SAFETY] Lighthouse 2 barrier")
 
     return (
-        max(-2.0, min(2.0, x)),
-        max(-2.0, min(2.0, y)),
-        max(0.0,  min(2.0, z))
+        max(-1.0, min(1.0, x)),
+        max(-1.0, min(1.0, y)),
+        max(0.0,  min(1.0, z))
     )
 
 
@@ -239,9 +239,9 @@ def clamp(x, y, z):
 
 def generate_coordinate():
     return clamp(
-        random.uniform(-2.0, 2.0),
-        random.uniform(-2.0, 2.0),
-        random.uniform(0.0,  2.0)
+        random.uniform(-1.0, 1.0),
+        random.uniform(-1.0, 1.0),
+        random.uniform(0.0,  1.0)
     )
 
 
@@ -263,7 +263,7 @@ def move_drone(x, y, z, affordance, hold=3):
     x, y, z = clamp(x, y, z)
 
     print(f"\n[DRONE] Flying to ({x:.2f}, {y:.2f}, {z:.2f})...")
-    commander.go_to(x, y, z, 0, 2)
+    commander.go_to(x, y, z, 0, 3)
     time.sleep(hold)
     print(f"[DRONE] Arrived.")
 
@@ -274,8 +274,7 @@ def move_drone(x, y, z, affordance, hold=3):
         "y": y,
         "z": z
     })
-
-    print(f"[UDP] Sent → affordance={affordance} ({x:.2f}, {y:.2f}, {z:.2f})")
+    print(f"[UDP] Sent TRIAL → affordance={affordance} ({x:.2f}, {y:.2f}, {z:.2f})")
 
 
 # ==================================================
@@ -478,6 +477,10 @@ with SyncCrazyflie(
     print(f"[UDP] Sent HOVER baseline ({current_x:.2f}, {current_y:.2f}, {current_z:.2f})")
     time.sleep(0.5)
 
+    # Show waiting panel immediately so user is blinded before Trial 1
+    send_udp({"type": "SHOW_WAITING"})
+    print("[UDP] Sent SHOW_WAITING — user blinded before Trial 1")
+
     # Start TCP listener thread
     threading.Thread(target=listen_unity, daemon=True).start()
 
@@ -486,6 +489,10 @@ with SyncCrazyflie(
         run_trials(trials)
         print_results()
         save_csv()
+
+        # Tell Unity all trials are done — shows "Trials Completed!" panel
+        send_udp({"type": "TRIALS_COMPLETE"})
+        print("[UDP] Sent TRIALS_COMPLETE")
 
     except KeyboardInterrupt:
         print("\n[EMERGENCY] Stopping early.")

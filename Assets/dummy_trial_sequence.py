@@ -185,8 +185,8 @@ def listen_unity():
 def move_drone(x, y, z, affordance):
     x, y, z = clamp(x, y, z)
     print(f"\n[DRONE] Flying to ({x:.2f}, {y:.2f}, {z:.2f})...")
-    time.sleep(2.0)  # simulate flight time
-    print(f"[DRONE] Arrived. Sending TRIAL packet to Unity.")
+    time.sleep(2.0)
+    print(f"[DRONE] Arrived.")
 
     send_udp({
         "type": "TRIAL",
@@ -195,8 +195,7 @@ def move_drone(x, y, z, affordance):
         "y": y,
         "z": z
     })
-
-    print(f"[UDP] Sent → affordance={affordance} ({x:.2f}, {y:.2f}, {z:.2f})")
+    print(f"[UDP] Sent TRIAL → affordance={affordance} ({x:.2f}, {y:.2f}, {z:.2f})")
 
 
 # ==================================================
@@ -374,9 +373,17 @@ try:
     print("[UDP] Sent HOVER baseline (0.0, 0.0, 1.5)")
     time.sleep(0.5)
 
+    # Show waiting panel immediately so user is blinded before Trial 1
+    send_udp({"type": "SHOW_WAITING"})
+    print("[UDP] Sent SHOW_WAITING — user blinded before Trial 1")
+
     run_trials(trials)
     print_results()
     save_csv()
+
+    # Tell Unity all trials are done
+    send_udp({"type": "TRIALS_COMPLETE"})
+    print("[UDP] Sent TRIALS_COMPLETE")
 
 except KeyboardInterrupt:
     print("\n[STOPPED] Session ended early.")
