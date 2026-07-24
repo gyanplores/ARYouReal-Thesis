@@ -167,21 +167,18 @@ public class TrialReceiver : MonoBehaviour
         // Show waiting panel if Python requests it (Trial 1 pre-blind)
         bool doShowWaiting;
         lock (dataLock) { doShowWaiting = pendingShowWaiting; pendingShowWaiting = false; }
-        if (doShowWaiting && questionnaireUI != null && questionnaireUI.waitingPanel != null)
-            questionnaireUI.waitingPanel.SetActive(true);
+        if (doShowWaiting && questionnaireUI != null)
+            questionnaireUI.ShowWaitingPanel();
 
         // Show completion panel when all trials done
         bool doComplete;
         lock (dataLock) { doComplete = pendingComplete; pendingComplete = false; }
         if (doComplete)
         {
-            // Hide waiting panel if showing
-            if (questionnaireUI != null && questionnaireUI.waitingPanel != null)
-                questionnaireUI.waitingPanel.SetActive(false);
-
+            if (questionnaireUI != null)
+                questionnaireUI.HideWaitingPanel();
             if (completionPanel != null)
                 completionPanel.SetActive(true);
-
             Debug.Log("[TrialReceiver] All trials complete!");
         }
 

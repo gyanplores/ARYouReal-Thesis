@@ -1578,7 +1578,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Quaternion_tDA59F214EF07D7700B26E40E562F267AF
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 92439
+// Method Definition Index: 92440
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExample_Start_mABF689D3037CA2E660DD5AB94B017F3C717D2739 (PalmMenuExample_tD4083D87F2785C208D16DFC657774C2335619B1A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1602,7 +1602,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExample_Start_mABF689D3037CA2E66
 		return;
 	}
 }
-// Method Definition Index: 92440
+// Method Definition Index: 92441
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExample_Update_m76BE78DCD9F1647E0886E913B73CC23DBD3F9092 (PalmMenuExample_tD4083D87F2785C208D16DFC657774C2335619B1A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -1676,7 +1676,7 @@ IL_0069:
 		return;
 	}
 }
-// Method Definition Index: 92441
+// Method Definition Index: 92442
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t PalmMenuExample_CalculateNearestButtonIdx_mB8E7E1C50D6A32D108EBF3341DAF5937D4B2234D (PalmMenuExample_tD4083D87F2785C208D16DFC657774C2335619B1A* __this, const RuntimeMethod* method) 
 {
 	int32_t V_0 = 0;
@@ -1881,7 +1881,7 @@ IL_00fc:
 		return L_53;
 	}
 }
-// Method Definition Index: 92442
+// Method Definition Index: 92443
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExample_LerpToButton_m43F025054E618B84B0AE95B2597B74DE4E21E070 (PalmMenuExample_tD4083D87F2785C208D16DFC657774C2335619B1A* __this, const RuntimeMethod* method) 
 {
 	float V_0 = 0.0f;
@@ -1998,7 +1998,7 @@ IL_0074:
 		return;
 	}
 }
-// Method Definition Index: 92443
+// Method Definition Index: 92444
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExample_ToggleMenu_m288508A87E8D7A682FFB7F27A4A3B0F6A74DB289 (PalmMenuExample_tD4083D87F2785C208D16DFC657774C2335619B1A* __this, const RuntimeMethod* method) 
 {
 	bool V_0 = false;
@@ -2045,7 +2045,7 @@ IL_0048:
 		return;
 	}
 }
-// Method Definition Index: 92444
+// Method Definition Index: 92445
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExample__ctor_m22A137A51BBD27EB75E82A69613994EA520CAFCD (PalmMenuExample_tD4083D87F2785C208D16DFC657774C2335619B1A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2063,7 +2063,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExample__ctor_m22A137A51BBD27EB7
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 92445
+// Method Definition Index: 92446
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers_Start_mF5B8C344F66C24B6A6B575E36375AE7743A18B7E (PalmMenuExampleButtonHandlers_t030DB06A3E0A064D1A498BC7E2CE8F62BFD68B24* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2106,7 +2106,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers_Start_mF5B
 		return;
 	}
 }
-// Method Definition Index: 92446
+// Method Definition Index: 92447
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers_Update_mE4689BA4EBF81E176D526E6DFEF62CBF06A02292 (PalmMenuExampleButtonHandlers_t030DB06A3E0A064D1A498BC7E2CE8F62BFD68B24* __this, const RuntimeMethod* method) 
 {
 	bool V_0 = false;
@@ -2182,7 +2182,7 @@ IL_005c:
 		return;
 	}
 }
-// Method Definition Index: 92447
+// Method Definition Index: 92448
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers_CycleColor_mA67AEF7D86D0EFC0100925AB5511415CF74FF43D (PalmMenuExampleButtonHandlers_t030DB06A3E0A064D1A498BC7E2CE8F62BFD68B24* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2233,7 +2233,7 @@ IL_002f:
 		return;
 	}
 }
-// Method Definition Index: 92448
+// Method Definition Index: 92449
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers_ToggleRotationEnabled_m7BEB28979D061BF95C0BB3914EAB3300B159490F (PalmMenuExampleButtonHandlers_t030DB06A3E0A064D1A498BC7E2CE8F62BFD68B24* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2254,7 +2254,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers_ToggleRota
 		return;
 	}
 }
-// Method Definition Index: 92449
+// Method Definition Index: 92450
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers_CycleRotationDirection_m147693647FE52B477C1C97C6F188505CE2DDF79E (PalmMenuExampleButtonHandlers_t030DB06A3E0A064D1A498BC7E2CE8F62BFD68B24* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2373,7 +2373,7 @@ IL_00ae:
 		return;
 	}
 }
-// Method Definition Index: 92450
+// Method Definition Index: 92451
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers_IncrementElevation_m53D6A5CBACBA61C33B942442AEE77106E361EA0B (PalmMenuExampleButtonHandlers_t030DB06A3E0A064D1A498BC7E2CE8F62BFD68B24* __this, bool ___0_up, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2434,7 +2434,7 @@ IL_001a:
 		return;
 	}
 }
-// Method Definition Index: 92451
+// Method Definition Index: 92452
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers_CycleShape_m7B15D0F86D08B49B0883B91BD5CD808B6A6EC502 (PalmMenuExampleButtonHandlers_t030DB06A3E0A064D1A498BC7E2CE8F62BFD68B24* __this, bool ___0_cycleForward, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2553,7 +2553,7 @@ IL_006e:
 		return;
 	}
 }
-// Method Definition Index: 92452
+// Method Definition Index: 92453
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers__ctor_m067CE830F7189BC2A9FBE333E1D27D247FF3912F (PalmMenuExampleButtonHandlers_t030DB06A3E0A064D1A498BC7E2CE8F62BFD68B24* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2573,7 +2573,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PalmMenuExampleButtonHandlers__ctor_m067
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 92453
+// Method Definition Index: 92454
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR uint32_t U3CPrivateImplementationDetailsU3E_ComputeStringHash_mAC6DE2E26FE500BB44C4A219CEF97D6778F8B1E4 (String_t* ___0_s, const RuntimeMethod* method) 
 {
 	uint32_t V_0 = 0;
@@ -2690,7 +2690,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D
 		return L_9;
 	}
 }
-// Method Definition Index: 67818
+// Method Definition Index: 67819
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* __this, float ___0_x, float ___1_y, const RuntimeMethod* method) 
 {
 	{
@@ -2701,7 +2701,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Vector2__ctor_m9525B79969AFF
 		return;
 	}
 }
-// Method Definition Index: 67819
+// Method Definition Index: 67820
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 Vector2_Lerp_m1A36103F7967F653A929556E26E6D052C298C00C_inline (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___0_a, Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___1_b, float ___2_t, const RuntimeMethod* method) 
 {
 	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 V_0;
@@ -2872,7 +2872,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D
 		return L_23;
 	}
 }
-// Method Definition Index: 67793
+// Method Definition Index: 67794
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Clamp_mEB9AEA827D27D20FCC787F7375156AF46BB12BBF_inline (float ___0_value, float ___1_min, float ___2_max, const RuntimeMethod* method) 
 {
 	{
@@ -2929,7 +2929,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t String_get_Length_m42625D
 		return L_0;
 	}
 }
-// Method Definition Index: 67795
+// Method Definition Index: 67796
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Clamp01_mA7E048DBDA832D399A581BE4D6DED9FA44CE0F14_inline (float ___0_value, const RuntimeMethod* method) 
 {
 	{

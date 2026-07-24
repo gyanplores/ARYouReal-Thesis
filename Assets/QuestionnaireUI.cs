@@ -138,6 +138,23 @@ public class QuestionnaireUI : MonoBehaviour
         timerRunning = true;
     }
 
+    /// <summary>
+    /// Called by TrialReceiver for Trial 1 pre-blind via SHOW_WAITING packet.
+    /// Shows waiting panel without affecting the questionnaire timer.
+    /// </summary>
+    public void ShowWaitingPanel()
+    {
+        if (waitingPanel != null)
+            waitingPanel.SetActive(true);
+        SetDebug("Waiting panel shown (pre-trial)");
+    }
+
+    public void HideWaitingPanel()
+    {
+        if (waitingPanel != null)
+            waitingPanel.SetActive(false);
+    }
+
     // ─── INTERNAL ─────────────────────────────────────────────────
 
     void ShowQuestionnaire()

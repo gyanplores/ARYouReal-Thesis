@@ -4057,6 +4057,8 @@ struct LED_t752264271805A3A908EE0FD5E58B9CB00922BB73  : public RuntimeObject
 {
 	Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF* ___renderer;
 	Light_t1E68479B7782AF2050FAA02A5DC612FD034F18F3* ___pointLight;
+	Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF* ___glowSphere1;
+	Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF* ___glowSphere2;
 	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* ___onMaterial;
 	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* ___offMaterial;
 };
@@ -25532,12 +25534,26 @@ struct DroneSway_t596D97615FA3E72448FE6A0AE6E811676C9D407A  : public MonoBehavio
 	float ___idleTiltAmount;
 	float ___idleBobAmount;
 	float ___idleSwaySpeed;
+	bool ___enableMicroJitter;
+	float ___jitterRotationAmount;
+	float ___jitterSpeed;
+	float ___jitterPositionAmount;
+	bool ___enablePropellerVibration;
+	float ___vibrationAmount;
+	float ___vibrationSpeed;
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___lastPosition;
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___currentVelocity;
 	float ___idleTimerX;
 	float ___idleTimerZ;
 	float ___idleTimerBob;
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___lastAppliedBobOffset;
+	float ___jitterSeedX;
+	float ___jitterSeedY;
+	float ___jitterSeedZ;
+	float ___jitterPosX;
+	float ___jitterPosZ;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___lastAppliedJitterPos;
+	float ___vibrationTimer;
 };
 struct DroneUIManager_t53CC13FB52C3655145166540F12E24D8F0E12FB1  : public MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71
 {
@@ -26558,6 +26574,7 @@ struct SensoryManager_t09C03C68121A63FD6B960707827FFD8A9B70F85C  : public MonoBe
 	AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* ___whiteNoiseSource;
 	AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* ___droneAudioSource;
 	DroneHaptics_tF535AB47AA9E420A2ABDC179F51DF0FDE5E901B4* ___droneHaptics;
+	DroneHaptics_tF535AB47AA9E420A2ABDC179F51DF0FDE5E901B4* ___proxyHaptics;
 	UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* ___udpClient;
 	Thread_t0A773B9DE873D2DCAA7D229EAB36757B500E207F* ___udpThread;
 	bool ___isRunning;
@@ -26979,9 +26996,11 @@ struct TrialReceiver_tA61A15A2B8303D73B64B5F6726953976C6B88BF7  : public MonoBeh
 	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___realDroneProxy;
 	QuestionnaireUI_tE4BC47653687E347F0882BFE15E4E52EC77572B1* ___questionnaireUI;
 	HeadGazeReticle_t02ACA9FD62DFD118EB719E937234F36E5978D59B* ___headGazeReticle;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ___completionPanel;
 	bool ___isMirrorMode;
 	bool ____isMirrorModeInternal;
 	float ___moveSpeed;
+	float ___heightOffsetY;
 	TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* ___statusText;
 	TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* ___receivedText;
 	UdpClient_t03C5278D44ADD98C3A506D8EA5445309FDF1F5B8* ___udpClient;
@@ -26994,6 +27013,8 @@ struct TrialReceiver_tA61A15A2B8303D73B64B5F6726953976C6B88BF7  : public MonoBeh
 	bool ___hasNewAffordance;
 	String_t* ___lastRawMessage;
 	int32_t ___messageCount;
+	bool ___pendingShowWaiting;
+	bool ___pendingComplete;
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___realBaseline;
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___unityStartPosition;
 	bool ___baselineSet;
