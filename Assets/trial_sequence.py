@@ -18,7 +18,7 @@ from cflib.crazyflie.log import LogConfig
 # VALID AFFORDANCE COMBINATIONS
 # ==================================================
 
-VALID_COMBOS = {"VAH", "VA", "AH", "VH", "V", "A", "H"}
+VALID_COMBOS = {"VAH", "VA", "AH", "VH", "V", "A", "H", "N"}
 
 
 # ==================================================
@@ -238,11 +238,16 @@ def clamp(x, y, z):
 # ==================================================
 
 def generate_coordinate():
-    return clamp(
-        random.uniform(-1.0, 1.0),
-        random.uniform(-1.0, 1.0),
-        random.uniform(0.0,  1.0)
-    )
+    x = random.choice([-1.0, 1.0])
+    y = 0.5
+    z = 0.2
+
+    return clamp(x,y,z)
+    #return clamp(
+    #    random.uniform(-1.0, 1.0),
+    #    random.uniform(-1.0, 1.0),
+    #    random.uniform(0.0,  1.0)
+    #)
 
 
 def get_drone_side(x):
@@ -315,7 +320,7 @@ def run_trials(trials):
             trial["affordance"]
         )
 
-        print(f"[TRIAL {i}] Waiting for participant answers (3 sliders 1-7)...")
+        print(f"[TRIAL {i}] Waiting for participant answers (3 sliders 1-8)...")
         while current_answer is None:
             time.sleep(0.1)
 
@@ -342,6 +347,27 @@ def run_trials(trials):
         })
 
     print("\nAll trials complete.")
+
+    if i == 4 and i < len(trials):
+
+        print("\n" + "=" * 50)
+        print("REST PERIOD")
+        print("=" * 50)
+
+        commander.land(0, 3)
+        time.sleep(4)
+
+        input("Press Enter when ready to continue...")
+
+        print("Re-arming drone...")
+        cf.supervisor.send_arming_request(True)
+        time.sleep(2)
+
+        print("Taking off...")
+        commander.takeoff(1.5, 3)
+        time.sleep(4)
+
+        print("Drone ready. Continuing trials...")
 
 
 # ==================================================

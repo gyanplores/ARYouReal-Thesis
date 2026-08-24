@@ -79,7 +79,7 @@ public class SensoryManager : MonoBehaviour
             pendingMode = -1;
         }
 
-        if (mode >= 1 && mode <= 7)
+        if (mode >= 1 && mode <= 8)
             ApplyMode(mode);
     }
 
@@ -151,6 +151,11 @@ public class SensoryManager : MonoBehaviour
                 SetVisual(false);
                 SetAudio(false);
                 SetHaptics(true);
+                break;
+            case 8: // N Condition
+                SetVisual(false);
+                SetAudio(false);
+                SetHaptics(false);
                 break;
         }
 
