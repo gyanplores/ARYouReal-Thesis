@@ -59268,6 +59268,10 @@ struct VertexAttributeDescriptor_tD4231FBF57335465D16308D2A18E8E83D36BFA76
 	int32_t ___U3CdimensionU3Ek__BackingField;
 	int32_t ___U3CstreamU3Ek__BackingField;
 };
+struct VideoClipPlayable_t2AAA6B40D35759730C170CA3124BC2499B50A0F1 
+{
+	PlayableHandle_t5D6A01EF94382EFEDC047202F71DF882769654D4 ___m_Handle;
+};
 struct VisibleLight_t0A4DF5B22865A00F618A0352B805277FA0132805 
 {
 	int32_t ___m_LightType;
@@ -152940,6 +152944,12 @@ void RuntimeInvoker_TrueByte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3_VertexAtt
 {
 	typedef uint8_t (*Func)(void* obj, VertexAttributeDescriptor_tD4231FBF57335465D16308D2A18E8E83D36BFA76 p1, const RuntimeMethod* method);
 	*((uint8_t*)returnAddress) = ((Func)methodPointer)(obj, *((VertexAttributeDescriptor_tD4231FBF57335465D16308D2A18E8E83D36BFA76*)args[0]), methodMetadata);
+}
+
+void RuntimeInvoker_TrueByte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3_VideoClipPlayable_t2AAA6B40D35759730C170CA3124BC2499B50A0F1 (Il2CppMethodPointer methodPointer, const RuntimeMethod* methodMetadata, void* obj, void** args, void* returnAddress)
+{
+	typedef uint8_t (*Func)(void* obj, VideoClipPlayable_t2AAA6B40D35759730C170CA3124BC2499B50A0F1 p1, const RuntimeMethod* method);
+	*((uint8_t*)returnAddress) = ((Func)methodPointer)(obj, *((VideoClipPlayable_t2AAA6B40D35759730C170CA3124BC2499B50A0F1*)args[0]), methodMetadata);
 }
 
 void RuntimeInvoker_TrueByte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3_VisibleLight_t0A4DF5B22865A00F618A0352B805277FA0132805 (Il2CppMethodPointer methodPointer, const RuntimeMethod* methodMetadata, void* obj, void** args, void* returnAddress)
@@ -270458,6 +270468,12 @@ void RuntimeInvoker_FalseVoid_t4861ACF8F4594C3437BB48B6E56783494B843915_RuntimeO
 	((Func)methodPointer)((RuntimeObject*)args[0], *((int32_t*)args[1]), methodMetadata);
 }
 
+void RuntimeInvoker_FalseVoid_t4861ACF8F4594C3437BB48B6E56783494B843915_RuntimeObject_Int64_t092CFB123BE63C28ACDAF65C68F21A526050DBA3 (Il2CppMethodPointer methodPointer, const RuntimeMethod* methodMetadata, void* obj, void** args, void* returnAddress)
+{
+	typedef void (*Func)(RuntimeObject* p1, int64_t p2, const RuntimeMethod* method);
+	((Func)methodPointer)((RuntimeObject*)args[0], *((int64_t*)args[1]), methodMetadata);
+}
+
 void RuntimeInvoker_FalseVoid_t4861ACF8F4594C3437BB48B6E56783494B843915_RuntimeObject_IntPtr_t (Il2CppMethodPointer methodPointer, const RuntimeMethod* methodMetadata, void* obj, void** args, void* returnAddress)
 {
 	typedef void (*Func)(RuntimeObject* p1, intptr_t p2, const RuntimeMethod* method);
@@ -304491,7 +304507,7 @@ void RuntimeInvoker_FalseBuilder_tCBCB06F4A2C922C71431C0418A7EA386E2383588 (Il2C
 }
 
 IL2CPP_EXTERN_C const InvokerMethod g_Il2CppInvokerPointers[];
-const InvokerMethod g_Il2CppInvokerPointers[35793] = 
+const InvokerMethod g_Il2CppInvokerPointers[35795] = 
 {
 	RuntimeInvoker_F57671A1A271362DE5576D4120520430DEAD6EAE,
 	RuntimeInvoker_7C7502B48E2131BE322E25A4A5423517C2046CC6,
@@ -316046,6 +316062,7 @@ const InvokerMethod g_Il2CppInvokerPointers[35793] =
 	RuntimeInvoker_TrueByte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3_VectorImageVertex_t9D42377517CC059BD40E2A626ECEBE0C94CA0948,
 	RuntimeInvoker_TrueByte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3_Vertex_t016AC68A2E6C62576E65412BEC71544AFC01AFC7,
 	RuntimeInvoker_TrueByte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3_VertexAttributeDescriptor_tD4231FBF57335465D16308D2A18E8E83D36BFA76,
+	RuntimeInvoker_TrueByte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3_VideoClipPlayable_t2AAA6B40D35759730C170CA3124BC2499B50A0F1,
 	RuntimeInvoker_TrueByte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3_VisibleLight_t0A4DF5B22865A00F618A0352B805277FA0132805,
 	RuntimeInvoker_TrueByte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3_VisibleReflectionProbe_t8AF1FAD09A36E33F5101B683DB8E99582815EF0B,
 	RuntimeInvoker_TrueByte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3_VisualData_t64B2C5387387BCEC426F3981BECC8582A02D3F1B,
@@ -334660,6 +334677,7 @@ const InvokerMethod g_Il2CppInvokerPointers[35793] =
 	RuntimeInvoker_FalseVoid_t4861ACF8F4594C3437BB48B6E56783494B843915_RuntimeObject_InputControlScheme_tB60FB32F414727140B32E1A0447679DC7ABC8434,
 	RuntimeInvoker_FalseVoid_t4861ACF8F4594C3437BB48B6E56783494B843915_RuntimeObject_InputDeviceMatcher_tF9BA551C8BB4AE41672366A7EBEA951543E0C555,
 	RuntimeInvoker_FalseVoid_t4861ACF8F4594C3437BB48B6E56783494B843915_RuntimeObject_Int32_t680FF22E76F6EFAD4375103CBBFFA0421349384C,
+	RuntimeInvoker_FalseVoid_t4861ACF8F4594C3437BB48B6E56783494B843915_RuntimeObject_Int64_t092CFB123BE63C28ACDAF65C68F21A526050DBA3,
 	RuntimeInvoker_FalseVoid_t4861ACF8F4594C3437BB48B6E56783494B843915_RuntimeObject_IntPtr_t,
 	RuntimeInvoker_FalseVoid_t4861ACF8F4594C3437BB48B6E56783494B843915_RuntimeObject_InteractorHitData_t68896E48EBE45BE5DA6CB5E318E9B91BEB304804,
 	RuntimeInvoker_FalseVoid_t4861ACF8F4594C3437BB48B6E56783494B843915_RuntimeObject_InternedString_t8D62A48CB7D85AAE9CFCCCFB0A77AC2844905735,

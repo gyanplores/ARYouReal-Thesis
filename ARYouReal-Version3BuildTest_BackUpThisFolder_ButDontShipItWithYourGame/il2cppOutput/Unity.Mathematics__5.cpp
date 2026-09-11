@@ -26586,7 +26586,7 @@ IL_0028:
 		return L_9;
 	}
 }
-// Method Definition Index: 67818
+// Method Definition Index: 67819
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* __this, float ___0_x, float ___1_y, const RuntimeMethod* method) 
 {
 	{

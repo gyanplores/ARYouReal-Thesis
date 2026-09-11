@@ -18,7 +18,10 @@ from cflib.crazyflie.log import LogConfig
 # VALID AFFORDANCE COMBINATIONS
 # ==================================================
 
-VALID_COMBOS = {"VAH", "VA", "AH", "VH", "V", "A", "H", "N"}
+# "VIDEO" is a special condition: no drone movement, no questionnaire —
+# it just tells Unity to start the 360 video and waits for you to press
+# Enter when the participant is done watching.
+VALID_COMBOS = {"VAH", "VA", "AH", "VH", "V", "A", "H", "N", "VIDEO"}
 
 
 # ==================================================
@@ -35,7 +38,7 @@ USER_Z = float(input("Enter subject eye level vertical height in meters: "))
 
 print()
 print("Enter affordance combinations one at a time.")
-print("Valid options: VAH, VA, AH, VH, V, A, H")
+print("Valid options: VAH, VA, AH, VH, V, A, H, VIDEO")
 print("Type 'done' when finished.\n")
 
 combos = []
@@ -283,15 +286,37 @@ def move_drone(x, y, z, affordance, hold=3):
 
 
 # ==================================================
+# RUN THE VIDEO CONDITION (no drone movement, no questionnaire)
+# ==================================================
+
+def run_video_condition():
+    print("\n" + "=" * 50)
+    print("  VIDEO CONDITION")
+    print("=" * 50)
+
+    send_udp({"type": "START_VIDEO"})
+    print("[UDP] Sent START_VIDEO — 360 video should now be playing in Unity")
+
+    input("\nPress Enter when the participant is done watching (this ends the video condition)...")
+
+    send_udp({"type": "END_VIDEO"})
+    print("[UDP] Sent END_VIDEO — Unity should return to the drone trial view")
+
+
+# ==================================================
 # BUILD TRIAL LIST
 # ==================================================
 
 def build_trials(combo_list):
-    return [
-        {"affordance": c, "x": x, "y": y, "z": z}
-        for c in combo_list
-        for x, y, z in [generate_coordinate()]
-    ]
+    trials = []
+    for c in combo_list:
+        if c == "VIDEO":
+            # No coordinate needed for the video condition
+            trials.append({"affordance": "VIDEO", "x": None, "y": None, "z": None})
+        else:
+            x, y, z = generate_coordinate()
+            trials.append({"affordance": c, "x": x, "y": y, "z": z})
+    return trials
 
 
 # ==================================================
@@ -305,10 +330,37 @@ def run_trials(trials):
     print("  TRIAL SEQUENCE")
     print("=" * 50)
     for i, t in enumerate(trials, 1):
-        print(f"  {i}. {t['affordance']:<4} → ({t['x']:.2f}, {t['y']:.2f}, {t['z']:.2f})")
+        if t["affordance"] == "VIDEO":
+            print(f"  {i}. VIDEO")
+        else:
+            print(f"  {i}. {t['affordance']:<4} → ({t['x']:.2f}, {t['y']:.2f}, {t['z']:.2f})")
     print()
 
     for i, trial in enumerate(trials, 1):
+
+        # ─── VIDEO CONDITION — separate path, skips drone + questionnaire ───
+        if trial["affordance"] == "VIDEO":
+            input(f"\nPress Enter to start trial {i}/{len(trials)} [VIDEO]...")
+            run_video_condition()
+
+            answers.append({
+                "trial": i,
+                "affordance": "VIDEO",
+                "drone_side": "N/A",
+                "real_gaze_label": "N/A",
+                "virtual_gaze_label": "N/A",
+                "real_gaze": None,
+                "virtual_gaze": None,
+                "x": None,
+                "y": None,
+                "z": None,
+                "q1": None,
+                "q2": None,
+                "q3": None
+            })
+            continue
+
+        # ─── NORMAL DRONE TRIAL ───
         input(f"\nPress Enter to start trial {i}/{len(trials)} [{trial['affordance']}]...")
 
         current_answer = None
@@ -379,6 +431,9 @@ def print_results():
     print("  RESULTS")
     print("=" * 100)
     for r in answers:
+        if r["affordance"] == "VIDEO":
+            print(f"\n  Trial {r['trial']} — VIDEO condition (no drone data)")
+            continue
         pos = f"({r['x']:.2f}, {r['y']:.2f}, {r['z']:.2f})"
         print(f"\n  Trial {r['trial']} — Affordance: {r['affordance']} | Real drone: {r['drone_side']} | Position: {pos}")
         print(f"    {r['real_gaze_label']}:    {r['real_gaze']}s")
@@ -416,6 +471,23 @@ def save_csv():
         writer.writeheader()
 
         for r in answers:
+            if r["affordance"] == "VIDEO":
+                # Log the video condition as its own row, rest left blank
+                writer.writerow({
+                    "Trial": r["trial"],
+                    "Affordance": "VIDEO",
+                    "Left Drone": "N/A",
+                    "Right Drone": "N/A",
+                    "Left Drone Coordinates": "N/A",
+                    "Right Drone Coordinates": "N/A",
+                    "Which drone is more real? (1=Left 7=Right)": "N/A",
+                    "Which drone feels closer? (1=Left 7=Right)": "N/A",
+                    "Which drone is more safe? (1=Left 7=Right)": "N/A",
+                    "Left Drone Gaze Duration (s)": "N/A",
+                    "Right Drone Gaze Duration (s)": "N/A"
+                })
+                continue
+
             real_side    = r["drone_side"]
             virtual_side = "Left" if real_side == "Right" else "Right"
 

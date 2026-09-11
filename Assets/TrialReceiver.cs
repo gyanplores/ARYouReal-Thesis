@@ -12,9 +12,14 @@ using TMPro;
 ///   1. Parses the affordance string (VAH, VA, AH, VH, V, A, H)
 ///      and applies it via the SensoryManager (Visual/Audio/Haptics toggles)
 ///   2. Parses the x/y/z coordinate and moves the drone there (mirrored if desired)
+///   3. Handles START_VIDEO / END_VIDEO packets to toggle the 360 video
+///      condition on/off via VideoConditionController, without loading a
+///      second scene.
 ///
 /// Expected JSON from Python (UDP, port 5005):
 ///   {"type": "TRIAL", "affordance": "VAH", "x": 1.5, "y": 1.0, "z": 2.0}
+///   {"type": "START_VIDEO"}
+///   {"type": "END_VIDEO"}
 /// </summary>
 public class TrialReceiver : MonoBehaviour
 {
@@ -39,6 +44,9 @@ public class TrialReceiver : MonoBehaviour
 
     [Tooltip("Panel shown when all trials are completed — 'Trials Completed!'")]
     public GameObject completionPanel;
+
+    [Tooltip("Drag VideoConditionController here to handle START_VIDEO / END_VIDEO packets")]
+    public VideoConditionController videoConditionController;
 
     [Header("Drone Mode (set by StartupMenu)")]
     [Tooltip("True = MIRROR (opposite X). False = MASK (same direction). Set automatically by StartupMenu.cs")]
@@ -70,6 +78,10 @@ public class TrialReceiver : MonoBehaviour
     private int messageCount = 0;
     private bool pendingShowWaiting = false;
     private bool pendingComplete = false;
+
+    // Video condition — set on UDP thread, consumed on main thread in Update()
+    private bool pendingStartVideo = false;
+    private bool pendingEndVideo = false;
 
     // Relative/offset movement tracking
     private Vector3 realBaseline = Vector3.zero;
@@ -182,6 +194,21 @@ public class TrialReceiver : MonoBehaviour
             Debug.Log("[TrialReceiver] All trials complete!");
         }
 
+        // Start/stop the 360 video condition — must happen on the main
+        // thread since it touches GameObjects, VideoPlayer, and the
+        // OVRPassthroughLayer, none of which are safe to call from the
+        // UDP background thread.
+        bool doStartVideo, doEndVideo;
+        lock (dataLock)
+        {
+            doStartVideo = pendingStartVideo; pendingStartVideo = false;
+            doEndVideo = pendingEndVideo; pendingEndVideo = false;
+        }
+        if (doStartVideo && videoConditionController != null)
+            videoConditionController.StartVideo();
+        if (doEndVideo && videoConditionController != null)
+            videoConditionController.EndVideo();
+
         // Notify QuestionnaireUI that a new trial has arrived (starts 5s countdown)
         if (newAffordance && questionnaireUI != null)
             questionnaireUI.OnTrialStarted();
@@ -285,6 +312,16 @@ public class TrialReceiver : MonoBehaviour
             {
                 lock (dataLock) { pendingShowWaiting = true; }
                 Debug.Log("[TrialReceiver] SHOW_WAITING received");
+            }
+            else if (type == "START_VIDEO")
+            {
+                lock (dataLock) { pendingStartVideo = true; }
+                Debug.Log("[TrialReceiver] START_VIDEO received");
+            }
+            else if (type == "END_VIDEO")
+            {
+                lock (dataLock) { pendingEndVideo = true; }
+                Debug.Log("[TrialReceiver] END_VIDEO received");
             }
             else if (type == "HOVER")
             {
