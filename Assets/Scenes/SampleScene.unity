@@ -2003,7 +2003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 459e0e70d81b8d043988368469cfc4af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TCPClient
-  pythonIP: 192.168.2.203
+  pythonIP: 192.168.0.173
   pythonPort: 5007
 --- !u!4 &184733140
 Transform:
@@ -9383,7 +9383,7 @@ MonoBehaviour:
   idleBobAmount: 0.02
   idleSwaySpeed: 1.2
   enableMicroJitter: 1
-  jitterRotationAmount: 0.8
+  jitterRotationAmount: 2
   jitterSpeed: 12
   jitterPositionAmount: 0.003
   enablePropellerVibration: 1
@@ -9410,7 +9410,7 @@ MonoBehaviour:
   completionPanel: {fileID: 1200270755}
   videoConditionController: {fileID: 17078646}
   isMirrorMode: 1
-  moveSpeed: 100
+  moveSpeed: 1e+9
   heightOffsetY: 0.1
   statusText: {fileID: 1479923171}
   receivedText: {fileID: 986580960}
