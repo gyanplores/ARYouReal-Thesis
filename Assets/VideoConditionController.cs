@@ -41,6 +41,12 @@ public class VideoConditionController : MonoBehaviour
     [Header("Gaze")]
     public HeadGazeReticle headGazeReticle;
 
+    [Header("Sensory / UI")]
+    [Tooltip("Drag your SensoryManager here — forces Visual ON, Audio OFF (both drone sound and white noise), Haptics OFF while the video plays.")]
+    public SensoryManager sensoryManager;
+    [Tooltip("Drag your QuestionnaireUI here — hides the waiting panel while the video plays, and restores it after so the user is blinded again until the next trial begins.")]
+    public QuestionnaireUI questionnaireUI;
+
     private bool isVideoActive = false;
     public bool IsVideoActive => isVideoActive;
 
@@ -77,6 +83,12 @@ public class VideoConditionController : MonoBehaviour
 
         if (headGazeReticle != null)
             headGazeReticle.enabled = false;
+
+        if (sensoryManager != null)
+            sensoryManager.EnterVideoCondition();
+
+        if (questionnaireUI != null)
+            questionnaireUI.HideWaitingPanel();
 
         if (videoSphere != null)
             videoSphere.SetActive(true);
@@ -117,6 +129,15 @@ public class VideoConditionController : MonoBehaviour
 
         if (headGazeReticle != null)
             headGazeReticle.enabled = true;
+
+        // Restore the "blinded between trials" state — the next TRIAL
+        // packet's OnTrialStarted() will hide this again once the
+        // following condition actually begins. We don't need to
+        // explicitly restore SensoryManager's V/A/H state here — the
+        // next TRIAL packet calls ApplyAffordanceString() automatically,
+        // which will set Visual/Audio/Haptics correctly for that trial.
+        if (questionnaireUI != null)
+            questionnaireUI.ShowWaitingPanel();
 
         Debug.Log("[VideoConditionController] Video condition ended.");
     }

@@ -99,6 +99,7 @@ extern void SensoryManager_Start_mF2350D030A8A6393D5B10757BACF35938B31A73B (void
 extern void SensoryManager_Update_mD77C6F2178ED19B2F48C10D25023F051A7587FB7 (void);
 extern void SensoryManager_ApplyAffordanceString_mD47808A119D92C60485BF592800E5A19B0F69D82 (void);
 extern void SensoryManager_ApplyMode_m8F84A94B674EF031B9CB242CE77FF48E9B2D5BFE (void);
+extern void SensoryManager_EnterVideoCondition_m1117FBC5E6F5E6ACF33CBDB6C1458664FA4ADA3A (void);
 extern void SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609 (void);
 extern void SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6 (void);
 extern void SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E (void);
@@ -429,7 +430,7 @@ extern void U3CWarpTextU3Ed__8_MoveNext_mCE7A826C5E4854C2C509C77BD18F5A9B6D691B0
 extern void U3CWarpTextU3Ed__8_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_mD80368E9B7E259311C03E406B75161ED6F7618E3 (void);
 extern void U3CWarpTextU3Ed__8_System_Collections_IEnumerator_Reset_m07746C332D2D8CE5DEA59873C26F2FAD4B369B42 (void);
 extern void U3CWarpTextU3Ed__8_System_Collections_IEnumerator_get_Current_m71D7F84D9DEF63BEC6B44866515DDCF35B142A19 (void);
-static Il2CppMethodPointer s_methodPointers[422] = 
+static Il2CppMethodPointer s_methodPointers[423] = 
 {
 	DroneController_Start_m845711AE6688093E343C5E9D5E0458A0BC3FDD0F,
 	DroneController_Update_m2A32A202931F956DDC0E1AC00385B11071289B5E,
@@ -523,6 +524,7 @@ static Il2CppMethodPointer s_methodPointers[422] =
 	SensoryManager_Update_mD77C6F2178ED19B2F48C10D25023F051A7587FB7,
 	SensoryManager_ApplyAffordanceString_mD47808A119D92C60485BF592800E5A19B0F69D82,
 	SensoryManager_ApplyMode_m8F84A94B674EF031B9CB242CE77FF48E9B2D5BFE,
+	SensoryManager_EnterVideoCondition_m1117FBC5E6F5E6ACF33CBDB6C1458664FA4ADA3A,
 	SensoryManager_SetVisual_m9A473021A5AA4E88CB10529D906CF48107FF0609,
 	SensoryManager_SetAudio_m38740C58B5F971423AEEAEBC478C90D19E625AA6,
 	SensoryManager_SetHaptics_mAAC36C7CD524AE9D29DA14569695AFFEFAFCC29E,
@@ -854,7 +856,7 @@ static Il2CppMethodPointer s_methodPointers[422] =
 	U3CWarpTextU3Ed__8_System_Collections_IEnumerator_Reset_m07746C332D2D8CE5DEA59873C26F2FAD4B369B42,
 	U3CWarpTextU3Ed__8_System_Collections_IEnumerator_get_Current_m71D7F84D9DEF63BEC6B44866515DDCF35B142A19,
 };
-static const int32_t s_InvokerIndices[422] = 
+static const int32_t s_InvokerIndices[423] = 
 {
 	21450,
 	21450,
@@ -948,6 +950,7 @@ static const int32_t s_InvokerIndices[422] =
 	21450,
 	16040,
 	15951,
+	21450,
 	15805,
 	15805,
 	15805,
@@ -1283,7 +1286,7 @@ IL2CPP_EXTERN_C const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule;
 const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule = 
 {
 	"Assembly-CSharp.dll",
-	422,
+	423,
 	s_methodPointers,
 	0,
 	NULL,

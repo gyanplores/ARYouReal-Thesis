@@ -302,6 +302,8 @@ MonoBehaviour:
   hideDuringVideo: []
   disableDuringVideo: []
   headGazeReticle: {fileID: 910772658}
+  sensoryManager: {fileID: 1741312760}
+  questionnaireUI: {fileID: 1828580932}
 --- !u!4 &17078647
 Transform:
   m_ObjectHideFlags: 0
@@ -2001,7 +2003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 459e0e70d81b8d043988368469cfc4af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TCPClient
-  pythonIP: 192.168.0.173
+  pythonIP: 192.168.2.203
   pythonPort: 5007
 --- !u!4 &184733140
 Transform:
@@ -7040,7 +7042,6 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   - {fileID: 2100000, guid: 295c5c96006078345a89ccc78b42105d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -9407,7 +9408,7 @@ MonoBehaviour:
   questionnaireUI: {fileID: 1828580932}
   headGazeReticle: {fileID: 910772658}
   completionPanel: {fileID: 1200270755}
-  videoConditionController: {fileID: 0}
+  videoConditionController: {fileID: 17078646}
   isMirrorMode: 1
   moveSpeed: 100
   heightOffsetY: 0.1

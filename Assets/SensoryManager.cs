@@ -162,6 +162,30 @@ public class SensoryManager : MonoBehaviour
         Debug.Log($"[SensoryManager] Mode {mode} → Visual:{visualEnabled} Audio:{audioEnabled} Haptics:{hapticsEnabled}");
     }
 
+    // ─── VIDEO CONDITION ──────────────────────────────────────────
+
+    /// <summary>
+    /// Called by VideoConditionController when the 360 video starts.
+    /// Forces Visual ON (removes the black box so the user can see the
+    /// video), and both audio sources OFF — SetAudio(true)/(false) each
+    /// only ever silence ONE of drone-sound / white-noise, since the
+    /// white noise is designed as a masking mechanism rather than a
+    /// simple "audio off" toggle. The video has its own soundtrack, so
+    /// both need to be stopped directly here. Haptics are also forced off.
+    /// </summary>
+    public void EnterVideoCondition()
+    {
+        SetVisual(true);
+
+        if (droneAudioSource != null) droneAudioSource.Stop();
+        if (whiteNoiseSource != null) whiteNoiseSource.Stop();
+        audioEnabled = false;
+
+        SetHaptics(false);
+
+        Debug.Log("[SensoryManager] Entered video condition — Visual ON, Audio OFF (both sources), Haptics OFF");
+    }
+
     // ─── SENSORY CONTROLS ─────────────────────────────────────────
 
     void SetVisual(bool enabled)
