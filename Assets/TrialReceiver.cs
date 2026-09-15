@@ -127,8 +127,11 @@ public class TrialReceiver : MonoBehaviour
             hasNewAffordance = false; // consume affordance flag once
         }
 
-        // Move virtual drone toward mirrored target
-        if (droneTransform != null)
+        // Move virtual drone toward mirrored target — paused while the
+        // video condition is active, since VideoConditionController takes
+        // direct control of the drone's position/visibility during that time.
+        bool videoIsActive = videoConditionController != null && videoConditionController.IsVideoActive;
+        if (!videoIsActive && droneTransform != null)
         {
             float distanceToTarget = Vector3.Distance(droneTransform.position, target);
             if (distanceToTarget > 0.001f)

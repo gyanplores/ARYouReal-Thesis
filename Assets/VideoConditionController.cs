@@ -47,6 +47,16 @@ public class VideoConditionController : MonoBehaviour
     [Tooltip("Drag your QuestionnaireUI here — hides the waiting panel while the video plays, and restores it after so the user is blinded again until the next trial begins.")]
     public QuestionnaireUI questionnaireUI;
 
+    [Header("Virtual Drone Visibility")]
+    [Tooltip("Drag FINAL_DRONE_1.4 (or its root) here. Its Renderer(s) are disabled during video and re-enabled after — the GameObject itself is never deactivated, so any scripts on it (UDP-driven movement, haptics, etc.) keep running normally.")]
+    public Transform virtualDroneVisual;
+    [Tooltip("How far back (world Z) to move the drone while it's hidden during video — extra insurance beyond disabling renderers/lights, in case any light bleed or glow is still visible.")]
+    public float hiddenZPosition = 5f;
+    [Tooltip("Z position to instantly teleport the drone back to when the video ends, before normal UDP-driven tracking resumes.")]
+    public float returnZPosition = 2f;
+    private Renderer[] droneRenderers;
+    private Light[] droneLights;
+
     private bool isVideoActive = false;
     public bool IsVideoActive => isVideoActive;
 
@@ -60,6 +70,16 @@ public class VideoConditionController : MonoBehaviour
             videoPlayer.playOnAwake = false;
             videoPlayer.isLooping = true; // safety net in case the operator takes longer than the video's length
             videoPlayer.Prepare();        // preload now so Play() has no buffering delay when the condition starts
+        }
+
+        // Cache renderers and lights once — GetComponentsInChildren catches
+        // any child mesh parts / light sources too, not just ones on the
+        // root object. Lights (e.g. simulated LEDs) are a separate system
+        // from Renderers and won't be affected by disabling renderers alone.
+        if (virtualDroneVisual != null)
+        {
+            droneRenderers = virtualDroneVisual.GetComponentsInChildren<Renderer>(true);
+            droneLights = virtualDroneVisual.GetComponentsInChildren<Light>(true);
         }
     }
 
@@ -89,6 +109,27 @@ public class VideoConditionController : MonoBehaviour
 
         if (questionnaireUI != null)
             questionnaireUI.HideWaitingPanel();
+
+        // Hide the drone visually only — GameObject stays active, so
+        // its UDP-driven movement script, haptics, etc. keep running.
+        if (droneRenderers != null)
+            foreach (var r in droneRenderers)
+                if (r != null) r.enabled = false;
+
+        if (droneLights != null)
+            foreach (var l in droneLights)
+                if (l != null) l.enabled = false;
+
+        // Extra insurance: physically move it out of view too, in case
+        // any glow/bloom effect was still visible even with renderers and
+        // lights off. IsVideoActive (checked by TrialReceiver) pauses its
+        // normal UDP-driven position updates so it doesn't glide straight
+        // back into view on the next frame.
+        if (virtualDroneVisual != null)
+        {
+            Vector3 p = virtualDroneVisual.position;
+            virtualDroneVisual.position = new Vector3(p.x, p.y, hiddenZPosition);
+        }
 
         if (videoSphere != null)
             videoSphere.SetActive(true);
@@ -120,6 +161,25 @@ public class VideoConditionController : MonoBehaviour
 
         if (passthroughLayer != null)
             passthroughLayer.enabled = true;
+
+        // Restore drone visibility
+        if (droneRenderers != null)
+            foreach (var r in droneRenderers)
+                if (r != null) r.enabled = true;
+
+        if (droneLights != null)
+            foreach (var l in droneLights)
+                if (l != null) l.enabled = true;
+
+        // Teleport straight back to its resting Z instead of letting
+        // TrialReceiver's MoveTowards glide it there over a few seconds —
+        // the user can't see it during this transition anyway, so there's
+        // no reason to visibly animate it.
+        if (virtualDroneVisual != null)
+        {
+            Vector3 p = virtualDroneVisual.position;
+            virtualDroneVisual.position = new Vector3(p.x, p.y, returnZPosition);
+        }
 
         foreach (var go in hideDuringVideo)
             if (go != null) go.SetActive(true);
