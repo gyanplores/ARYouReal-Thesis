@@ -304,6 +304,7 @@ MonoBehaviour:
   headGazeReticle: {fileID: 910772658}
   sensoryManager: {fileID: 1741312760}
   questionnaireUI: {fileID: 1828580932}
+  virtualDroneVisual: {fileID: 845719449}
 --- !u!4 &17078647
 Transform:
   m_ObjectHideFlags: 0
@@ -2003,7 +2004,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 459e0e70d81b8d043988368469cfc4af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TCPClient
-  pythonIP: 192.168.0.173
+  pythonIP: 192.168.2.203
   pythonPort: 5007
 --- !u!4 &184733140
 Transform:
@@ -9266,10 +9267,10 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 0
   DopplerLevel: 1
-  MinDistance: 0.5
+  MinDistance: 1.5
   MaxDistance: 10
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -18269,7 +18270,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1760754845
 MonoBehaviour:
   m_ObjectHideFlags: 0
